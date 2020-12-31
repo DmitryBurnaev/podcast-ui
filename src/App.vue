@@ -2,12 +2,31 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
+      <router-link to="/sign_in">SignIn</router-link> |
       <router-link to="/podcasts">Podcast List</router-link>
     </div>
-    <router-view/>
+    <component :is="layout">
+      <router-view/>
+    </component>
   </div>
 </template>
+
+<script>
+  import AuthLayout from "@/layouts/AuthLayout";
+  import MainLayout from "@/layouts/MainLayout";
+  export default {
+    computed: {
+      layout() {
+        console.log(this.$route.meta)
+        return (this.$route.meta.layout || "main")+ "-layout"
+      }
+    },
+    components: {
+      AuthLayout, MainLayout
+    }
+  }
+
+</script>
 
 <style>
 #app {
