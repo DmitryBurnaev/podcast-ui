@@ -12,15 +12,19 @@
 </template>
 
 <script>
+  import AuthLayout from "@/layouts/AuthLayout";
+  import MainLayout from "@/layouts/MainLayout";
   export default {
     computed: {
       layout() {
         console.log(this.$route.meta)
-        return this.$route.meta.layout + "-layout"
+        return (this.$route.meta.layout || "main")+ "-layout"
       }
+    },
+    components: {
+      AuthLayout, MainLayout
     }
   }
-
 
 </script>
 
