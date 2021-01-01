@@ -1,13 +1,14 @@
 <template>
-  <router-view/>
+  <div>
+    <Sidebar/>
+    <router-view/>
+  </div>
 </template>
 
 <script>
+import Sidebar from "@/components/app/Sidebar";
 export default {
-  name: "MainLayout"
+  name: "MainLayout",
+  components: {Sidebar}
 }
 </script>
-
-<style scoped>
-
-</style>
