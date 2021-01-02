@@ -1,11 +1,11 @@
 <template>
   <div class="podcast-details">
-    <h2>Podcast Details #{{ $route.params.id }}</h2>
+    <h2>Podcast List</h2>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'PodcastDetails',
+    name: 'PodcastList',
   }
 </script>

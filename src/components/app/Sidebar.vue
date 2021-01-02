@@ -56,4 +56,7 @@ export default {
     border: 1px solid gray;
     float: left;
   }
+  .side-bar li.router-link-exact-active a{
+      color: #42b983;
+  }
 </style>

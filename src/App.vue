@@ -3,6 +3,7 @@
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/podcasts">Podcast List</router-link> |
+      <router-link to="/sign_up">SignUp</router-link> |
       <router-link to="/sign_in">SignIn</router-link>
     </div>
     <component :is="layout">
@@ -29,6 +30,11 @@
 </script>
 
 <style>
+
+h1,h2,h3,h4{
+  text-align: center;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

@@ -8,7 +8,6 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    meta: {layout: 'main'},
     component: Home
   },
   {
@@ -18,11 +17,36 @@ const routes = [
     component: () => import('./views/SignIn.vue')
   },
   {
+    path: '/sign_up',
+    name: 'SignUp',
+    meta: {layout: 'auth'},
+    component: () => import('./views/SignUp.vue')
+  },
+  {
+    path: '/progress',
+    name: 'Progress',
+    meta: {layout: 'main'},
+    component: () => import('./views/Progress.vue')
+  },
+  {
     path: '/podcasts',
     name: 'PodcastList',
     meta: {layout: 'main'},
+    component: () => import('./views/PodcastList.vue')
+  },
+  {
+    path: '/podcasts/:id',
+    name: 'PodcastList',
+    meta: {layout: 'main'},
+    props: true,
     component: () => import('./views/PodcastDetails.vue')
-  }
+  },
+  {
+    path: '/episodes/:id',
+    name: 'EpisodeDetails',
+    meta: {layout: 'main'},
+    component: () => import('./views/EpisodeDetails.vue')
+  },
 ]
 
 const router = new VueRouter({
