@@ -1,5 +1,6 @@
 <template>
-  <div class="side-bar">
+  <div class="side-bar" :class="{open: value}">
+
     <ul class="main-nav">
       <router-link
           v-for="link in links"
@@ -34,6 +35,7 @@
 <script>
 export default {
   name: "Sidebar",
+  props: ['value'],
   data: () => ({
     links: [
       {"title": "Home", "url": "/", "exact": true},
