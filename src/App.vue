@@ -1,10 +1,5 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/sign_in">SignIn</router-link> |
-      <router-link to="/podcasts">Podcast List</router-link>
-    </div>
     <component :is="layout">
       <router-view/>
     </component>
@@ -29,11 +24,15 @@
 </script>
 
 <style>
+
+h1,h2,h3,h4{
+  text-align: center;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
 }
 
