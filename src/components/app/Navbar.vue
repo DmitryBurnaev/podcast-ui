@@ -9,9 +9,9 @@
         |
         <router-link to="/podcasts">Podcast List</router-link>
         |
-        <router-link to="/sign_up">SignUp</router-link>
+        <router-link to="/sign-up">SignUp</router-link>
         |
-        <router-link to="/sign_in">SignIn</router-link>
+        <router-link to="/sign-in">SignIn</router-link>
       </div>
     </div>
 
@@ -43,7 +43,7 @@ export default {
   methods: {
     signOut() {
       console.log("SignOut here...")
-      this.$router.push("/sign_in?message=SignOut")
+      this.$router.push("/sign-in?message=SignOut")
     }
   },
   beforeDestroy() {
