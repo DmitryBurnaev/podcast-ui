@@ -1,5 +1,6 @@
 <template>
   <nav class="navbar">
+    <div class="date">{{date | date('datetime') }}</div>
     <div class="nav-wrapper">
 
       <div id="nav">
@@ -14,16 +15,54 @@
       </div>
     </div>
 
+    <div class="dropdown">
+      <ul>
+        <li>
+          <router-link to="/">Profile</router-link>
+        </li>
+        <li>
+          <a href="#" @click.prevent="signOut">Выйти</a>
+        </li>
+      </ul>
 
+    </div>
   </nav>
 </template>
 
 <script>
 export default {
-  name: "Navbar"
+  name: "Navbar",
+  data: () => ({
+    date: new Date()
+  }),
+  mounted() {
+    this.interval = setInterval(() => {
+      this.date = new Date()
+    }, 1000)
+  },
+  methods: {
+    signOut() {
+      console.log("SignOut here...")
+      this.$router.push("/sign_in?message=SignOut")
+    }
+  },
+  beforeDestroy() {
+    console.log("beforeDestroy")
+    clearInterval(this.interval)
+  }
 }
 </script>
 
 <style scoped>
-
+  .date{
+    position: absolute;
+    top: 0;
+    left: 10px;
+  }
+  .dropdown{
+    width: 50px;
+    position: absolute;
+    top: 0;
+    right: 80px;
+  }
 </style>
