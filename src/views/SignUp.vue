@@ -70,6 +70,10 @@ export default {
     password_1: {required, minLength: minLength(2)},
     password_2: {required, minLength: minLength(2)},
   },
+  mounted() {
+    this.token = this.$route.query.token || "[UNKNOWN token]"
+    console.log(this.token)
+  },
   methods: {
     submitSignUp() {
       console.log("SignUp submitting")

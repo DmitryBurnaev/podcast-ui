@@ -42,12 +42,11 @@ export default {
   },
   methods: {
     signOut() {
-      console.log("SignOut here...")
-      this.$router.push("/sign-in?message=SignOut")
+      this.$message("SignOut here...")
+      this.$router.push("/sign-in?message=signed-out")
     }
   },
   beforeDestroy() {
-    console.log("beforeDestroy")
     clearInterval(this.interval)
   }
 }

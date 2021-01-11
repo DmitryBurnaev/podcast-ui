@@ -29,7 +29,7 @@
         </small>
         <br/>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button><br/>
-      or <router-link to="/sign-up">sign-up</router-link>
+      or <router-link to="/sign-up?token=registration-invite">sign-up</router-link>
     </form>
 
   </div>
@@ -38,6 +38,7 @@
 <script>
 
 import {email, required, minLength} from "vuelidate/lib/validators";
+import messages from "@/utils/messages";
 
 export default {
   name: "SignIn",
@@ -49,12 +50,21 @@ export default {
     email: {email, required},
     password: {required, minLength: minLength(8)}
   },
+  mounted() {
+    let message = messages[this.$route.query.message];
+    if (message){
+      this.$message("SignIn | " + message)
+    }
+    else {
+      this.$message("SignIn from the world!!")
+    }
+  },
   methods: {
     submitSignIn() {
       console.log("SignIn submitting")
       if (this.$v.$invalid){
         this.$v.$touch()
-        console.log("Is invalid..")
+        this.$error("Form is invalid..")
         return
       }
       const formData = {
