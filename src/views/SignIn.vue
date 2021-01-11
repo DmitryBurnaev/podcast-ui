@@ -3,9 +3,8 @@
     <h1>Sign-IN</h1>
 
     <form class="form-signin" method="post" @submit.prevent="submitSignIn" >
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
         <input
-            type="text" name="email" id="email"
+            type="text" name="email" id="email" placeholder="email"
             v-model.trim="email"
             :class="{invalid: ($v.email.$dirty && !$v.email.required ) || ($v.email.$dirty && !$v.email.email ) }">
         <br/>
@@ -17,7 +16,7 @@
         </small>
         <br/>
         <input
-            type="password" name="email" id="password"
+            type="password" name="email" id="password" placeholder="password"
             v-model.trim="password"
             :class="{invalid: ($v.password.$dirty && !$v.password.required ) || ($v.password.$dirty && !$v.password.minLength ) }">
         <br/>
@@ -32,9 +31,6 @@
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button><br/>
       or <router-link to="/sign-up">sign-up</router-link>
     </form>
-
-
-
 
   </div>
 </template>
