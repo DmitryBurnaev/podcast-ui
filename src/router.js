@@ -11,13 +11,13 @@ const routes = [
     component: Home
   },
   {
-    path: '/sign_in',
+    path: '/sign-in',
     name: 'SignIn',
     meta: {layout: 'auth'},
     component: () => import('./views/SignIn.vue')
   },
   {
-    path: '/sign_up',
+    path: '/sign-up',
     name: 'SignUp',
     meta: {layout: 'auth'},
     component: () => import('./views/SignUp.vue')
@@ -36,7 +36,7 @@ const routes = [
   },
   {
     path: '/podcasts/:id',
-    name: 'PodcastList',
+    name: 'PodcastDetails',
     meta: {layout: 'main'},
     props: true,
     component: () => import('./views/PodcastDetails.vue')
