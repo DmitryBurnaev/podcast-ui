@@ -1,15 +1,17 @@
 import Vue from 'vue'
 import App from './App.vue'
-import Vuelidate from "vuelidate";
+import Vuelidate from "vuelidate"
 import router from './router'
-import dateFilter from "@/filters/date.filter";
-import messagePlugin from "@/utils/message.plugin"
+import store from '@/store'
+import dateFilter from '@/filters/date.filter'
+import messagePlugin from '@/utils/message.plugin'
 
 
 Vue.config.productionTip = false
 Vue.filter('date', dateFilter)
 Vue.use(Vuelidate)
 Vue.use(messagePlugin)
+Vue.use(store)
 
 new Vue({
   router,
