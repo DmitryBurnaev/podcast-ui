@@ -60,7 +60,7 @@ export default {
     }
   },
   methods: {
-    submitSignIn() {
+    async submitSignIn() {
       console.log("SignIn submitting")
       if (this.$v.$invalid){
         this.$v.$touch()
@@ -71,8 +71,8 @@ export default {
         email: this.email,
         password: this.password
       }
-      console.log(formData)
-      this.$router.push("/")
+      await this.$store.dispatch("signIn", formData)
+      await this.$router.push("/")
     }
   }
 }
