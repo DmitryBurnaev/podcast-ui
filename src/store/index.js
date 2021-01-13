@@ -4,9 +4,9 @@ import auth from './auth'
 
 Vue.use(Vuex)
 
-export default {
+export default new Vuex.Store({
     state: {},
     mutations: {},
     actions: {},
     modules: {auth}
-}
+})

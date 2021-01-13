@@ -11,10 +11,10 @@ Vue.config.productionTip = false
 Vue.filter('date', dateFilter)
 Vue.use(Vuelidate)
 Vue.use(messagePlugin)
-Vue.use(store)
 
 new Vue({
   router,
+  store,
   render: h => h(App),
   data: {
     podcastItems: [
