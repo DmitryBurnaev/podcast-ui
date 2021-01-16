@@ -7,7 +7,10 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        error: null
+        error: null,
+        podcasts: null,
+        accessToken: localStorage.getItem('accessToken') || null,
+        refreshToken: localStorage.getItem('refreshToken') || null,
     },
     mutations: {
         setError(state, error){
