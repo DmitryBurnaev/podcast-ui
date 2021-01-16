@@ -48,7 +48,12 @@ export default {
       {"id": 3, "title": "Test podcast 3", "url": "/podcasts/3"},
       {"id": 4, "title": "Test podcast 4", "url": "/podcasts/4"},
     ]
-  })
+  }),
+  async mounted() {
+    if (!this.podcasts){
+      this.podcasts = await this.$store.dispatch("getPodcasts")
+    }
+  },
 }
 </script>
 

@@ -16,6 +16,6 @@ export default {
   components: {Sidebar, Navbar},
   data: () => ({
     sidebarIsOpen: true
-  })
+  }),
 }
 </script>

@@ -2,26 +2,41 @@ import axios from "axios";
 import config from "@/config";
 
 export default {
+    state: {
+        accessToken: null,
+        refreshToken: null,
+    },
+    getters: {
+        accessToken: s => s.accessToken,
+        refreshToken: s => s.refreshToken,
+    },
+    mutations: {
+        setTokens(state, response){
+            console.log("setTokens", response)
+            state.accessToken = response.access_token
+            state.refreshToken = response.refresh_token
+        }
+    },
     actions: {
-        async signIn({dispatch}, {email, password}) {
+        async signIn({dispatch, commit}, {email, password}) {
             console.log(dispatch)
             const url = config.apiURL + "auth/sign-in/"
+            let response
             try {
                 console.log("Send sign-in request... ")
-                let response = await axios.post(url, {'email': email, 'password': password})
-                console.log(response)
-                return true
+                response = await axios.post(url, {'email': email, 'password': password})
             } catch (err) {
-                if (err.response) {
-                   console.log(err.response.status)
-                   console.log(err.response.data)
-                }
+                commit('setError', err.response.data)
                 return false
             }
+            console.log("Save authToken", response)
+            commit('setTokens', response.data)
+            return true
         },
-        async signUp({dispatch}, {email, password_1, password_2, token}){
+        async signUp({dispatch, commit}, {email, password_1, password_2, token}){
             console.log(dispatch)
             const url = config.apiURL + "auth/sign-up/"
+            let response
             try {
                 console.log("Send sign-up request... ")
                 const payload = {
@@ -30,20 +45,18 @@ export default {
                     'password_2': password_2,
                     'invite_token': token
                 }
-                let response = await axios.post(url, payload)
-                console.log(response)
-                return true
+                response = await axios.post(url, payload)
             } catch (err) {
-                if (err.response) {
-                   console.log(err.response.status)
-                   console.log(err.response.data)
-                }
+                commit('setError', err.response.data)
                 return false
             }
+            console.log("Save authToken", response)
+            commit('setTokens', response.data)
+            return true
         },
-        async signOut(){
+        async signOut({state}){
             const url = config.apiURL + "auth/sign-out/"
-            let response = await axios.get(url)
+            let response = await axios.get(url, {headers: {'Authorization': `Bearer ${state.accessToken}`}})
             console.log(response)
         }
     }

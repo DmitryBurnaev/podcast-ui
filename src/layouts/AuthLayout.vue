@@ -14,7 +14,7 @@ export default {
   },
   watch: {
     error(serverError){
-      console.error(serverError)
+      this.$error(serverError.details)
     }
   }
 }

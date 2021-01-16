@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import auth from './auth'
+import podcasts from './podcasts'
 
 Vue.use(Vuex)
 
@@ -14,11 +15,17 @@ export default new Vuex.Store({
         },
         clearError(state){
             state.error = null;
-        }
+        },
+        // setTokens(state, response){
+        //     state.authToken = response.token
+        //     state.refreshToken = response.refresh_token
+        // }
     },
     getters: {
-        error: s => s.error
+        error: s => s.error,
+        // authToken: s => s.authToken,
+        // refreshToken: s => s.refreshToken,
     },
     actions: {},
-    modules: {auth}
+    modules: {auth, podcasts}
 })
