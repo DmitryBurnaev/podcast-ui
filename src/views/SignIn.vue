@@ -48,7 +48,7 @@ export default {
   }),
   validations:{
     email: {email, required},
-    password: {required, minLength: minLength(8)}
+    password: {required, minLength: minLength(2)}
   },
   mounted() {
     let message = messages[this.$route.query.message];
@@ -60,7 +60,7 @@ export default {
     }
   },
   methods: {
-    submitSignIn() {
+    async submitSignIn() {
       console.log("SignIn submitting")
       if (this.$v.$invalid){
         this.$v.$touch()
@@ -71,8 +71,10 @@ export default {
         email: this.email,
         password: this.password
       }
-      console.log(formData)
-      this.$router.push("/")
+      let success = await this.$store.dispatch("signIn", formData)
+      if (success) {
+        await this.$router.push("/")
+      }
     }
   }
 }

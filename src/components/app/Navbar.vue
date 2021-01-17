@@ -41,9 +41,10 @@ export default {
     }, 1000)
   },
   methods: {
-    signOut() {
+    async signOut() {
       this.$message("SignOut here...")
-      this.$router.push("/sign-in?message=signed-out")
+      await this.$store.dispatch('signOut')
+      await this.$router.push("/sign-in?message=signed-out")
     }
   },
   beforeDestroy() {

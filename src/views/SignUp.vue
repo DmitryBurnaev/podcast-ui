@@ -75,7 +75,7 @@ export default {
     console.log(this.token)
   },
   methods: {
-    submitSignUp() {
+    async submitSignUp() {
       console.log("SignUp submitting")
       if (this.$v.$invalid){
         this.$v.$touch()
@@ -89,7 +89,10 @@ export default {
         token: this.token,
       }
       console.log(formData)
-      this.$router.push("/")
+      let success = await this.$store.dispatch('signUp', formData)
+      if (success) {
+        await this.$router.push("/")
+      }
     }
   }
 }
