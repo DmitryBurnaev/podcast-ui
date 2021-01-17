@@ -2,10 +2,10 @@ import axios from "axios";
 import config from "@/config";
 
 export default {
-    // state: {
-    //     accessToken: localStorage.getItem('accessToken') || null,
-    //     refreshToken: localStorage.getItem('refreshToken') || null,
-    // },
+    state: {
+        accessToken: localStorage.getItem('accessToken') || null,
+        refreshToken: localStorage.getItem('refreshToken') || null,
+    },
     getters: {
         accessToken: s => s.accessToken,
         refreshToken: s => s.refreshToken,
@@ -15,6 +15,10 @@ export default {
             console.log("setTokens", response)
             localStorage.setItem('accessToken', response.access_token)
             localStorage.setItem('refreshToken', response.refresh_token)
+        },
+        clearToken(){
+            localStorage.removeItem('accessToken')
+            localStorage.removeItem('refreshToken')
         }
     },
     actions: {
@@ -54,10 +58,15 @@ export default {
             commit('setTokens', response.data)
             return true
         },
-        async signOut(){
+        async signOut({commit}){
             const url = config.apiURL + "auth/sign-out/"
-            let response = await axios.get(url)
-            // let response = await axios.get(url, {headers: {'Authorization': `Bearer ${state.accessToken}`}})
+            let response;
+            try {
+                response = await axios.get(url)
+            } catch (err) {
+                commit('setError', err.response.data)
+            }
+            commit('clearToken')
             console.log(response)
         }
     }

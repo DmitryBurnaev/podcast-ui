@@ -8,9 +8,6 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         error: null,
-        podcasts: null,
-        accessToken: localStorage.getItem('accessToken') || null,
-        refreshToken: localStorage.getItem('refreshToken') || null,
     },
     mutations: {
         setError(state, error){
@@ -19,15 +16,9 @@ export default new Vuex.Store({
         clearError(state){
             state.error = null;
         },
-        // setTokens(state, response){
-        //     state.authToken = response.token
-        //     state.refreshToken = response.refresh_token
-        // }
     },
     getters: {
         error: s => s.error,
-        // authToken: s => s.authToken,
-        // refreshToken: s => s.refreshToken,
     },
     actions: {},
     modules: {auth, podcasts}

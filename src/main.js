@@ -18,11 +18,4 @@ new Vue({
   router,
   store,
   render: h => h(App),
-  data: {
-    podcastItems: [
-      { title: 'Learn JavaScript' },
-      { title: 'Learn Vue' },
-      { title: 'Build something awesome' }
-    ]
-  }
 }).$mount('#app')

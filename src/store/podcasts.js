@@ -2,9 +2,9 @@ import axios from "axios";
 import config from "@/config";
 
 export default {
-    // state: {
-    //     podcasts: null
-    // },
+    state: {
+        podcasts: null
+    },
     mutations: {
         setPodcasts(state, podcasts){
             state.podcasts = podcasts
@@ -14,15 +14,11 @@ export default {
         podcasts: s => s.podcasts,
     },
     actions: {
-        async getPodcasts({dispatch, commit, state}) {
+        async getPodcasts({dispatch, commit}) {
             console.log(dispatch)
             let response
             try {
-                //TODO:
-                //  1. use localstorage
-                //  2. use interceptors
-
-                response = await axios.get(config.apiURL + "podcasts/", {headers: {'Authorization': `Bearer ${state.accessToken}`}})
+                response = await axios.get(config.apiURL + "podcasts/", )
             } catch (err) {
                 commit('setError', err.response.data)
                 return false

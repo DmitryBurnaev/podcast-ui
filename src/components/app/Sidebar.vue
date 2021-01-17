@@ -17,11 +17,11 @@
     <h4 style="text-align: center">Podcasts list</h4>
     <ul class="podcast-list-nav">
       <router-link
-          v-for="podcast in podcastItems"
+          v-for="podcast in podcasts"
           :key="podcast.id"
           tag="li"
           active-class="active"
-          :to=podcast.url
+          :to="{name: 'PodcastDetails', params: {'id': podcast.id}}"
       >
         <a href="#" class="podcast-link">{{podcast.title}}</a>
       </router-link>
@@ -42,12 +42,13 @@ export default {
       {"title": "Podcast List", "url": "/podcasts/"},
       {"title": "Progress", "url": "/progress/"},
     ],
-    podcastItems: [
-      {"id": 1, "title": "Test podcast 1", "url": "/podcasts/1"},
-      {"id": 2, "title": "Test podcast 2", "url": "/podcasts/2"},
-      {"id": 3, "title": "Test podcast 3", "url": "/podcasts/3"},
-      {"id": 4, "title": "Test podcast 4", "url": "/podcasts/4"},
-    ]
+    podcasts: null,
+    // podcastItems: [
+    //   {"id": 1, "title": "Test podcast 1", "url": "/podcasts/1"},
+    //   {"id": 2, "title": "Test podcast 2", "url": "/podcasts/2"},
+    //   {"id": 3, "title": "Test podcast 3", "url": "/podcasts/3"},
+    //   {"id": 4, "title": "Test podcast 4", "url": "/podcasts/4"},
+    // ]
   }),
   async mounted() {
     if (!this.podcasts){
