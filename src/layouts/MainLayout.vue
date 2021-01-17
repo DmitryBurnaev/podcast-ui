@@ -1,7 +1,7 @@
 <template>
   <div id="mainLayout">
     <Navbar @navClick="sidebarIsOpen = !sidebarIsOpen"/>
-    <Sidebar v-model="sidebarIsOpen" />
+    <Sidebar v-model="sidebarIsOpen" :podcasts="podcasts"/>
     <main class="app-content" :class="{full: !sidebarIsOpen}">
       <router-view/>
     </main>
@@ -15,7 +15,16 @@ export default {
   name: "MainLayout",
   components: {Sidebar, Navbar},
   data: () => ({
+    loading: true,
+    podcasts: [{"id":1, "name": "test2"}],
     sidebarIsOpen: true
   }),
+  async mounted(){
+    if (!this.$store.getters.podcasts){
+      await this.$store.dispatch('getPodcasts')
+    }
+    this.podcasts = this.$store.getters.podcasts
+    this.loading = false
+  }
 }
 </script>

@@ -15,10 +15,14 @@ export default {
             console.log("setTokens", response)
             localStorage.setItem('accessToken', response.access_token)
             localStorage.setItem('refreshToken', response.refresh_token)
+            state.accessToken = response.access_token
+            state.refreshToken = response.refresh_token
         },
-        clearToken(){
+        clearToken(state){
             localStorage.removeItem('accessToken')
             localStorage.removeItem('refreshToken')
+            state.accessToken = null
+            state.refreshToken = null
         }
     },
     actions: {
@@ -27,13 +31,11 @@ export default {
             const url = config.apiURL + "auth/sign-in/"
             let response
             try {
-                console.log("Send sign-in request... ")
                 response = await axios.post(url, {'email': email, 'password': password})
             } catch (err) {
                 commit('setError', err.response.data)
                 return false
             }
-            console.log("Save authToken", response)
             commit('setTokens', response.data)
             return true
         },
@@ -42,7 +44,6 @@ export default {
             const url = config.apiURL + "auth/sign-up/"
             let response
             try {
-                console.log("Send sign-up request... ")
                 const payload = {
                     'email': email,
                     'password_1': password_1,
@@ -54,20 +55,17 @@ export default {
                 commit('setError', err.response.data)
                 return false
             }
-            console.log("Save authToken", response)
             commit('setTokens', response.data)
             return true
         },
         async signOut({commit}){
             const url = config.apiURL + "auth/sign-out/"
-            let response;
             try {
-                response = await axios.get(url)
+                await axios.get(url)
             } catch (err) {
                 commit('setError', err.response.data)
             }
             commit('clearToken')
-            console.log(response)
         }
     }
 }

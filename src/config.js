@@ -1,4 +1,3 @@
 export default {
-    // apiURL: "http://dev.podcast-service:8001/api/"
-    apiURL: "https://podcast-service.devpython.ru/api/"
+    apiURL: process.env.VUE_APP_API_URL
 }

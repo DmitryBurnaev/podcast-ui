@@ -23,7 +23,7 @@
           active-class="active"
           :to="{name: 'PodcastDetails', params: {'id': podcast.id}}"
       >
-        <a href="#" class="podcast-link">{{podcast.title}}</a>
+        <a href="#" class="podcast-link">{{podcast.name}}</a>
       </router-link>
     </ul>
 
@@ -35,14 +35,14 @@
 <script>
 export default {
   name: "Sidebar",
-  props: ['value'],
+  props: ['value', 'podcasts'],
   data: () => ({
     links: [
       {"title": "Home", "url": "/", "exact": true},
       {"title": "Podcast List", "url": "/podcasts/"},
       {"title": "Progress", "url": "/progress/"},
     ],
-    podcasts: null,
+    // podcasts: null,
     // podcastItems: [
     //   {"id": 1, "title": "Test podcast 1", "url": "/podcasts/1"},
     //   {"id": 2, "title": "Test podcast 2", "url": "/podcasts/2"},
@@ -50,11 +50,11 @@ export default {
     //   {"id": 4, "title": "Test podcast 4", "url": "/podcasts/4"},
     // ]
   }),
-  async mounted() {
-    if (!this.podcasts){
-      this.podcasts = await this.$store.dispatch("getPodcasts")
-    }
-  },
+  // async mounted() {
+  //   if (!this.podcasts){
+  //     this.podcasts = await this.$store.dispatch("getPodcasts")
+  //   }
+  // },
 }
 </script>
 
