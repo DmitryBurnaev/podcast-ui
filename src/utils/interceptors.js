@@ -1,5 +1,9 @@
 import axios from 'axios';
 import store from '@/store'
+import config from "@/config";
+
+
+axios.defaults.baseURL = config.apiURL
 
 
 export default function setup() {

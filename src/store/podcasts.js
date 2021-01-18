@@ -1,5 +1,4 @@
 import axios from "axios";
-import config from "@/config";
 
 export default {
     state: {
@@ -18,7 +17,7 @@ export default {
             console.log(dispatch)
             let response
             try {
-                response = await axios.get(config.apiURL + "podcasts/", )
+                response = await axios.get("podcasts/", )
             } catch (err) {
                 commit('setError', err.response.data)
                 return false
