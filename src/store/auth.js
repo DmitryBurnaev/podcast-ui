@@ -62,6 +62,13 @@ export default {
                 commit('setError', err.response.data)
             }
             commit('clearToken')
-        }
+        },
+        async refreshToken({dispatch, commit}) {
+            console.log(dispatch)
+            let response
+            response = await axios.post("auth/refresh-token/", {'refresh_token': this.refreshToken})
+            commit('setTokens', response.data)
+            return true
+        },
     }
 }
