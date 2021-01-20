@@ -20,11 +20,14 @@ export default {
     sidebarIsOpen: true
   }),
   async mounted(){
-    if (!this.$store.getters.podcasts){
-      await this.$store.dispatch('getPodcasts')
-    }
+    console.log("MainLayout mounted")
+    // console.log("getPodcasts here (from main layout)", this.$router.history.current.name)
+    // await this.$store.dispatch('getPodcasts')
     this.podcasts = this.$store.getters.podcasts
     this.loading = false
+
+    // if (! this.$router.history.name.startsWith('auth')){
+    // }
   }
 }
 </script>

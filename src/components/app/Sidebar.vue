@@ -21,7 +21,7 @@
           :key="podcast.id"
           tag="li"
           active-class="active"
-          :to="{name: 'PodcastDetails', params: {'id': podcast.id}}"
+          :to="{name: 'podcastDetails', params: {'id': podcast.id}}"
       >
         <a href="#" class="podcast-link">{{podcast.name}}</a>
       </router-link>

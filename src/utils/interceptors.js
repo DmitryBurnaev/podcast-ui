@@ -23,24 +23,24 @@ export default function setup() {
     axios.interceptors.response.use(
         (response) => {return response},
         (error) => {
-            console.log(`interceptor | ${error}`, error)
+            console.log(`interceptor | ${error}`)
             const status = error.response ? error.response.status : null
             if (status === 401) {
                 if (error.response.data.details.includes("Signature has expired")) {
-                    console.log("interceptor | refresh")
+                    console.log("interceptor | refresh", store.getters.refreshToken)
                     axios
-                        .post("auth/refresh-token/", {'refresh_token': this.refreshToken})
+                        .post("auth/refresh-token/", {'refresh_token': store.getters.refreshToken})
                         .then((response) => {
-                            console.log("then", response)
+                            console.log(`then ${response}`)
                             return axios.request(error.config)
                         })
                         .catch((error) => {
-                            console.log("catch", error)
-                            return router.push("/sign-in?message=session-expired")
+                            console.log(`catch ${error}`)
+                            router.push("/sign-in?message=session-expired").then(() => {})
                         })
                 }
                 else {
-                    router.push("/sign-in?message=session-expired").then(() => {})
+                    router.push("/sign-in?message=need-sign-in").catch(() => {})
                 }
             }
             return Promise.reject(error);
