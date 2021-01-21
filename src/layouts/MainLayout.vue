@@ -16,18 +16,19 @@ export default {
   components: {Sidebar, Navbar},
   data: () => ({
     loading: true,
-    podcasts: [{"id":1, "name": "test2"}],
+    podcasts: [],
     sidebarIsOpen: true
   }),
   async mounted(){
     console.log("MainLayout mounted")
-    // console.log("getPodcasts here (from main layout)", this.$router.history.current.name)
-    // await this.$store.dispatch('getPodcasts')
-    this.podcasts = this.$store.getters.podcasts
-    this.loading = false
+    // FIXME: why does this layout load for every page?
+    //        To prevent access to protected API we have to check that user is logged-in or not...
 
-    // if (! this.$router.history.name.startsWith('auth')){
-    // }
+    if (this.$store.getters.accessToken){
+      await this.$store.dispatch('getPodcasts')
+      this.podcasts = this.$store.getters.podcasts
+    }
+    this.loading = false
   }
 }
 </script>
