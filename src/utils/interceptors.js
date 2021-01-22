@@ -31,11 +31,12 @@ export default function setup() {
                     axios
                         .post("auth/refresh-token/", {'refresh_token': store.getters.refreshToken})
                         .then((response) => {
-                            console.log(`then ${response}`)
+                            console.log('interceptor | token refreshed. response:', response)
+                            store.commit('setTokens', response)
                             return axios.request(error.config)
                         })
                         .catch((error) => {
-                            console.log(`catch ${error}`)
+                            console.log('interceptor | catch err:', error)
                             router.push("/sign-in?message=session-expired").then(() => {})
                         })
                 }
