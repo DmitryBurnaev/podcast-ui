@@ -32,7 +32,7 @@ export default function setup() {
                         .post("auth/refresh-token/", {'refresh_token': store.getters.refreshToken})
                         .then((response) => {
                             console.log('interceptor | token refreshed. response:', response)
-                            store.commit('setTokens', response)
+                            store.commit('setTokens', response.data)
                             return axios.request(error.config)
                         })
                         .catch((error) => {
@@ -44,7 +44,10 @@ export default function setup() {
                     router.push("/sign-in?message=need-sign-in").catch(() => {})
                 }
             }
-            return Promise.reject(error);
+            store.commit('setError', error.response.data)
+            //TODO: use Vue.$error instead ?!
+            console.error("Catch error response: ", error.response.data)
+            return null
         }
     );
 }
