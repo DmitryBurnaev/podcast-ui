@@ -6,14 +6,30 @@
           <p style="text-align: center">Загрузка...</p>
         </div>
 
-        <div v-if="error" class="error">
-          {{ error }}
+        <div v-if="podcast" class="content">
+          <h2>Podcast {{ podcast.id }}</h2>
+          <p style="text-align: center">{{ podcast.id }}</p>
+          <p style="text-align: center">{{ podcast.name }}</p>
+          <p style="text-align: center">{{ podcast.description }}</p>
+          <p style="text-align: center"><img :src="podcast.image_url" alt=""></p>
+          <p style="text-align: center">{{ podcast.created_at }}</p>
+        </div>
+        <div class="episodes">
+          <ul>
+            <router-link v-for="episode in episodes" :key="episode.id"
+                tag="li"
+                active-class="active"
+                :to="{name: 'episodeDetails', params: {'id': episode.id}}"
+            >
+              #{{episode.id}} "{{episode.title}}"
+
+            </router-link>
+          </ul>
+
+
         </div>
 
-        <div v-if="podcast" class="content">
-          <h2>{{ podcast.id }}</h2>
-          <p style="text-align: center">{{ podcast.name }}</p>
-        </div>
+
       </div>
     </template>
 
@@ -24,29 +40,24 @@
   export default {
     name: 'PodcastDetails',
     data: () => ({
-        loading: false,
+        loading: true,
         podcast: null,
-        error: null
+        episodes: [],
     }),
-    created() {
-      this.fetchData()
+    async created() {
+      await this.fetchData()
     },
     watch: {
       // при изменениях маршрута запрашиваем данные снова
       $route: 'fetchData'
     },
     methods: {
-      fetchData() {
-        this.podcast = {}
-        this.error = this.post = null
+      async fetchData() {
+        const podcastID = this.$route.params.id
         this.loading = true
-        setTimeout(() => {
-          this.loading = false
-          this.podcast = {
-            "id": "Podcast-" + this.$route.params.id,
-            "name": "Name of Podcast #" + this.$route.params.id
-          }
-        }, 300)
+        this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
+        this.episodes = await this.$store.dispatch('getEpisodes', podcastID)
+        this.loading = false
       },
     }
   }

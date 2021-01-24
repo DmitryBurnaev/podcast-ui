@@ -2,7 +2,7 @@
   <div class="about">
     <h1>Sign-UP</h1>
 
-    <form class="form-signin" method="post" @submit.prevent="submitSignUp" >
+    <form class="form-signup" method="post" @submit.prevent="submitSignUp" >
         <input
             type="text" name="email" id="email" placeholder="email"
             v-model.trim="email"
@@ -58,7 +58,7 @@
 import {email, required, minLength} from "vuelidate/lib/validators";
 
 export default {
-  name: "SignIn",
+  name: "SignUp",
   data: () => ({
     email: "",
     password_1: "",

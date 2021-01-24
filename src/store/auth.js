@@ -1,5 +1,4 @@
 import axios from "axios";
-import config from "@/config";
 
 export default {
     state: {
@@ -28,10 +27,9 @@ export default {
     actions: {
         async signIn({dispatch, commit}, {email, password}) {
             console.log(dispatch)
-            const url = config.apiURL + "auth/sign-in/"
             let response
             try {
-                response = await axios.post(url, {'email': email, 'password': password})
+                response = await axios.post("auth/sign-in/", {'email': email, 'password': password})
             } catch (err) {
                 commit('setError', err.response.data)
                 return false
@@ -41,7 +39,6 @@ export default {
         },
         async signUp({dispatch, commit}, {email, password_1, password_2, token}){
             console.log(dispatch)
-            const url = config.apiURL + "auth/sign-up/"
             let response
             try {
                 const payload = {
@@ -50,7 +47,7 @@ export default {
                     'password_2': password_2,
                     'invite_token': token
                 }
-                response = await axios.post(url, payload)
+                response = await axios.post("auth/sign-up/", payload)
             } catch (err) {
                 commit('setError', err.response.data)
                 return false
@@ -59,13 +56,19 @@ export default {
             return true
         },
         async signOut({commit}){
-            const url = config.apiURL + "auth/sign-out/"
             try {
-                await axios.get(url)
+                await axios.delete("auth/sign-out/")
             } catch (err) {
                 commit('setError', err.response.data)
             }
             commit('clearToken')
-        }
+        },
+        async refreshToken({dispatch, commit}) {
+            console.log(dispatch)
+            let response
+            response = await axios.post("auth/refresh-token/", {'refresh_token': this.refreshToken})
+            commit('setTokens', response.data)
+            return true
+        },
     }
 }

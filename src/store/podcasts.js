@@ -1,5 +1,4 @@
 import axios from "axios";
-import config from "@/config";
 
 export default {
     state: {
@@ -14,19 +13,34 @@ export default {
         podcasts: s => s.podcasts,
     },
     actions: {
-        async getPodcasts({dispatch, commit}) {
-            console.log(dispatch)
-            let response
-            try {
-                response = await axios.get(config.apiURL + "podcasts/", )
-            } catch (err) {
-                commit('setError', err.response.data)
-                return false
+        async getPodcasts({commit}) {
+            console.log(commit)
+            const response = await axios.get(`podcasts/`, )
+            if (response){
+                commit('setPodcasts', response.data)
+                return response.data
             }
-            console.log("Save podcast list", response)
-            commit('setPodcasts', response.data)
-            return true
         },
-
+        async getPodcastDetails({commit}, podcastID) {
+            console.log(commit)
+            const response = await axios.get(`podcasts/${podcastID}/`, )
+            if (response){
+                return response.data
+            }
+        },
+        async getEpisodes({commit}, podcastID) {
+            console.log(commit)
+            const response = await axios.get(`podcasts/${podcastID}/episodes/`, )
+            if (response){
+                return response.data
+            }
+        },
+        async getEpisodeDetails({commit}, episodeID) {
+            console.log(commit, episodeID)
+            const response = await axios.get(`episodes/${episodeID}/`, )
+            if (response){
+                return response.data
+            }
+        },
     }
 }

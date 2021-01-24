@@ -16,14 +16,18 @@ export default {
   components: {Sidebar, Navbar},
   data: () => ({
     loading: true,
-    podcasts: [{"id":1, "name": "test2"}],
+    podcasts: [],
     sidebarIsOpen: true
   }),
   async mounted(){
-    if (!this.$store.getters.podcasts){
+    console.log("MainLayout mounted")
+    // FIXME: why does this layout load for every page?
+    //        To prevent access to protected API we have to check that user is logged-in or not...
+
+    if (this.$store.getters.accessToken){
       await this.$store.dispatch('getPodcasts')
+      this.podcasts = this.$store.getters.podcasts
     }
-    this.podcasts = this.$store.getters.podcasts
     this.loading = false
   }
 }
