@@ -7,11 +7,15 @@ import dateFilter from '@/filters/date.filter'
 import messagePlugin from '@/utils/message.plugin'
 import interceptorsSetup from '@/utils/interceptors'
 
+// LightBootstrap plugin
+import LightBootstrap from './light-bootstrap-main'
+
 
 Vue.config.productionTip = false
 Vue.filter('date', dateFilter)
 Vue.use(Vuelidate)
 Vue.use(messagePlugin)
+Vue.use(LightBootstrap)
 interceptorsSetup()
 
 new Vue({

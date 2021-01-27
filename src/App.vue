@@ -1,5 +1,6 @@
 <template>
-  <div id="app">
+  <div :class="{'nav-open': $sidebar.showSidebar}">
+    <notifications></notifications>
     <component :is="layout">
       <router-view/>
     </component>
@@ -21,30 +22,31 @@
   }
 
 </script>
+<style lang="scss">
+  .vue-notifyjs.notifications{
+    .list-move {
+      transition: transform 0.3s, opacity 0.4s;
+    }
+    .list-item {
+      display: inline-block;
+      margin-right: 10px;
 
-<style>
+    }
+    .list-enter-active {
+      transition: transform 0.2s ease-in, opacity 0.4s ease-in;
+    }
+    .list-leave-active {
+      transition: transform 1s ease-out, opacity 0.4s ease-out;
+    }
 
-h1,h2,h3,h4{
-  text-align: center;
-}
+    .list-enter {
+      opacity: 0;
+      transform: scale(1.1);
 
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+    }
+    .list-leave-to {
+      opacity: 0;
+      transform: scale(1.2, 0.7);
+    }
+  }
 </style>

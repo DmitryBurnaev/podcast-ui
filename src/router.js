@@ -52,7 +52,15 @@ const routes = [
 
 const router = new VueRouter({
   mode: 'history',
+  linkActiveClass: 'nav-item active',
   base: process.env.BASE_URL,
+  scrollBehavior: (to) => {
+    if (to.hash) {
+      return {selector: to.hash}
+    } else {
+      return { x: 0, y: 0 }
+    }
+  },
   routes
 })
 
