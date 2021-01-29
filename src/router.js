@@ -1,14 +1,16 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '@/store'
+import LightBootstrap from './light-bootstrap-main'
 
 Vue.use(VueRouter)
+Vue.use(LightBootstrap)
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    meta: {layout: 'main', auth: true},
+    meta: {layout: 'dashboard', auth: true},
     component: () => import('./views/Home.vue')
   },
   {
@@ -26,26 +28,26 @@ const routes = [
   {
     path: '/progress',
     name: 'progress',
-    meta: {layout: 'main', auth: true},
+    meta: {layout: 'dashboard', auth: true},
     component: () => import('./views/Progress.vue')
   },
   {
     path: '/podcasts',
     name: 'podcastList',
-    meta: {layout: 'main', auth: true},
+    meta: {layout: 'dashboard', auth: true},
     component: () => import('./views/PodcastList.vue')
   },
   {
     path: '/podcasts/:id',
     name: 'podcastDetails',
-    meta: {layout: 'main', auth: true},
+    meta: {layout: 'dashboard', auth: true},
     props: true,
     component: () => import('./views/PodcastDetails.vue')
   },
   {
     path: '/episodes/:id',
     name: 'episodeDetails',
-    meta: {layout: 'main', auth: true},
+    meta: {layout: 'dashboard', auth: true},
     component: () => import('./views/EpisodeDetails.vue')
   },
 ]

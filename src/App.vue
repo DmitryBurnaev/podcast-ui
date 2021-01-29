@@ -10,6 +10,7 @@
 <script>
   import AuthLayout from "@/layouts/AuthLayout";
   import MainLayout from "@/layouts/MainLayout";
+  import DashboardLayout from "@/layouts/DashboardLayout";
   export default {
     computed: {
       layout() {
@@ -17,7 +18,7 @@
       }
     },
     components: {
-      AuthLayout, MainLayout
+      AuthLayout, MainLayout, DashboardLayout
     }
   }
 
