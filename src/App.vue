@@ -1,6 +1,5 @@
 <template>
-  <div :class="{'nav-open': $sidebar.showSidebar}">
-    <notifications></notifications>
+  <div>
     <component :is="layout">
       <router-view/>
     </component>
@@ -10,7 +9,6 @@
 <script>
   import AuthLayout from "@/layouts/AuthLayout";
   import MainLayout from "@/layouts/MainLayout";
-  import DashboardLayout from "@/layouts/DashboardLayout";
   export default {
     computed: {
       layout() {
@@ -18,36 +16,13 @@
       }
     },
     components: {
-      AuthLayout, MainLayout, DashboardLayout
+      AuthLayout, MainLayout
     }
   }
 
 </script>
 <style lang="scss">
-  .vue-notifyjs.notifications{
-    .list-move {
-      transition: transform 0.3s, opacity 0.4s;
-    }
-    .list-item {
-      display: inline-block;
-      margin-right: 10px;
+  @import 'assets/css/bootstrap.min.css';
+  @import 'assets/scss/paper-dashboard';
 
-    }
-    .list-enter-active {
-      transition: transform 0.2s ease-in, opacity 0.4s ease-in;
-    }
-    .list-leave-active {
-      transition: transform 1s ease-out, opacity 0.4s ease-out;
-    }
-
-    .list-enter {
-      opacity: 0;
-      transform: scale(1.1);
-
-    }
-    .list-leave-to {
-      opacity: 0;
-      transform: scale(1.2, 0.7);
-    }
-  }
 </style>
