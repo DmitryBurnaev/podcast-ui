@@ -13,7 +13,7 @@
                 <div class="col-7 col-md-8">
                   <div class="numbers">
                     <p class="card-category">Capacity</p>
-                    <p class="card-title">150GB<p>
+                    <p class="card-title">150GB</p>
                   </div>
                 </div>
               </div>
@@ -39,7 +39,7 @@
                 <div class="col-7 col-md-8">
                   <div class="numbers">
                     <p class="card-category">Revenue</p>
-                    <p class="card-title">$ 1,345<p>
+                    <p class="card-title">$ 1,345</p>
                   </div>
                 </div>
               </div>
@@ -65,7 +65,7 @@
                 <div class="col-7 col-md-8">
                   <div class="numbers">
                     <p class="card-category">Errors</p>
-                    <p class="card-title">23<p>
+                    <p class="card-title">23</p>
                   </div>
                 </div>
               </div>
@@ -174,3 +174,9 @@
     </div>
 
 </template>
+
+<script>
+export default {
+  name: "Home",
+}
+</script>
