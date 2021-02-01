@@ -1,7 +1,10 @@
 <template>
-  <div class="podcast-details">
-    <template>
-      <div class="post">
+    <div class="content podcast-details">
+      <div class="container-fluid">
+        <h2>Podcast Details</h2>
+        <div class="post">
+
+        <!-- todo: move to common component -->
         <div v-if="loading" class="loading">
           <p style="text-align: center">Загрузка...</p>
         </div>
@@ -31,9 +34,8 @@
 
 
       </div>
-    </template>
-
-  </div>
+      </div>
+    </div>
 </template>
 
 <script>

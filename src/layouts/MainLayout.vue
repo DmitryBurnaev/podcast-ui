@@ -1,19 +1,23 @@
 <template>
   <div id="mainLayout">
-    <Navbar @navClick="sidebarIsOpen = !sidebarIsOpen"/>
     <Sidebar v-model="sidebarIsOpen" :podcasts="podcasts"/>
-    <main class="app-content" :class="{full: !sidebarIsOpen}">
+    <div class="main-panel">
+      <Navbar @navClick="sidebarIsOpen = !sidebarIsOpen"/>
+      <span>print</span>
       <router-view/>
-    </main>
+    </div>
+    <Footer />
   </div>
 </template>
 
 <script>
-import Sidebar from "@/components/app/Sidebar";
-import Navbar from "@/components/app/Navbar";
+import Sidebar from "@/components/Sidebar";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
 export default {
   name: "MainLayout",
-  components: {Sidebar, Navbar},
+  components: {Sidebar, Navbar, Footer},
   data: () => ({
     loading: true,
     podcasts: [],

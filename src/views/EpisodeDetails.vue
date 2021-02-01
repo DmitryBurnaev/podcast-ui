@@ -1,24 +1,26 @@
 <template>
-  <div class="podcast-details">
-    <h2>Episode Details</h2>
-    <div v-if="loading" class="loading">
-      <p style="text-align: center">Загрузка...</p>
-    </div>
-    <div v-else-if="episode" class="content">
-      <h2>Episode {{ episode.id }}</h2>
-      <p style="text-align: left">{{ episode.id }}</p>
-      <p style="text-align: left">{{ episode.title }}</p>
-      <p style="text-align: left">{{ episode.description }}</p>
-      <p style="text-align: left"><img :src="episode.image_url" alt=""></p>
-      <p style="text-align: left">{{ episode.created_at }}</p>
-      <p style="text-align: left">{{ episode.published_at }}</p>
-      <p style="text-align: left">{{ episode.status }}</p>
-      <p style="text-align: left">{{ episode.author }}</p>
-      <p style="text-align: left">{{ episode.length }}</p>
-      <p style="text-align: left">{{ episode.remote_url }}</p>
+    <div class="content podcast-details">
+      <div class="container-fluid">
+        <h2>Episode Details</h2>
+        <div v-if="loading" class="loading">
+          <p style="text-align: center">Загрузка...</p>
+        </div>
+        <div v-else-if="episode" class="content">
+          <h2>Episode {{ episode.id }}</h2>
+          <p style="text-align: left">{{ episode.id }}</p>
+          <p style="text-align: left">{{ episode.title }}</p>
+          <p style="text-align: left">{{ episode.description }}</p>
+          <p style="text-align: left"><img :src="episode.image_url" alt=""></p>
+          <p style="text-align: left">{{ episode.created_at }}</p>
+          <p style="text-align: left">{{ episode.published_at }}</p>
+          <p style="text-align: left">{{ episode.status }}</p>
+          <p style="text-align: left">{{ episode.author }}</p>
+          <p style="text-align: left">{{ episode.length }}</p>
+          <p style="text-align: left">{{ episode.remote_url }}</p>
+        </div>
+      </div>
     </div>
 
-  </div>
 </template>
 
 <script>
