@@ -1,6 +1,6 @@
 <template>
   <div id="mainLayout">
-    <Sidebar v-model="sidebarIsOpen" :podcasts="podcasts"/>
+    <Sidebar v-model="sidebarIsOpen"/>
     <div class="main-panel">
       <Navbar @navClick="sidebarIsOpen = !sidebarIsOpen"/>
       <router-view/>
