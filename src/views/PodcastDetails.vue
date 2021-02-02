@@ -1,6 +1,5 @@
 <template>
-    <div class="content podcast-details">
-      <div class="container-fluid">
+    <div class="content content-podcast-details">
         <h2>Podcast Details</h2>
         <div class="post">
 
@@ -32,8 +31,6 @@
 
         </div>
 
-
-      </div>
       </div>
     </div>
 </template>

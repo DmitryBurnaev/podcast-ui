@@ -3,7 +3,6 @@
     <Sidebar v-model="sidebarIsOpen" :podcasts="podcasts"/>
     <div class="main-panel">
       <Navbar @navClick="sidebarIsOpen = !sidebarIsOpen"/>
-      <span>print</span>
       <router-view/>
     </div>
     <Footer />
