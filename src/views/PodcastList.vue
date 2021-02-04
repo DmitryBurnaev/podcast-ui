@@ -14,13 +14,23 @@
                       <th> ID </th>
                       <th> Logo </th>
                       <th> Name </th>
+                      <th> Created </th>
+                      <th> Description </th>
                     </thead>
                     <tbody>
-                      <tr v-for="podcast in podcasts" :key="podcast.id">
+                      <router-link
+                          v-for="podcast in podcasts"
+                          class="podcast_list__link-to-podcast"
+                          :key="podcast.id"
+                          tag="tr"
+                          :to="{name: 'podcastDetails', params: {'id': podcast.id}}"
+                      >
                         <td> {{ podcast.id }} </td>
                         <td> <img :src="podcast.image_url" :alt="podcast.name" class="podcast_list__image"> </td>
                         <td> {{podcast.name}}</td>
-                      </tr>
+                        <td> {{podcast.created_at}}</td>
+                        <td> {{podcast.description}}</td>
+                      </router-link>
                     </tbody>
                   </table>
                 </div>
@@ -29,23 +39,6 @@
           </div>
         </div>
       </div>
-
-      <h2>Podcast List</h2>
-      <ul>
-          <router-link
-              v-for="podcast in podcasts"
-              :key="podcast.id"
-              tag="li"
-              active-class="active"
-              :to="{name: 'podcastDetails', params: {'id': podcast.id}}"
-          >
-            <p>{{podcast.id}}</p>
-            <p>{{podcast.name}}</p>
-            <p>{{podcast.description}}</p>
-            <p><img :src="podcast.image_url" alt=""></p>
-            <p>{{podcast.created_at}}</p>
-          </router-link>
-      </ul>
     </div>
 
 </template>
@@ -66,6 +59,9 @@
 
 .podcast_list__image{
   height: 50px;
+}
+.podcast_list__link-to-podcast{
+  cursor: pointer;
 }
 
 </style>
