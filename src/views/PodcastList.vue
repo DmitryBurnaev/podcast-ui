@@ -28,7 +28,7 @@
                         <td> {{ podcast.id }} </td>
                         <td> <img :src="podcast.image_url" :alt="podcast.name" class="podcast_list__image"> </td>
                         <td> {{podcast.name}}</td>
-                        <td> {{podcast.created_at}}</td>
+                        <td> {{podcast.created_at | date('datetime')}}</td>
                         <td> {{podcast.description}}</td>
                       </router-link>
                     </tbody>
