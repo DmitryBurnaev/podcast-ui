@@ -1,6 +1,5 @@
 <template>
-  <div class="content podcast-progress-content">
-    <div class="container-fluid">
+  <div class="content content-podcast-progress">
       <h2>Current Progress</h2>
       <div class="row">
         <div class="col-md-8">
@@ -10,12 +9,7 @@
             </pre>
           </div>
         </div>
-        <div class="col-md-4">
-          <user-card>
-          </user-card>
-        </div>
       </div>
-    </div>
   </div>
 </template>
 
