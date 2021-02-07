@@ -44,7 +44,7 @@ const routes = [
     component: () => import('./views/PodcastDetails.vue')
   },
   {
-    path: '/episodes/:id',
+    path: '/podcasts/:podcastID/episodes/:episodeID',
     name: 'episodeDetails',
     meta: {layout: 'main', auth: true},
     component: () => import('./views/EpisodeDetails.vue')

@@ -48,7 +48,7 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Created At</label>
-                    <input type="text" class="form-control" placeholder="Username" disabled
+                    <input type="text" class="form-control" placeholder="Podcast name" disabled
                            :value="podcast.created_at | date('datetime')">
                   </div>
                 </div>
@@ -79,7 +79,12 @@
           </div>
           <div class="card-body">
             <ul class="list-unstyled team-members">
-              <li v-for="episode in episodes" :key="episode.id">
+              <router-link
+                  tag="li"
+                  v-for="episode in episodes"
+                  :key="episode.id"
+                  :to="{name: 'episodeDetails', params: {'podcastID': podcast.id, 'episodeID': episode.id}}"
+              >
                   <div class="row row-episode">
                     <div class="col-md-1 col-1 episode-content">
                       <div class="episode-image">
@@ -97,7 +102,7 @@
                     </div>
                   </div>
                   <hr class="hr__row-episode">
-              </li>
+              </router-link>
             </ul>
           </div>
         </div>
@@ -105,41 +110,6 @@
     </div>
   </div>
 
-
-  <!--    <div class="content content-podcast-details">-->
-  <!--        <h2>Podcast Details</h2>-->
-  <!--        <div class="post">-->
-
-  <!--        &lt;!&ndash; todo: move to common component &ndash;&gt;-->
-  <!--        <div v-if="loading" class="loading">-->
-  <!--          <p style="text-align: center">Загрузка...</p>-->
-  <!--        </div>-->
-
-  <!--        <div v-if="podcast" class="content">-->
-  <!--          <h2>Podcast {{ podcast.id }}</h2>-->
-  <!--          <p style="text-align: center">{{ podcast.id }}</p>-->
-  <!--          <p style="text-align: center">{{ podcast.name }}</p>-->
-  <!--          <p style="text-align: center">{{ podcast.description }}</p>-->
-  <!--          <p style="text-align: center"><img :src="podcast.image_url" alt=""></p>-->
-  <!--          <p style="text-align: center">{{ podcast.created_at }}</p>-->
-  <!--        </div>-->
-  <!--        <div class="episodes">-->
-  <!--          <ul>-->
-  <!--            <router-link v-for="episode in episodes" :key="episode.id"-->
-  <!--                tag="li"-->
-  <!--                active-class="active"-->
-  <!--                :to="{name: 'episodeDetails', params: {'id': episode.id}}"-->
-  <!--            >-->
-  <!--              #{{episode.id}} "{{episode.title}}"-->
-
-  <!--            </router-link>-->
-  <!--          </ul>-->
-
-
-  <!--        </div>-->
-
-  <!--      </div>-->
-  <!--    </div>-->
 </template>
 
 <script>
@@ -172,6 +142,7 @@ export default {
 .row-episode{
 }
 .row-episode .episode-content{
+  cursor: pointer;
 }
 .row-episode .episode-title{
   margin-top: -3px;

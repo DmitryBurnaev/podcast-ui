@@ -14,3 +14,4 @@ export default function dateFilter(value, format='date'){
     }
     return new Intl.DateTimeFormat('en-EN', options).format(new Date(value) )
 }
+//TODO: add filers for size (in MB), for length (HH:MM:SS)
