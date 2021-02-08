@@ -1,4 +1,4 @@
-export default function dateFilter(value, format='date'){
+function dateFilter(value, format='date'){
     const options = {}
     if (format.includes('date')){
         options.day = '2-digit'
@@ -14,4 +14,13 @@ export default function dateFilter(value, format='date'){
     }
     return new Intl.DateTimeFormat('en-EN', options).format(new Date(value) )
 }
-//TODO: add filers for size (in MB), for length (HH:MM:SS)
+function sizeFilter(value){
+    return (value / 1024 / 1024).toFixed(2)
+}
+
+function audioLengthFilter(value){
+    return new Date(value * 1000).toISOString().substr(11, 8)
+}
+
+
+export {dateFilter, sizeFilter, audioLengthFilter}

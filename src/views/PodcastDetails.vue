@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content" v-if="!loading">
     <div class="row">
       <div class="col-md-4">
         <div class="card card-podcast card-user">
@@ -97,8 +97,8 @@
                       <span class="text-success"><small>Downloaded</small></span>
                     </div>
                     <div class="col-md-2 col-2 text-right episode-controls">
-                      <btn class="btn btn-sm btn-outline-success btn-round btn-icon"><i
-                          class="fa fa-envelope"></i></btn>
+                      <button class="btn btn-sm btn-outline-success btn-round btn-icon"><i
+                          class="fa fa-envelope"></i></button>
                     </div>
                   </div>
                   <hr class="hr__row-episode">
