@@ -33,55 +33,54 @@
                 <h4 class="card-title">Episode details</h4>
               </div>
               <div class="card-body">
-                <ul class="list-unstyled team-members">
+                <ul class="list-unstyled episode-details">
                   <li>
                     <div class="row">
                       <div class="col-md-2 col-2">
-                        <div class="avatar">
-                          <img src="../assets/img/faces/ayo-ogunseinde-2.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
-                        </div>
+                        <div class="icon-episode-detail text-center icon-warning"><i class="nc-icon nc-ruler-pencil text-success"></i></div>
                       </div>
                       <div class="col-md-7 col-7">
-                        DJ Khaled
+                        {{ episode.created_at | date}}
                         <br />
-                        <span class="text-muted"><small>Offline</small></span>
-                      </div>
-                      <div class="col-md-3 col-3 text-right">
-                        <btn class="btn btn-sm btn-outline-success btn-round btn-icon"><i class="fa fa-envelope"></i></btn>
+                        <span class="text-secondary"><small>Created At</small></span>
                       </div>
                     </div>
                   </li>
                   <li>
                     <div class="row">
                       <div class="col-md-2 col-2">
-                        <div class="avatar">
-                          <img src="../assets/img/faces/joe-gardner-2.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
-                        </div>
+                        <div class="icon-episode-detail text-center"><i class="nc-icon nc-spaceship text-warning"></i></div>
                       </div>
                       <div class="col-md-7 col-7">
-                        Creative Tim
+                        {{ episode.published_at | date}}
                         <br />
-                        <span class="text-success"><small>Available</small></span>
-                      </div>
-                      <div class="col-md-3 col-3 text-right">
-                        <btn class="btn btn-sm btn-outline-success btn-round btn-icon"><i class="fa fa-envelope"></i></btn>
+                        <span class="text-secondary"><small>Published At</small></span>
                       </div>
                     </div>
                   </li>
+
                   <li>
                     <div class="row">
                       <div class="col-md-2 col-2">
-                        <div class="avatar">
-                          <img src="../assets/img/faces/clem-onojeghuo-2.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
-                        </div>
+                        <div class="icon-episode-detail text-center"><i class="nc-icon nc-world-2 text-primary"></i></div>
                       </div>
-                      <div class="col-ms-7 col-7">
-                        Flume
+                      <div class="col-ms-10 col-10">
+                        <a :href="episode.watch_url" target="_blank">{{ episode.watch_url }}</a>
                         <br />
-                        <span class="text-danger"><small>Busy</small></span>
+                        <span class="text-secondary"><small>Watch URL</small></span>
                       </div>
-                      <div class="col-md-3 col-3 text-right">
-                        <btn class="btn btn-sm btn-outline-success btn-round btn-icon"><i class="fa fa-envelope"></i></btn>
+                    </div>
+                  </li>
+
+                  <li>
+                    <div class="row">
+                      <div class="col-md-2 col-2">
+                        <div class="icon-episode-detail text-center"><i class="nc-icon nc-note-03 text-info"></i></div>
+                      </div>
+                      <div class="col-ms-10 col-10">
+                        <a :href="episode.remote_url" target="_blank">{{ episode.remote_url }}</a>
+                        <br />
+                        <span class="text-secondary"><small>Remote URL</small></span>
                       </div>
                     </div>
                   </li>
@@ -104,10 +103,12 @@
                     <textarea class="form-control textarea" v-model="episode.title" rows="2" placeholder="Podcast Title"></textarea>
                   </div>
                 </div>
-                <div class="col-md-4">
+              </div>
+              <div class="row">
+                <div class="col-md-12 pr-1">
                   <div class="form-group">
-                    <label>Created At</label>
-                    <input type="text" class="form-control" disabled :value="episode.created_at | date('datetime')">
+                    <label>Author</label>
+                    <input type="text" class="form-control textarea" v-model="episode.author" placeholder="Podcast Title">
                   </div>
                 </div>
               </div>
@@ -185,13 +186,20 @@
     }
   }
 </script>
-<style>
+<style lang="scss">
 
 .avatar-episode{
   width: 60% !important;
   height: auto !important;
   border-radius: 6px !important;
 }
-
+.episode-details{
+  li{
+    padding-bottom: 10px;
+  }
+  .icon-episode-detail{
+    font-size: 1.5em;
+  }
+}
 
 </style>
