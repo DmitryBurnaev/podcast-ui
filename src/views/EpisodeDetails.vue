@@ -11,6 +11,22 @@
                 <img class="avatar avatar-episode border-gray" :src="episode.image_url" alt="...">
                 <p class="title">{{ episode.title }}</p>
             </div>
+            <div class="episode-content text-center">
+              <div v-if="episode.remote_url" class="text-secondary">
+                <i v-if="!playerOn" class="nc-icon nc-button-play" @click="playerOn = !playerOn"></i>
+                <figure v-if="playerOn">
+                  <audio :src="episode.remote_url">
+                      Your browser does not support the
+                      <code>audio</code> element.
+                  </audio>
+                </figure>
+              </div>
+              <div v-else class="text-success">
+                <i class="nc-icin nc-cloud-download-93"></i>
+              </div>
+            </div>
+
+
           </div>
           <div class="card-footer">
             <hr>
@@ -181,6 +197,7 @@
         loading: true,
         episode: null,
         podcast: null,
+        playerOn: false
     }),
     async created() {
       await this.fetchData()
@@ -215,5 +232,11 @@
     font-size: 1.5em;
   }
 }
-
+.episode-content{
+  //figure{display: none}
+  i{
+    font-size: 2.5em;
+    cursor: pointer;
+  }
+}
 </style>
