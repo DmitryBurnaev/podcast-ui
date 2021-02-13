@@ -22,6 +22,10 @@
                     }"
                     @click="playPause()"
                 ></i>
+                <div class="block">
+                  <span class="demonstration">Customized initial value</span>
+                  <el-slider v-model="audioCurrentTime"></el-slider>
+                </div>
                 <figure>
                   <audio :src="episode.remote_url" id="episodePlayer">
                       Your browser does not support the
@@ -183,7 +187,8 @@
         loading: true,
         episode: null,
         podcast: null,
-        isPlaying: false
+        isPlaying: false,
+        audioCurrentTime: 0
     }),
     async created() {
       await this.fetchData()
@@ -207,6 +212,7 @@
         } else {
           audio.play()
         }
+        this.audioCurrentTime = audio.currentTime
         this.isPlaying = !this.isPlaying;
       }
     }
