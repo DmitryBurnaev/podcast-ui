@@ -23,7 +23,6 @@
                     @click="playPause()"
                 ></i>
                 <div class="block">
-                  <span class="demonstration">Customized initial value</span>
                   <el-slider v-model="audioCurrentTime"></el-slider>
                 </div>
                 <figure>
@@ -207,6 +206,7 @@
       },
       playPause(){
         let audio = document.getElementById("episodePlayer");
+        audio.addEventListener("timeupdate", () => { this.audioCurrentTime = audio.currentTime })
         if (this.isPlaying){
           audio.pause()
         } else {
