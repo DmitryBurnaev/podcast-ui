@@ -13,9 +13,17 @@
             </div>
             <div class="episode-content text-center">
               <div v-if="episode.remote_url" class="text-secondary">
-                <i v-if="!playerOn" class="nc-icon nc-button-play" @click="playerOn = !playerOn"></i>
-                <figure v-if="playerOn">
-                  <audio :src="episode.remote_url">
+                <i
+                    class="nc-icon text-primary"
+                    :title="episode.title"
+                    :class="{
+                      'nc-button-play': !isPlaying,
+                      'nc-button-pause': isPlaying,
+                    }"
+                    @click="playPause()"
+                ></i>
+                <figure>
+                  <audio :src="episode.remote_url" id="episodePlayer">
                       Your browser does not support the
                       <code>audio</code> element.
                   </audio>
@@ -161,28 +169,6 @@
       </div>
     </div>
 
-
-<!--    <div class="content podcast-details">-->
-<!--      <div class="container-fluid">-->
-<!--        <h2>Episode Details</h2>-->
-<!--        <div v-if="loading" class="loading">-->
-<!--          <p style="text-align: center">Загрузка...</p>-->
-<!--        </div>-->
-<!--        <div v-else-if="episode" class="content">-->
-<!--          <h2>Episode {{ episode.id }}</h2>-->
-<!--          <p style="text-align: left">{{ episode.id }}</p>-->
-<!--          <p style="text-align: left">{{ episode.title }}</p>-->
-<!--          <p style="text-align: left">{{ episode.description }}</p>-->
-<!--          <p style="text-align: left"><img :src="episode.image_url" alt=""></p>-->
-<!--          <p style="text-align: left">{{ episode.created_at }}</p>-->
-<!--          <p style="text-align: left">{{ episode.published_at }}</p>-->
-<!--          <p style="text-align: left">{{ episode.status }}</p>-->
-<!--          <p style="text-align: left">{{ episode.author }}</p>-->
-<!--          <p style="text-align: left">{{ episode.length }}</p>-->
-<!--          <p style="text-align: left">{{ episode.remote_url }}</p>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
   </div>
 
 
@@ -197,7 +183,7 @@
         loading: true,
         episode: null,
         podcast: null,
-        playerOn: false
+        isPlaying: false
     }),
     async created() {
       await this.fetchData()
@@ -214,6 +200,15 @@
         this.episode = await this.$store.dispatch('getEpisodeDetails', episodeID)
         this.loading = false
       },
+      playPause(){
+        let audio = document.getElementById("episodePlayer");
+        if (this.isPlaying){
+          audio.pause()
+        } else {
+          audio.play()
+        }
+        this.isPlaying = !this.isPlaying;
+      }
     }
   }
 </script>
@@ -233,7 +228,7 @@
   }
 }
 .episode-content{
-  //figure{display: none}
+  figure{display: none}
   i{
     font-size: 2.5em;
     cursor: pointer;
