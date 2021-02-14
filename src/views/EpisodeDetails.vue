@@ -12,32 +12,11 @@
                 <p class="title">{{ episode.title }}</p>
             </div>
             <div class="episode-content text-center">
-              <div v-if="episode.remote_url" class="text-secondary">
-                <i
-                    class="nc-icon text-primary"
-                    :title="episode.title"
-                    :class="{
-                      'nc-button-play': !isPlaying,
-                      'nc-button-pause': isPlaying,
-                    }"
-                    @click="playPause()"
-                ></i>
-                <div class="block">
-                  <el-slider v-model="audioCurrentTime"></el-slider>
-                </div>
-                <figure>
-                  <audio :src="episode.remote_url" id="episodePlayer">
-                      Your browser does not support the
-                      <code>audio</code> element.
-                  </audio>
-                </figure>
-              </div>
+              <Audio v-if="episode.status === 'published'" :src="episode.remote_url" :length="episode.length" ></Audio>
               <div v-else class="text-success">
                 <i class="nc-icin nc-cloud-download-93"></i>
               </div>
             </div>
-
-
           </div>
           <div class="card-footer">
             <hr>
@@ -180,14 +159,15 @@
 </template>
 
 <script>
+  import Audio from "@/components/Audio";
+
   export default {
     name: 'EpisodeDetails',
+    components: {Audio},
     data: () => ({
         loading: true,
         episode: null,
         podcast: null,
-        isPlaying: false,
-        audioCurrentTime: 0
     }),
     async created() {
       await this.fetchData()
@@ -204,17 +184,6 @@
         this.episode = await this.$store.dispatch('getEpisodeDetails', episodeID)
         this.loading = false
       },
-      playPause(){
-        let audio = document.getElementById("episodePlayer");
-        audio.addEventListener("timeupdate", () => { this.audioCurrentTime = audio.currentTime })
-        if (this.isPlaying){
-          audio.pause()
-        } else {
-          audio.play()
-        }
-        this.audioCurrentTime = audio.currentTime
-        this.isPlaying = !this.isPlaying;
-      }
     }
   }
 </script>
@@ -231,13 +200,6 @@
   }
   .icon-episode-detail{
     font-size: 1.5em;
-  }
-}
-.episode-content{
-  figure{display: none}
-  i{
-    font-size: 2.5em;
-    cursor: pointer;
   }
 }
 </style>
