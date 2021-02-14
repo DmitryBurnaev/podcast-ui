@@ -24,5 +24,4 @@
 <style lang="scss">
   @import 'assets/css/bootstrap.min.css';
   @import 'assets/scss/paper-dashboard';
-
 </style>
