@@ -10,7 +10,7 @@
         @click="playPause()"
     ></i>
     <div class="block">
-      <el-slider v-model="audioCurrentTime" :max="length"></el-slider>
+      <el-slider v-model="audioCurrentTime" :max="length" @change="seek()"></el-slider>
     </div>
     <figure>
       <audio :src="src" id="audioPlayer" >
@@ -27,21 +27,28 @@ export default {
   name: "Audio",
   props: ['src', 'length'],
   data: () => ({
+    audio: null,
     isPlaying: false,
     audioCurrentTime: 0
   }),
+  mounted() {
+    this.audio = document.getElementById("audioPlayer");
+    this.audio.addEventListener("timeupdate", () => { this.audioCurrentTime = this.audio.currentTime})
+    this.audio.addEventListener("ended", () => { this.isPlaying = false;})
+  },
   methods: {
     playPause(){
-      let audio = document.getElementById("audioPlayer");
-      audio.addEventListener("timeupdate", () => { this.audioCurrentTime = audio.currentTime })
       if (this.isPlaying){
-        audio.pause()
+        this.audio.pause()
       } else {
-        audio.play()
+        this.audio.play()
       }
-      this.audioCurrentTime = audio.currentTime
       this.isPlaying = !this.isPlaying;
-    }
+    },
+    seek(){
+      this.audio.currentTime = this.audioCurrentTime
+    },
+
   }
 }
 </script>

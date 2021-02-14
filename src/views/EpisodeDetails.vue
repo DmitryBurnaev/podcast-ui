@@ -22,10 +22,10 @@
             <hr>
             <div class="button-container">
                   <div class="row">
-                    <div class="col-lg-4 col-md-4 col-4 ml-auto text-center">
+                    <div class="col-lg-5 col-md-5 col-5 ml-auto text-center">
                       <h5>{{ episode.length | length }}<br><small>Length</small></h5>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-4 ml-auto text-center">
+                    <div class="col-lg-2 col-md-2 col-2 ml-auto text-center">
                       <h2>
                         <i
                             class="nc-icon text-primary"
@@ -39,7 +39,7 @@
                         </i>
                       </h2>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-4 ml-auto mr-auto text-center">
+                    <div class="col-lg-5 col-md-5 col-5 ml-auto mr-auto text-center">
                       <h5>{{ episode.file_size | size }} MB<br><small>Size</small></h5>
                     </div>
                   </div>
