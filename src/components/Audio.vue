@@ -9,8 +9,15 @@
         }"
         @click="playPause()"
     ></i>
+    <br />
+    <span class="muted">{{audioCurrentTime | length}}</span>
     <div class="block">
-      <el-slider v-model="audioCurrentTime" :max="length" @change="seek()"></el-slider>
+      <el-slider
+          v-model="audioCurrentTime"
+          :max="length"
+          :format-tooltip="audioLength"
+          @change="seek()">
+      </el-slider>
     </div>
     <figure>
       <audio :src="src" id="audioPlayer" >
@@ -23,6 +30,8 @@
 </template>
 
 <script>
+import {audioLengthFilter} from "@/utils/filters";
+
 export default {
   name: "Audio",
   props: ['src', 'length'],
@@ -48,7 +57,7 @@ export default {
     seek(){
       this.audio.currentTime = this.audioCurrentTime
     },
-
+    audioLength: audioLengthFilter
   }
 }
 </script>

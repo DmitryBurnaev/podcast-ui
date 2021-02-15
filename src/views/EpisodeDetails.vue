@@ -25,7 +25,7 @@
                     <div class="col-lg-5 col-md-5 col-5 ml-auto text-center">
                       <h5>{{ episode.length | length }}<br><small>Length</small></h5>
                     </div>
-                    <div class="col-lg-2 col-md-2 col-2 ml-auto text-center">
+                    <div class="col-lg-2 col-md-2 col-2 ml-auto pr-1 pl-1 text-center">
                       <h2>
                         <i
                             class="nc-icon text-primary"
@@ -69,7 +69,7 @@
                   <li>
                     <div class="row">
                       <div class="col-md-2 col-2">
-                        <div class="icon-episode-detail text-center"><i class="nc-icon nc-spaceship text-warning"></i></div>
+                        <div class="icon-episode-detail text-center"><i class="nc-icon nc-spaceship text-info"></i></div>
                       </div>
                       <div class="col-md-7 col-7">
                         {{ episode.published_at | date}}
@@ -82,7 +82,7 @@
                   <li>
                     <div class="row">
                       <div class="col-md-2 col-2">
-                        <div class="icon-episode-detail text-center"><i class="nc-icon nc-world-2 text-primary"></i></div>
+                        <div class="icon-episode-detail text-center"><i class="nc-icon nc-world-2 text-success"></i></div>
                       </div>
                       <div class="col-ms-10 col-10">
                         <a :href="episode.watch_url" target="_blank">{{ episode.watch_url }}</a>
@@ -168,9 +168,17 @@
         loading: true,
         episode: null,
         podcast: null,
+        form: {
+          title: '',
+          author: '',
+          description: ''
+        }
     }),
     async created() {
       await this.fetchData()
+      this.form.title = this.episode.title;
+      this.form.author = this.episode.author;
+      this.form.description = this.episode.description;
     },
     watch: {
       // при изменениях маршрута запрашиваем данные снова
