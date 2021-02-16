@@ -115,12 +115,12 @@
             <h5 class="card-title">Edit Episode</h5>
           </div>
           <div class="card-body">
-            <form>
+            <el-form ref="form" :model="form">
               <div class="row">
                 <div class="col-md-12 pr-1">
                   <div class="form-group">
                     <label>Title</label>
-                    <textarea class="form-control textarea" v-model="episode.title" rows="2" placeholder="Podcast Title"></textarea>
+                    <textarea class="form-control textarea" v-model="form.title" rows="2" placeholder="Podcast Title"></textarea>
                   </div>
                 </div>
               </div>
@@ -128,7 +128,7 @@
                 <div class="col-md-12 pr-1">
                   <div class="form-group">
                     <label>Author</label>
-                    <input type="text" class="form-control textarea" v-model="episode.author" placeholder="Podcast Title">
+                    <input type="text" class="form-control textarea" v-model="form.author" placeholder="Podcast Title">
                   </div>
                 </div>
               </div>
@@ -136,16 +136,16 @@
                 <div class="col-md-12">
                   <div class="form-group">
                     <label>Description</label>
-                    <textarea class="form-control textarea" v-model="episode.description" rows="10"></textarea>
+                    <textarea class="form-control textarea" v-model="form.description" rows="10"></textarea>
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="update ml-auto mr-auto">
-                  <button type="submit" class="btn btn-primary btn-round">Update Episode</button>
+                  <button type="button" class="btn btn-primary btn-round" @click="update()">Update Episode</button>
                 </div>
               </div>
-            </form>
+            </el-form>
           </div>
         </div>
       </div>
@@ -160,6 +160,7 @@
 
 <script>
   import Audio from "@/components/Audio";
+  import axios from "axios";
 
   export default {
     name: 'EpisodeDetails',
@@ -179,6 +180,7 @@
       this.form.title = this.episode.title;
       this.form.author = this.episode.author;
       this.form.description = this.episode.description;
+      this.loading = false;
     },
     watch: {
       // при изменениях маршрута запрашиваем данные снова
@@ -190,8 +192,20 @@
         const podcastID = this.$route.params.podcastID
         this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
         this.episode = await this.$store.dispatch('getEpisodeDetails', episodeID)
-        this.loading = false
       },
+      async update(){
+        console.log("sfsfsdf")
+        await axios.patch(`episodes/${this.episode.id}/`, this.form)
+        // this.$confirm('This will update episode. Continue?', 'Warning', {
+        //   confirmButtonText: 'OK',
+        //   cancelButtonText: 'Cancel',
+        //   type: 'warning'
+        // }).then(() => {
+        //   axios.patch(`episodes/${this.episode.id}/`, this.form).then(() => {
+        //     this.$message({type: 'success', message: 'Delete completed'});
+        //   })
+        // })
+      }
     }
   }
 </script>

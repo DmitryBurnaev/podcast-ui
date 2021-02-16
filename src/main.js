@@ -6,10 +6,11 @@ import store from '@/store'
 import messagePlugin from '@/utils/message.plugin'
 import interceptorsSetup from '@/utils/interceptors'
 import {dateFilter, sizeFilter, audioLengthFilter} from "@/utils/filters";
-import { Dialog, Slider } from 'element-ui';
+import { Dialog, Slider, Form } from 'element-ui';
 
 Vue.component(Dialog.name, Dialog);
 Vue.component(Slider.name, Slider);
+Vue.component(Form.name, Form);
 
 // todo: is it necessary?!
 // import '@/assets/js/core/jquery.min'
