@@ -142,7 +142,10 @@
               </div>
               <div class="row">
                 <div class="update ml-auto mr-auto">
-                  <button type="button" class="btn btn-primary btn-round" @click="update()">Update Episode</button>
+                  <button type="button" class="btn btn-primary btn-round" @click="updateEpisode">Update Episode</button>
+                </div>
+                <div class="update ml-auto mr-auto">
+                  <button type="button" class="btn btn-danger btn-round" @click="deleteEpisode">Delete Episode</button>
                 </div>
               </div>
             </el-form>
@@ -161,6 +164,7 @@
 <script>
   import Audio from "@/components/Audio";
   import axios from "axios";
+  import router from "@/router";
 
   export default {
     name: 'EpisodeDetails',
@@ -193,18 +197,27 @@
         this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
         this.episode = await this.$store.dispatch('getEpisodeDetails', episodeID)
       },
-      async update(){
-        console.log("sfsfsdf")
-        await axios.patch(`episodes/${this.episode.id}/`, this.form)
-        // this.$confirm('This will update episode. Continue?', 'Warning', {
-        //   confirmButtonText: 'OK',
-        //   cancelButtonText: 'Cancel',
-        //   type: 'warning'
-        // }).then(() => {
-        //   axios.patch(`episodes/${this.episode.id}/`, this.form).then(() => {
-        //     this.$message({type: 'success', message: 'Delete completed'});
-        //   })
-        // })
+      async updateEpisode(){
+        const response = await axios.patch(`episodes/${this.episode.id}/`, this.form);
+        this.episode = response.data
+        this.$message({type: 'success', message: 'Episode updated'});
+      },
+      deleteEpisode(){
+        this.$confirm('This will permanently delete the episode. Continue?', 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {
+          axios.delete(`episodes/${this.episode.id}/`).then(() => {
+            this.$message({type: 'success', message: `Episode '${this.episode.title}' successful deleted`});
+            router.push(`/podcasts/${this.podcast.id}`).then(() => {})
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: 'Delete canceled'
+          });
+        });
       }
     }
   }

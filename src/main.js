@@ -3,14 +3,17 @@ import App from './App.vue'
 import Vuelidate from "vuelidate"
 import router from './router'
 import store from '@/store'
-import messagePlugin from '@/utils/message.plugin'
+// import messagePlugin from '@/utils/message.plugin'
 import interceptorsSetup from '@/utils/interceptors'
 import {dateFilter, sizeFilter, audioLengthFilter} from "@/utils/filters";
-import { Dialog, Slider, Form } from 'element-ui';
+import { Dialog, Slider, Form, MessageBox, Message } from 'element-ui';
 
 Vue.component(Dialog.name, Dialog);
 Vue.component(Slider.name, Slider);
 Vue.component(Form.name, Form);
+
+Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$message = Message
 
 // todo: is it necessary?!
 // import '@/assets/js/core/jquery.min'
@@ -24,7 +27,7 @@ Vue.filter('date', dateFilter)
 Vue.filter('size', sizeFilter)
 Vue.filter('length', audioLengthFilter)
 Vue.use(Vuelidate)
-Vue.use(messagePlugin)
+// Vue.use(messagePlugin)
 interceptorsSetup()
 
 new Vue({
