@@ -31,10 +31,11 @@
                             class="nc-icon text-primary"
                             :title="episode.status"
                             :class="{
-                              'nc-watch-time': episode.status === 'pending',
+                              'nc-watch-time cursor': episode.status === 'pending',
                               'nc-cloud-download-93': episode.status === 'downloading',
                               'nc-headphones': episode.status === 'published',
                             }"
+                            @click="downloadEpisode"
                         >
                         </i>
                       </h2>
@@ -142,6 +143,9 @@
               </div>
               <div class="row">
                 <div class="update ml-auto mr-auto">
+                  <button type="button" class="btn btn-success btn-round" @click="downloadEpisode">Download Episode</button>
+                </div>
+                <div class="update ml-auto mr-auto">
                   <button type="button" class="btn btn-primary btn-round" @click="updateEpisode">Update Episode</button>
                 </div>
                 <div class="update ml-auto mr-auto">
@@ -200,7 +204,7 @@
       async updateEpisode(){
         const response = await axios.patch(`episodes/${this.episode.id}/`, this.form);
         this.episode = response.data
-        this.$message({type: 'success', message: 'Episode updated'});
+        this.$message({type: 'success', message: 'Episode successful updated.'});
       },
       deleteEpisode(){
         this.$confirm('This will permanently delete the episode. Continue?', 'Warning', {
@@ -209,16 +213,33 @@
           type: 'warning'
         }).then(() => {
           axios.delete(`episodes/${this.episode.id}/`).then(() => {
-            this.$message({type: 'success', message: `Episode '${this.episode.title}' successful deleted`});
+            this.$message({type: 'success', message: `Episode '${this.episode.title}' successful deleted.`});
             router.push(`/podcasts/${this.podcast.id}`).then(() => {})
           })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: 'Delete canceled'
-          });
         });
+      },
+      downloadEpisode(){
+        if (this.episode.status === 'downloading'){
+          this.$message({type: 'warning', message: `Episode '${this.episode.title}' successful deleted.`});
+          return
+        }
+        if (this.episode.status === 'new'){
+          axios.put(`episodes/${this.episode.id}/download/`).then(() => {
+            this.$message({type: 'success', message: `Downloading has been started.`});
+          })
+        } else {
+          this.$confirm('This will remove downloaded and reload new episode. Continue?', 'Warning', {
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel',
+            type: 'warning'
+          }).then(() => {
+            axios.put(`episodes/${this.episode.id}/download/`).then(() => {
+              this.$message({type: 'success', message: `Downloading has been started.`});
+            })
+          });
+        }
       }
+
     }
   }
 </script>
@@ -236,5 +257,8 @@
   .icon-episode-detail{
     font-size: 1.5em;
   }
+}
+.cursor{
+  cursor: pointer;
 }
 </style>
