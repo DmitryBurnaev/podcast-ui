@@ -42,7 +42,7 @@
                 <div class="col-md-8 pr-1">
                   <div class="form-group">
                     <label>Name</label>
-                    <input v-model="podcast.name" type="text" class="form-control" placeholder="Podcast Name">
+                    <input v-model="form.name" type="text" class="form-control" placeholder="Podcast Name">
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -57,14 +57,21 @@
                 <div class="col-md-12">
                   <div class="form-group">
                     <label>Description</label>
-                    <textarea class="form-control textarea" v-model="podcast.description" rows="4"></textarea>
+                    <textarea class="form-control textarea" v-model="form.description" rows="4"></textarea>
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="update ml-auto mr-auto">
-                  <button type="submit" class="btn btn-primary btn-round">Update Podcast</button>
+                  <button type="button" class="btn btn-success btn-round" @click="generateRSS">Regenerate RSS</button>
                 </div>
+                <div class="update ml-auto mr-auto">
+                  <button type="button" class="btn btn-primary btn-round" @click="updatePodcast">Update Podcast</button>
+                </div>
+                <div class="update ml-auto mr-auto">
+                  <button type="button" class="btn btn-danger btn-round" @click="deletePodcast">Delete Podcast</button>
+                </div>
+
               </div>
             </form>
           </div>
@@ -113,6 +120,9 @@
 </template>
 
 <script>
+import axios from "axios";
+import router from "@/router";
+
 export default {
   name: 'PodcastDetails',
   data: () => ({
@@ -120,9 +130,16 @@ export default {
     podcast: null,
     episodes: [],
     downloadAuto: false,
+    form: {
+      name: '',
+      description: ''
+    }
   }),
   async created() {
     await this.fetchData()
+    this.form.name = this.podcast.name;
+    this.form.description = this.podcast.description;
+    this.loading = false;
   },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
@@ -134,6 +151,27 @@ export default {
       this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
       this.episodes = await this.$store.dispatch('getEpisodes', podcastID)
       this.loading = false
+    },
+    async updatePodcast(){
+      const response = await axios.patch(`podcasts/${this.podcast.id}/`, this.form);
+      this.podcast = response.data
+      this.$message({type: 'success', message: 'Podcast successful updated.'});
+    },
+    async generateRSS(){
+      await axios.put(`podcasts/${this.podcast.id}/generate_rss/`);
+      this.$message({type: 'success', message: 'RSS will be regenerated soon.'});
+    },
+    deletePodcast(){
+      this.$confirm('This will permanently delete the podcast and included episodes. Continue?', 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(() => {
+        axios.delete(`podcasts/${this.episode.id}/`).then(() => {
+          this.$message({type: 'success', message: `Podcast '${this.podcast.name}' successful deleted.`});
+          router.push(`/podcasts`).then(() => {})
+        })
+      });
     },
   }
 }

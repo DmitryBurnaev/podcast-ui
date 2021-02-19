@@ -220,9 +220,10 @@
       },
       downloadEpisode(){
         if (this.episode.status === 'downloading'){
-          this.$message({type: 'warning', message: `Episode '${this.episode.title}' successful deleted.`});
+          this.$message({type: 'warning', message: `Episode is downloading now.`});
           return
         }
+
         if (this.episode.status === 'new'){
           axios.put(`episodes/${this.episode.id}/download/`).then(() => {
             this.$message({type: 'success', message: `Downloading has been started.`});
