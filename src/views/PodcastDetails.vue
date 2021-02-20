@@ -104,8 +104,19 @@
                       <span class="text-success"><small>Downloaded</small></span>
                     </div>
                     <div class="col-md-2 col-2 text-right episode-controls">
-                      <button class="btn btn-sm btn-outline-success btn-round btn-icon"><i
-                          class="fa fa-envelope"></i></button>
+                      <button
+                          v-if="episode.status === 'new'"
+                          class="btn btn-sm btn-outline-success btn-round btn-icon">
+                        <i class="nc-icon nc-cloud-download-93"></i>
+                      </button>
+                      <button
+                          v-else-if="episode.status === 'downloading'"
+                          class="btn btn-sm btn-outline-primary btn-round btn-icon">
+                        <i class="fa fa-envelope"></i>
+                      </button>
+                      <button class="btn btn-sm btn-outline-danger btn-round btn-icon">
+                        <i class="nc-icon nc-simple-remove"></i>
+                      </button>
                     </div>
                   </div>
                   <hr class="hr__row-episode">
@@ -122,6 +133,7 @@
 <script>
 import axios from "axios";
 import router from "@/router";
+import {deleteEpisode, downloadEpisode} from "@/utils/podcast";
 
 export default {
   name: 'PodcastDetails',
@@ -173,10 +185,12 @@ export default {
         })
       });
     },
+    deleteEpisode: deleteEpisode,
+    downloadEpisode: downloadEpisode,
   }
 }
 </script>
-<style>
+<style lang="scss">
 .row-episode{
 }
 .row-episode .episode-content{
@@ -190,6 +204,10 @@ export default {
 }
 .episode-controls{
   margin-top: -7px;
+  i{
+    font-weight: bold;
+    font-size: 14px !important;
+  }
 }
 .card-podcast .card-body{
   min-height: 198px;
