@@ -80,6 +80,36 @@
     </div>
     <div class="row">
       <div class="col-12">
+        <div class="card create-episode-card">
+          <div class="card-header">
+            <h5 class="card-title">Create new episode</h5>
+          </div>
+          <div class="card-body">
+            <form>
+              <div class="row">
+                <div class="col-md-9 pr-1">
+                  <div class="form-group">
+                    <input v-model="newEpisodeForm.url" type="text" class="form-control" placeholder="Episode Source Link">
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <img class="preload" v-if="newEpisodeIsCreating" src="../assets/img/down-arrow.gif" alt=""/>
+                  <button
+                      type="button"
+                      class="btn btn-success btn-round"
+                      :disabled="newEpisodeIsCreating"
+                      @click="createEpisode">
+                    <i v-if="newEpisodeIsCreating" class="nc-icon nc-refresh-69"></i>
+                    Add Episode</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
         <div class="card">
           <div class="card-header">
             <h4 class="card-title">Episodes</h4>
@@ -101,7 +131,15 @@
                     <div class="col-md-9 col-9 episode-title episode-content">
                       {{ episode.title }}
                       <br/>
-                      <span class="text-success"><small>Downloaded</small></span>
+                      <span
+                          :class="{
+                            'text-success': (episode.status === 'published'),
+                            'text-danger': (episode.status === 'error'),
+                            'text-info': (['new', 'downloading'].includes(episode.status)),
+                            'text-gray': (episode.status === 'archived')
+                          }">
+                        <small>{{humanStatus(episode.status)}}</small>
+                      </span>
                     </div>
                     <div class="col-md-2 col-2 text-right episode-controls">
                       <button
@@ -133,7 +171,7 @@
 <script>
 import axios from "axios";
 import router from "@/router";
-import {deleteEpisode, downloadEpisode} from "@/utils/podcast";
+import {deleteEpisode, downloadEpisode, humanStatus} from "@/utils/podcast";
 
 export default {
   name: 'PodcastDetails',
@@ -145,7 +183,12 @@ export default {
     form: {
       name: '',
       description: ''
-    }
+    },
+    newEpisodeForm: {
+      //todo: rename to source_url
+      youtube_link: ''
+    },
+    newEpisodeIsCreating: false,
   }),
   async created() {
     await this.fetchData()
@@ -185,8 +228,18 @@ export default {
         })
       });
     },
+    async createEpisode(){
+      this.newEpisodeIsCreating = true
+      // const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.newEpisodeForm);
+      // if (response){
+      //   this.$message({type: 'success', message: `New episode #${response.id} was created`});
+      //   this.episodes.push(response)
+      // }
+      // this.newEpisodeIsCreating = false
+    },
     deleteEpisode: deleteEpisode,
     downloadEpisode: downloadEpisode,
+    humanStatus: humanStatus
   }
 }
 </script>
@@ -211,5 +264,16 @@ export default {
 }
 .card-podcast .card-body{
   min-height: 198px;
+}
+.create-episode-card{
+  .form-group{
+    margin-top: 10px;
+  }
+  .card-body{
+    padding-top: 0
+  }
+  img.preload{
+    width: 20px;
+  }
 }
 </style>

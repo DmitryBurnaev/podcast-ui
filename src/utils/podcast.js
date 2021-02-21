@@ -39,6 +39,19 @@ function downloadEpisode(episode){
         })
       });
     }
-  }
+}
 
-export {deleteEpisode, downloadEpisode}
+
+function humanStatus(status){
+    const statuses = {
+        "new": "New",
+        "downloading": "Downloading",
+        "published": "Published",
+        "archived": "Archived",
+        "error": "Error"
+    }
+    return statuses[status] || status
+}
+
+
+export {deleteEpisode, downloadEpisode, humanStatus}
