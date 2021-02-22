@@ -87,20 +87,20 @@
           <div class="card-body">
             <form>
               <div class="row">
-                <div class="col-md-9 pr-1">
+                <div class="col-md-10 pr-1">
                   <div class="form-group">
-                    <input v-model="newEpisodeForm.url" type="text" class="form-control" placeholder="Episode Source Link">
+                    <input v-model="newEpisodeForm.source_url" type="text" class="form-control" placeholder="Episode Source Link">
                   </div>
                 </div>
-                <div class="col-md-3">
-                  <img class="preload" v-if="newEpisodeIsCreating" src="../assets/img/down-arrow.gif" alt=""/>
+                <div class="col-md-2 pr-1 pl-1">
                   <button
                       type="button"
                       class="btn btn-success btn-round"
                       :disabled="newEpisodeIsCreating"
                       @click="createEpisode">
-                    <i v-if="newEpisodeIsCreating" class="nc-icon nc-refresh-69"></i>
-                    Add Episode</button>
+                    Add Episode
+                  </button>
+                  <img class="preload ml-1" v-if="newEpisodeIsCreating" src="../assets/img/down-arrow.gif" alt=""/>
                 </div>
               </div>
             </form>
@@ -185,8 +185,7 @@ export default {
       description: ''
     },
     newEpisodeForm: {
-      //todo: rename to source_url
-      youtube_link: ''
+      source_url: ''
     },
     newEpisodeIsCreating: false,
   }),
@@ -230,12 +229,18 @@ export default {
     },
     async createEpisode(){
       this.newEpisodeIsCreating = true
-      // const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.newEpisodeForm);
-      // if (response){
-      //   this.$message({type: 'success', message: `New episode #${response.id} was created`});
-      //   this.episodes.push(response)
-      // }
-      // this.newEpisodeIsCreating = false
+      const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.newEpisodeForm);
+      if ((response ? response.status : null) === 201){
+        console.log(response.status)
+        const newEpisode = response.data
+        this.$message({type: 'success', message: `New episode #${newEpisode.id} was created`});
+        // router.push(`/podcasts/${this.podcast.id}`).then(() => {})
+        // todo: fix insertion
+        if (!this.episodes.find((el) => el.id === newEpisode.id)){
+          this.episodes.push(newEpisode)
+        }
+      }
+      this.newEpisodeIsCreating = false
     },
     deleteEpisode: deleteEpisode,
     downloadEpisode: downloadEpisode,
