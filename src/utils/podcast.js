@@ -9,7 +9,7 @@ function deleteEpisode(episode, podcastID){
       cancelButtonText: 'Cancel',
       type: 'warning'
     }).then(() => {
-      axios.delete(`episodes/${episode.id}/`).then(() => {
+      return axios.delete(`episodes/${episode.id}/`).then(() => {
         App.$message({type: 'success', message: `Episode '${episode.title}' successful deleted.`});
         if (podcastID){
             router.push(`/podcasts/${podcastID}`).then(() => {})

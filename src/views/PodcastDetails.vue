@@ -152,7 +152,9 @@
                           class="btn btn-sm btn-outline-primary btn-round btn-icon">
                         <i class="fa fa-envelope"></i>
                       </button>
-                      <button class="btn btn-sm btn-outline-danger btn-round btn-icon">
+                      <button
+                          class="btn btn-sm btn-outline-danger btn-round btn-icon"
+                          @click="deleteEpisode(episode)">
                         <i class="nc-icon nc-simple-remove"></i>
                       </button>
                     </div>
@@ -234,17 +236,21 @@ export default {
         console.log(response.status)
         const newEpisode = response.data
         this.$message({type: 'success', message: `New episode #${newEpisode.id} was created`});
-        // router.push(`/podcasts/${this.podcast.id}`).then(() => {})
-        // todo: fix insertion
         if (!this.episodes.find((el) => el.id === newEpisode.id)){
-          this.episodes.push(newEpisode)
+          this.episodes.unshift(newEpisode)
         }
+        this.newEpisodeForm.source_url = ''
       }
       this.newEpisodeIsCreating = false
     },
-    deleteEpisode: deleteEpisode,
     downloadEpisode: downloadEpisode,
-    humanStatus: humanStatus
+    humanStatus: humanStatus,
+    deleteEpisode(episode){
+      deleteEpisode(episode).then(() => {
+        const index = this.episodes.findIndex((el) => el.id === episode.id)
+        this.episodes.slice(index, 1)
+      })
+    }
   }
 }
 </script>
