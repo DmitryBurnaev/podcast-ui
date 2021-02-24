@@ -116,51 +116,91 @@
           </div>
           <div class="card-body">
             <ul class="list-unstyled team-members">
-              <router-link
-                  tag="li"
+              <li
                   v-for="episode in episodes"
-                  :key="episode.id"
-                  :to="{name: 'episodeDetails', params: {'podcastID': podcast.id, 'episodeID': episode.id}}"
-              >
-                  <div class="row row-episode">
-                    <div class="col-md-1 col-1 episode-content">
-                      <div class="episode-image">
-                        <img :src="episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
-                      </div>
+                  :key="episode.id">
+                <div class="row row-episode">
+                  <div class="col-md-1 col-1 episode-content" @click="goToEpisode(episode)">
+                    <div class="episode-image">
+                      <img :src="episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
                     </div>
-                    <div class="col-md-9 col-9 episode-title episode-content">
-                      {{ episode.title }}
-                      <br/>
-                      <span
-                          :class="{
-                            'text-success': (episode.status === 'published'),
-                            'text-danger': (episode.status === 'error'),
-                            'text-info': (['new', 'downloading'].includes(episode.status)),
-                            'text-gray': (episode.status === 'archived')
-                          }">
-                        <small>{{humanStatus(episode.status)}}</small>
-                      </span>
-                    </div>
-                    <div class="col-md-2 col-2 text-right episode-controls">
+                  </div>
+                  <div class="col-md-9 col-9 episode-title episode-content" @click="goToEpisode(episode)">
+                    {{ episode.title }}
+                    <br/>
+                    <span
+                        :class="{
+                          'text-success': (episode.status === 'published'),
+                          'text-danger': (episode.status === 'error'),
+                          'text-info': (['new', 'downloading'].includes(episode.status)),
+                          'text-gray': (episode.status === 'archived')
+                        }">
+                      <small>{{humanStatus(episode.status)}}</small>
+                    </span>
+                  </div>
+                  <div class="col-md-2 col-2 text-right episode-controls">
+                      <img class="preload ml-1" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
                       <button
                           v-if="episode.status === 'new'"
-                          class="btn btn-sm btn-outline-success btn-round btn-icon">
+                          class="btn btn-sm btn-outline-success btn-round btn-icon"
+                          @click="downloadEpisode(episode)">
                         <i class="nc-icon nc-cloud-download-93"></i>
                       </button>
                       <button
-                          v-else-if="episode.status === 'downloading'"
-                          class="btn btn-sm btn-outline-primary btn-round btn-icon">
-                        <i class="fa fa-envelope"></i>
-                      </button>
-                      <button
+                          v-if="episode.status !== 'downloading'"
                           class="btn btn-sm btn-outline-danger btn-round btn-icon"
                           @click="deleteEpisode(episode)">
                         <i class="nc-icon nc-simple-remove"></i>
                       </button>
                     </div>
-                  </div>
-                  <hr class="hr__row-episode">
-              </router-link>
+                </div>
+                <hr class="hr__row-episode">
+              </li>
+
+
+<!--              <router-link-->
+<!--                  tag="li"-->
+<!--                  v-for="episode in episodes"-->
+<!--                  :key="episode.id"-->
+<!--                  :to="{name: 'episodeDetails', params: {'podcastID': podcast.id, 'episodeID': episode.id}}"-->
+<!--              >-->
+<!--                  <div class="row row-episode">-->
+<!--                    <div class="col-md-1 col-1 episode-content">-->
+<!--                      <div class="episode-image">-->
+<!--                        <img :src="episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-9 col-9 episode-title episode-content">-->
+<!--                      {{ episode.title }}-->
+<!--                      <br/>-->
+<!--                      <span-->
+<!--                          :class="{-->
+<!--                            'text-success': (episode.status === 'published'),-->
+<!--                            'text-danger': (episode.status === 'error'),-->
+<!--                            'text-info': (['new', 'downloading'].includes(episode.status)),-->
+<!--                            'text-gray': (episode.status === 'archived')-->
+<!--                          }">-->
+<!--                        <small>{{humanStatus(episode.status)}}</small>-->
+<!--                      </span>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-2 col-2 text-right episode-controls">-->
+<!--                      <img class="preload ml-1" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>-->
+<!--                      <button-->
+<!--                          v-if="episode.status === 'new'"-->
+<!--                          class="btn btn-sm btn-outline-success btn-round btn-icon"-->
+<!--                          @click="downloadEpisode(episode)">-->
+<!--                        <i class="nc-icon nc-cloud-download-93"></i>-->
+<!--                      </button>-->
+<!--                      <button-->
+<!--                          v-if="episode.status !== 'downloading'"-->
+<!--                          class="btn btn-sm btn-outline-danger btn-round btn-icon"-->
+<!--                          @click="deleteEpisode(episode)">-->
+<!--                        <i class="nc-icon nc-simple-remove"></i>-->
+<!--                      </button>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  <hr class="hr__row-episode">-->
+<!--              </router-link>-->
             </ul>
           </div>
         </div>
@@ -250,6 +290,9 @@ export default {
         const index = this.episodes.findIndex((el) => el.id === episode.id)
         this.episodes.slice(index, 1)
       })
+    },
+    goToEpisode(episode){
+      router.push({name: 'episodeDetails', params: {'episodeID': episode.id, 'podcastID': this.podcast.id}})
     }
   }
 }

@@ -30,8 +30,10 @@ Vue.use(Vuelidate)
 // Vue.use(messagePlugin)
 interceptorsSetup()
 
-new Vue({
+const app = new Vue({
   router,
   store,
   render: h => h(App),
 }).$mount('#app')
+
+export default app

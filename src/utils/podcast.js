@@ -1,16 +1,17 @@
 import axios from "axios";
 import router from "@/router";
 import App from "@/App";
+import app from '@/main'
 
 
 function deleteEpisode(episode, podcastID){
-    App.$confirm(`This will permanently delete episode "${episode.title}". Continue?`, 'Warning', {
+    app.$confirm(`This will permanently delete episode "${episode.title}". Continue?`, 'Warning', {
       confirmButtonText: 'OK',
       cancelButtonText: 'Cancel',
       type: 'warning'
     }).then(() => {
       return axios.delete(`episodes/${episode.id}/`).then(() => {
-        App.$message({type: 'success', message: `Episode '${episode.title}' successful deleted.`});
+        app.$message({type: 'success', message: `Episode '${episode.title}' successful deleted.`});
         if (podcastID){
             router.push(`/podcasts/${podcastID}`).then(() => {})
         }
@@ -35,6 +36,7 @@ function downloadEpisode(episode){
         type: 'warning'
       }).then(() => {
         axios.put(`episodes/${episode.id}/download/`).then(() => {
+          episode.status = 'downloading'
           App.$message({type: 'success', message: `Downloading has been started.`});
         })
       });
