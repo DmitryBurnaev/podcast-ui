@@ -2,7 +2,7 @@
   <div class="content" v-if="!loading">
     <div class="row">
       <div class="col-md-4">
-        <div class="card card-podcast card-user">
+        <div class="card card-podcast-summary  card-user">
           <div class="image">
             <img src="../assets/img/damir-bosnjak.jpg" alt="...">
           </div>
@@ -55,13 +55,16 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <el-switch
-                    style="display: block"
-                    v-model="form.download_automatically"
-                    active-color="#13ce66"
-                    inactive-color="#ff4949"
-                    active-text="Download Automatically">
-                  </el-switch>
+                  <div class="form-group">
+                    <label>Download Automatically</label>
+                    <el-switch
+                      style="display: block"
+                      v-model="form.download_automatically"
+                      active-color="rgb(107, 208, 152)"
+                      inactive-color="rgb(203, 203, 203)"
+                    >
+                    </el-switch>
+                  </div>
                 </div>
               </div>
               <div class="row">
@@ -150,10 +153,10 @@
                     </span>
                   </div>
                   <div class="col-md-2 col-2 text-right episode-controls">
-                      <img class="preload ml-1" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
+                      <img class="preload mr-1 mt-2" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
                       <button
                           v-if="episode.status === 'new'"
-                          class="btn btn-sm btn-outline-success btn-round btn-icon"
+                          class="btn btn-sm btn-outline-success btn-round btn-icon mr-1"
                           @click="downloadEpisode(episode)">
                         <i class="nc-icon nc-cloud-download-93"></i>
                       </button>
@@ -283,9 +286,12 @@ export default {
     font-weight: bold;
     font-size: 14px !important;
   }
+  .preload{
+    width: 20px;
+  }
 }
-.card-podcast .card-body{
-  min-height: 198px;
+.card-podcast-summary{
+  min-height: 482px;
 }
 .create-episode-card{
   .form-group{

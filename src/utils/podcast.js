@@ -27,6 +27,7 @@ function downloadEpisode(episode){
     if (App.episode.status === 'new'){
       axios.put(`episodes/${episode.id}/download/`).then(() => {
         App.$message({type: 'success', message: `Downloading has been started.`});
+        episode.status = 'downloading'
       })
     } else {
       App.$confirm('This will remove downloaded and reload new episode. Continue?', 'Warning', {
@@ -35,8 +36,8 @@ function downloadEpisode(episode){
         type: 'warning'
       }).then(() => {
         axios.put(`episodes/${episode.id}/download/`).then(() => {
-          episode.status = 'downloading'
           App.$message({type: 'success', message: `Downloading has been started.`});
+          episode.status = 'downloading'
         })
       });
     }
