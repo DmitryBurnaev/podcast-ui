@@ -1,19 +1,18 @@
 import axios from "axios";
-import router from "@/router";
 import App from "@/App";
 import app from '@/main'
 
 
-function deleteEpisode(episode, podcastID){
+function deleteEpisode(episode, callback){
     app.$confirm(`This will permanently delete episode "${episode.title}". Continue?`, 'Warning', {
       confirmButtonText: 'OK',
       cancelButtonText: 'Cancel',
       type: 'warning'
     }).then(() => {
-      return axios.delete(`episodes/${episode.id}/`).then(() => {
+      axios.delete(`episodes/${episode.id}/`).then(() => {
         app.$message({type: 'success', message: `Episode '${episode.title}' successful deleted.`});
-        if (podcastID){
-            router.push(`/podcasts/${podcastID}`).then(() => {})
+        if (callback){
+            callback()
         }
       })
     });

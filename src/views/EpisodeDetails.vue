@@ -169,6 +169,7 @@
   import Audio from "@/components/Audio";
   import axios from "axios";
   import router from "@/router";
+  import {deleteEpisode} from "@/utils/podcast";
 
   export default {
     name: 'EpisodeDetails',
@@ -207,16 +208,9 @@
         this.$message({type: 'success', message: 'Episode successful updated.'});
       },
       deleteEpisode(){
-        this.$confirm('This will permanently delete the episode. Continue?', 'Warning', {
-          confirmButtonText: 'OK',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        }).then(() => {
-          axios.delete(`episodes/${this.episode.id}/`).then(() => {
-            this.$message({type: 'success', message: `Episode '${this.episode.title}' successful deleted.`});
-            router.push(`/podcasts/${this.podcast.id}`).then(() => {})
-          })
-        });
+        deleteEpisode(this.episode, () => {
+            router.push({name: 'podcastDetails', params: {'id': this.podcast.id}}).then(() => {})
+        })
       },
       downloadEpisode(){
         if (this.episode.status === 'downloading'){

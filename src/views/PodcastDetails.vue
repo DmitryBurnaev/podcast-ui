@@ -55,6 +55,17 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
+                  <el-switch
+                    style="display: block"
+                    v-model="form.download_automatically"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    active-text="Download Automatically">
+                  </el-switch>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
                   <div class="form-group">
                     <label>Description</label>
                     <textarea class="form-control textarea" v-model="form.description" rows="4"></textarea>
@@ -157,50 +168,6 @@
                 <hr class="hr__row-episode">
               </li>
 
-
-<!--              <router-link-->
-<!--                  tag="li"-->
-<!--                  v-for="episode in episodes"-->
-<!--                  :key="episode.id"-->
-<!--                  :to="{name: 'episodeDetails', params: {'podcastID': podcast.id, 'episodeID': episode.id}}"-->
-<!--              >-->
-<!--                  <div class="row row-episode">-->
-<!--                    <div class="col-md-1 col-1 episode-content">-->
-<!--                      <div class="episode-image">-->
-<!--                        <img :src="episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">-->
-<!--                      </div>-->
-<!--                    </div>-->
-<!--                    <div class="col-md-9 col-9 episode-title episode-content">-->
-<!--                      {{ episode.title }}-->
-<!--                      <br/>-->
-<!--                      <span-->
-<!--                          :class="{-->
-<!--                            'text-success': (episode.status === 'published'),-->
-<!--                            'text-danger': (episode.status === 'error'),-->
-<!--                            'text-info': (['new', 'downloading'].includes(episode.status)),-->
-<!--                            'text-gray': (episode.status === 'archived')-->
-<!--                          }">-->
-<!--                        <small>{{humanStatus(episode.status)}}</small>-->
-<!--                      </span>-->
-<!--                    </div>-->
-<!--                    <div class="col-md-2 col-2 text-right episode-controls">-->
-<!--                      <img class="preload ml-1" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>-->
-<!--                      <button-->
-<!--                          v-if="episode.status === 'new'"-->
-<!--                          class="btn btn-sm btn-outline-success btn-round btn-icon"-->
-<!--                          @click="downloadEpisode(episode)">-->
-<!--                        <i class="nc-icon nc-cloud-download-93"></i>-->
-<!--                      </button>-->
-<!--                      <button-->
-<!--                          v-if="episode.status !== 'downloading'"-->
-<!--                          class="btn btn-sm btn-outline-danger btn-round btn-icon"-->
-<!--                          @click="deleteEpisode(episode)">-->
-<!--                        <i class="nc-icon nc-simple-remove"></i>-->
-<!--                      </button>-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                  <hr class="hr__row-episode">-->
-<!--              </router-link>-->
             </ul>
           </div>
         </div>
@@ -224,7 +191,8 @@ export default {
     downloadAuto: false,
     form: {
       name: '',
-      description: ''
+      description: '',
+      download_automatically: false,
     },
     newEpisodeForm: {
       source_url: ''
@@ -235,6 +203,7 @@ export default {
     await this.fetchData()
     this.form.name = this.podcast.name;
     this.form.description = this.podcast.description;
+    this.form.download_automatically = this.podcast.download_automatically;
     this.loading = false;
   },
   watch: {
@@ -273,7 +242,6 @@ export default {
       this.newEpisodeIsCreating = true
       const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.newEpisodeForm);
       if ((response ? response.status : null) === 201){
-        console.log(response.status)
         const newEpisode = response.data
         this.$message({type: 'success', message: `New episode #${newEpisode.id} was created`});
         if (!this.episodes.find((el) => el.id === newEpisode.id)){
@@ -286,9 +254,9 @@ export default {
     downloadEpisode: downloadEpisode,
     humanStatus: humanStatus,
     deleteEpisode(episode){
-      deleteEpisode(episode).then(() => {
+      deleteEpisode(episode, () => {
         const index = this.episodes.findIndex((el) => el.id === episode.id)
-        this.episodes.slice(index, 1)
+        this.episodes.splice(index, 1)
       })
     },
     goToEpisode(episode){
