@@ -1,5 +1,4 @@
 import axios from "axios";
-import App from "@/App";
 import app from '@/main'
 
 
@@ -19,24 +18,24 @@ function deleteEpisode(episode, callback){
 }
 
 function downloadEpisode(episode){
-    if (App.episode.status === 'downloading'){
-      App.$message({type: 'warning', message: `Episode "${episode.title}" is downloading now.`});
+    if (episode.status === 'downloading'){
+      app.$message({type: 'warning', message: `Episode "${episode.title}" is downloading now.`});
       return
     }
 
-    if (App.episode.status === 'new'){
+    if (episode.status === 'new'){
       axios.put(`episodes/${episode.id}/download/`).then(() => {
-        App.$message({type: 'success', message: `Downloading has been started.`});
+        app.$message({type: 'success', message: `Downloading has been started.`});
         episode.status = 'downloading'
       })
     } else {
-      App.$confirm('This will remove downloaded and reload new episode. Continue?', 'Warning', {
+      app.$confirm('This will remove downloaded and reload new episode. Continue?', 'Warning', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
         axios.put(`episodes/${episode.id}/download/`).then(() => {
-          App.$message({type: 'success', message: `Downloading has been started.`});
+          app.$message({type: 'success', message: `Downloading has been started.`});
           episode.status = 'downloading'
         })
       });

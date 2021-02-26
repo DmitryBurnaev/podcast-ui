@@ -13,9 +13,7 @@
             </div>
             <div class="episode-content text-center">
               <Audio v-if="episode.status === 'published'" :src="episode.remote_url" :length="episode.length" ></Audio>
-              <div v-else class="text-success">
-                <i class="nc-icin nc-cloud-download-93"></i>
-              </div>
+              <img class="preload" v-else-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
             </div>
           </div>
           <div class="card-footer">
@@ -35,7 +33,7 @@
                               'nc-cloud-download-93': episode.status === 'downloading',
                               'nc-headphones': episode.status === 'published',
                             }"
-                            @click="downloadEpisode"
+                            @click="downloadEpisode(episode)"
                         >
                         </i>
                       </h2>
@@ -143,7 +141,7 @@
               </div>
               <div class="row">
                 <div class="update ml-auto mr-auto">
-                  <button type="button" class="btn btn-success btn-round" @click="downloadEpisode">Download Episode</button>
+                  <button type="button" class="btn btn-success btn-round" @click="downloadEpisode(episode)">Download Episode</button>
                 </div>
                 <div class="update ml-auto mr-auto">
                   <button type="button" class="btn btn-primary btn-round" @click="updateEpisode">Update Episode</button>
@@ -169,7 +167,7 @@
   import Audio from "@/components/Audio";
   import axios from "axios";
   import router from "@/router";
-  import {deleteEpisode} from "@/utils/podcast";
+  import {deleteEpisode, downloadEpisode} from "@/utils/podcast";
 
   export default {
     name: 'EpisodeDetails',
@@ -212,29 +210,7 @@
             router.push({name: 'podcastDetails', params: {'id': this.podcast.id}}).then(() => {})
         })
       },
-      downloadEpisode(){
-        if (this.episode.status === 'downloading'){
-          this.$message({type: 'warning', message: `Episode is downloading now.`});
-          return
-        }
-
-        if (this.episode.status === 'new'){
-          axios.put(`episodes/${this.episode.id}/download/`).then(() => {
-            this.$message({type: 'success', message: `Downloading has been started.`});
-          })
-        } else {
-          this.$confirm('This will remove downloaded and reload new episode. Continue?', 'Warning', {
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Cancel',
-            type: 'warning'
-          }).then(() => {
-            axios.put(`episodes/${this.episode.id}/download/`).then(() => {
-              this.$message({type: 'success', message: `Downloading has been started.`});
-            })
-          });
-        }
-      }
-
+      downloadEpisode: downloadEpisode,
     }
   }
 </script>
