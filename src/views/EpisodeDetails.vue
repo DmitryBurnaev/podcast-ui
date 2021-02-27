@@ -13,7 +13,10 @@
             </div>
             <div class="episode-content text-center">
               <Audio v-if="episode.status === 'published'" :src="episode.remote_url" :length="episode.length" ></Audio>
-              <img class="preload" v-else-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
+              <div v-else class="episode-status text-center">
+                <img class="preload" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
+                <p> {{ humanStatus(episode.status) }}</p>
+              </div>
             </div>
           </div>
           <div class="card-footer">
@@ -27,9 +30,9 @@
                       <h2>
                         <i
                             class="nc-icon text-primary"
-                            :title="episode.status"
+                            :title="humanStatus(episode.status)"
                             :class="{
-                              'nc-watch-time cursor': episode.status === 'pending',
+                              'nc-tap-01 cursor': episode.status === 'new',
                               'nc-cloud-download-93': episode.status === 'downloading',
                               'nc-headphones': episode.status === 'published',
                             }"
@@ -44,8 +47,6 @@
                   </div>
             </div>
           </div>
-
-
         </div>
         <div class="card">
               <div class="card-header">
@@ -91,14 +92,13 @@
                     </div>
                   </li>
 
-                  <li>
+                  <li v-if="episode.remote_url">
                     <div class="row">
                       <div class="col-md-2 col-2">
                         <div class="icon-episode-detail text-center"><i class="nc-icon nc-note-03 text-info"></i></div>
                       </div>
                       <div class="col-ms-10 col-10">
                         <a :href="episode.remote_url" target="_blank">{{ episode.remote_url }}</a>
-                        <br />
                         <span class="text-secondary"><small>Remote URL</small></span>
                       </div>
                     </div>
@@ -167,7 +167,7 @@
   import Audio from "@/components/Audio";
   import axios from "axios";
   import router from "@/router";
-  import {deleteEpisode, downloadEpisode} from "@/utils/podcast";
+  import {deleteEpisode, downloadEpisode, humanStatus} from "@/utils/podcast";
 
   export default {
     name: 'EpisodeDetails',
@@ -211,6 +211,7 @@
         })
       },
       downloadEpisode: downloadEpisode,
+      humanStatus: humanStatus,
     }
   }
 </script>
@@ -231,5 +232,15 @@
 }
 .cursor{
   cursor: pointer;
+}
+.episode-status{
+  .preload{
+    width: 50px;
+  }
+  p{
+    margin-top: 10px;
+    font-size: 14px;
+    color: #b1b1b1;
+  }
 }
 </style>
