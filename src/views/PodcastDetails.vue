@@ -2,7 +2,7 @@
   <div class="content" v-if="!loading">
     <div class="row">
       <div class="col-md-4">
-        <div class="card card-podcast card-user">
+        <div class="card card-podcast-summary  card-user">
           <div class="image">
             <img src="../assets/img/damir-bosnjak.jpg" alt="...">
           </div>
@@ -56,6 +56,20 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
+                    <label>Download Automatically</label>
+                    <el-switch
+                      style="display: block"
+                      v-model="form.download_automatically"
+                      active-color="rgb(107, 208, 152)"
+                      inactive-color="rgb(203, 203, 203)"
+                    >
+                    </el-switch>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
                     <label>Description</label>
                     <textarea class="form-control textarea" v-model="form.description" rows="4"></textarea>
                   </div>
@@ -87,20 +101,20 @@
           <div class="card-body">
             <form>
               <div class="row">
-                <div class="col-md-9 pr-1">
+                <div class="col-md-10 pr-1">
                   <div class="form-group">
-                    <input v-model="newEpisodeForm.url" type="text" class="form-control" placeholder="Episode Source Link">
+                    <input v-model="newEpisodeForm.source_url" type="text" class="form-control" placeholder="Episode Source Link">
                   </div>
                 </div>
-                <div class="col-md-3">
-                  <img class="preload" v-if="newEpisodeIsCreating" src="../assets/img/down-arrow.gif" alt=""/>
+                <div class="col-md-2 pr-1 pl-1">
                   <button
                       type="button"
                       class="btn btn-success btn-round"
                       :disabled="newEpisodeIsCreating"
                       @click="createEpisode">
-                    <i v-if="newEpisodeIsCreating" class="nc-icon nc-refresh-69"></i>
-                    Add Episode</button>
+                    Add Episode
+                  </button>
+                  <img class="preload ml-1" v-if="newEpisodeIsCreating" src="../assets/img/down-arrow.gif" alt=""/>
                 </div>
               </div>
             </form>
@@ -116,49 +130,47 @@
           </div>
           <div class="card-body">
             <ul class="list-unstyled team-members">
-              <router-link
-                  tag="li"
+              <li
                   v-for="episode in episodes"
-                  :key="episode.id"
-                  :to="{name: 'episodeDetails', params: {'podcastID': podcast.id, 'episodeID': episode.id}}"
-              >
-                  <div class="row row-episode">
-                    <div class="col-md-1 col-1 episode-content">
-                      <div class="episode-image">
-                        <img :src="episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
-                      </div>
+                  :key="episode.id">
+                <div class="row row-episode">
+                  <div class="col-md-1 col-1 episode-content" @click="goToEpisode(episode)">
+                    <div class="episode-image">
+                      <img :src="episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
                     </div>
-                    <div class="col-md-9 col-9 episode-title episode-content">
-                      {{ episode.title }}
-                      <br/>
-                      <span
-                          :class="{
-                            'text-success': (episode.status === 'published'),
-                            'text-danger': (episode.status === 'error'),
-                            'text-info': (['new', 'downloading'].includes(episode.status)),
-                            'text-gray': (episode.status === 'archived')
-                          }">
-                        <small>{{humanStatus(episode.status)}}</small>
-                      </span>
-                    </div>
-                    <div class="col-md-2 col-2 text-right episode-controls">
+                  </div>
+                  <div class="col-md-9 col-9 episode-title episode-content" @click="goToEpisode(episode)">
+                    {{ episode.title }}
+                    <br/>
+                    <span
+                        :class="{
+                          'text-success': (episode.status === 'published'),
+                          'text-danger': (episode.status === 'error'),
+                          'text-info': (['new', 'downloading'].includes(episode.status)),
+                          'text-gray': (episode.status === 'archived')
+                        }">
+                      <small>{{humanStatus(episode.status)}}</small>
+                    </span>
+                  </div>
+                  <div class="col-md-2 col-2 text-right episode-controls">
+                      <img class="preload mr-1 mt-2" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
                       <button
                           v-if="episode.status === 'new'"
-                          class="btn btn-sm btn-outline-success btn-round btn-icon">
+                          class="btn btn-sm btn-outline-success btn-round btn-icon mr-1"
+                          @click="downloadEpisode(episode)">
                         <i class="nc-icon nc-cloud-download-93"></i>
                       </button>
                       <button
-                          v-else-if="episode.status === 'downloading'"
-                          class="btn btn-sm btn-outline-primary btn-round btn-icon">
-                        <i class="fa fa-envelope"></i>
-                      </button>
-                      <button class="btn btn-sm btn-outline-danger btn-round btn-icon">
+                          v-if="episode.status !== 'downloading'"
+                          class="btn btn-sm btn-outline-danger btn-round btn-icon"
+                          @click="deleteEpisode(episode)">
                         <i class="nc-icon nc-simple-remove"></i>
                       </button>
                     </div>
-                  </div>
-                  <hr class="hr__row-episode">
-              </router-link>
+                </div>
+                <hr class="hr__row-episode">
+              </li>
+
             </ul>
           </div>
         </div>
@@ -182,11 +194,11 @@ export default {
     downloadAuto: false,
     form: {
       name: '',
-      description: ''
+      description: '',
+      download_automatically: false,
     },
     newEpisodeForm: {
-      //todo: rename to source_url
-      youtube_link: ''
+      source_url: ''
     },
     newEpisodeIsCreating: false,
   }),
@@ -194,6 +206,7 @@ export default {
     await this.fetchData()
     this.form.name = this.podcast.name;
     this.form.description = this.podcast.description;
+    this.form.download_automatically = this.podcast.download_automatically;
     this.loading = false;
   },
   watch: {
@@ -230,16 +243,28 @@ export default {
     },
     async createEpisode(){
       this.newEpisodeIsCreating = true
-      // const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.newEpisodeForm);
-      // if (response){
-      //   this.$message({type: 'success', message: `New episode #${response.id} was created`});
-      //   this.episodes.push(response)
-      // }
-      // this.newEpisodeIsCreating = false
+      const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.newEpisodeForm);
+      if ((response ? response.status : null) === 201){
+        const newEpisode = response.data
+        this.$message({type: 'success', message: `New episode #${newEpisode.id} was created`});
+        if (!this.episodes.find((el) => el.id === newEpisode.id)){
+          this.episodes.unshift(newEpisode)
+        }
+        this.newEpisodeForm.source_url = ''
+      }
+      this.newEpisodeIsCreating = false
     },
-    deleteEpisode: deleteEpisode,
     downloadEpisode: downloadEpisode,
-    humanStatus: humanStatus
+    humanStatus: humanStatus,
+    deleteEpisode(episode){
+      deleteEpisode(episode, () => {
+        const index = this.episodes.findIndex((el) => el.id === episode.id)
+        this.episodes.splice(index, 1)
+      })
+    },
+    goToEpisode(episode){
+      router.push({name: 'episodeDetails', params: {'episodeID': episode.id, 'podcastID': this.podcast.id}})
+    }
   }
 }
 </script>
@@ -261,9 +286,12 @@ export default {
     font-weight: bold;
     font-size: 14px !important;
   }
+  .preload{
+    width: 20px;
+  }
 }
-.card-podcast .card-body{
-  min-height: 198px;
+.card-podcast-summary{
+  min-height: 482px;
 }
 .create-episode-card{
   .form-group{

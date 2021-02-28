@@ -1,41 +1,42 @@
 import axios from "axios";
-import router from "@/router";
-import App from "@/App";
+import app from '@/main'
 
 
-function deleteEpisode(episode, podcastID){
-    App.$confirm(`This will permanently delete episode "${episode.title}". Continue?`, 'Warning', {
+function deleteEpisode(episode, callback){
+    app.$confirm(`This will permanently delete episode "${episode.title}". Continue?`, 'Warning', {
       confirmButtonText: 'OK',
       cancelButtonText: 'Cancel',
       type: 'warning'
     }).then(() => {
       axios.delete(`episodes/${episode.id}/`).then(() => {
-        App.$message({type: 'success', message: `Episode '${episode.title}' successful deleted.`});
-        if (podcastID){
-            router.push(`/podcasts/${podcastID}`).then(() => {})
+        app.$message({type: 'success', message: `Episode '${episode.title}' successful deleted.`});
+        if (callback){
+            callback()
         }
       })
     });
 }
 
 function downloadEpisode(episode){
-    if (App.episode.status === 'downloading'){
-      App.$message({type: 'warning', message: `Episode "${episode.title}" is downloading now.`});
+    if (episode.status === 'downloading'){
+      app.$message({type: 'warning', message: `Episode "${episode.title}" is downloading now.`});
       return
     }
 
-    if (App.episode.status === 'new'){
+    if (episode.status === 'new'){
       axios.put(`episodes/${episode.id}/download/`).then(() => {
-        App.$message({type: 'success', message: `Downloading has been started.`});
+        app.$message({type: 'success', message: `Downloading has been started.`});
+        episode.status = 'downloading'
       })
     } else {
-      App.$confirm('This will remove downloaded and reload new episode. Continue?', 'Warning', {
+      app.$confirm('This will remove downloaded and reload new episode. Continue?', 'Warning', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
         axios.put(`episodes/${episode.id}/download/`).then(() => {
-          App.$message({type: 'success', message: `Downloading has been started.`});
+          app.$message({type: 'success', message: `Downloading has been started.`});
+          episode.status = 'downloading'
         })
       });
     }

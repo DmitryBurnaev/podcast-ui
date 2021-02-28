@@ -13,8 +13,9 @@
             </div>
             <div class="episode-content text-center">
               <Audio v-if="episode.status === 'published'" :src="episode.remote_url" :length="episode.length" ></Audio>
-              <div v-else class="text-success">
-                <i class="nc-icin nc-cloud-download-93"></i>
+              <div v-else class="episode-status text-center">
+                <img class="preload" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
+                <p> {{ humanStatus(episode.status) }}</p>
               </div>
             </div>
           </div>
@@ -29,13 +30,13 @@
                       <h2>
                         <i
                             class="nc-icon text-primary"
-                            :title="episode.status"
+                            :title="humanStatus(episode.status)"
                             :class="{
-                              'nc-watch-time cursor': episode.status === 'pending',
+                              'nc-tap-01 cursor': episode.status === 'new',
                               'nc-cloud-download-93': episode.status === 'downloading',
                               'nc-headphones': episode.status === 'published',
                             }"
-                            @click="downloadEpisode"
+                            @click="downloadEpisode(episode)"
                         >
                         </i>
                       </h2>
@@ -46,8 +47,6 @@
                   </div>
             </div>
           </div>
-
-
         </div>
         <div class="card">
               <div class="card-header">
@@ -93,14 +92,13 @@
                     </div>
                   </li>
 
-                  <li>
+                  <li v-if="episode.remote_url">
                     <div class="row">
                       <div class="col-md-2 col-2">
                         <div class="icon-episode-detail text-center"><i class="nc-icon nc-note-03 text-info"></i></div>
                       </div>
                       <div class="col-ms-10 col-10">
                         <a :href="episode.remote_url" target="_blank">{{ episode.remote_url }}</a>
-                        <br />
                         <span class="text-secondary"><small>Remote URL</small></span>
                       </div>
                     </div>
@@ -143,7 +141,7 @@
               </div>
               <div class="row">
                 <div class="update ml-auto mr-auto">
-                  <button type="button" class="btn btn-success btn-round" @click="downloadEpisode">Download Episode</button>
+                  <button type="button" class="btn btn-success btn-round" @click="downloadEpisode(episode)">Download Episode</button>
                 </div>
                 <div class="update ml-auto mr-auto">
                   <button type="button" class="btn btn-primary btn-round" @click="updateEpisode">Update Episode</button>
@@ -169,6 +167,7 @@
   import Audio from "@/components/Audio";
   import axios from "axios";
   import router from "@/router";
+  import {deleteEpisode, downloadEpisode, humanStatus} from "@/utils/podcast";
 
   export default {
     name: 'EpisodeDetails',
@@ -207,40 +206,12 @@
         this.$message({type: 'success', message: 'Episode successful updated.'});
       },
       deleteEpisode(){
-        this.$confirm('This will permanently delete the episode. Continue?', 'Warning', {
-          confirmButtonText: 'OK',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        }).then(() => {
-          axios.delete(`episodes/${this.episode.id}/`).then(() => {
-            this.$message({type: 'success', message: `Episode '${this.episode.title}' successful deleted.`});
-            router.push(`/podcasts/${this.podcast.id}`).then(() => {})
-          })
-        });
+        deleteEpisode(this.episode, () => {
+            router.push({name: 'podcastDetails', params: {'id': this.podcast.id}}).then(() => {})
+        })
       },
-      downloadEpisode(){
-        if (this.episode.status === 'downloading'){
-          this.$message({type: 'warning', message: `Episode is downloading now.`});
-          return
-        }
-
-        if (this.episode.status === 'new'){
-          axios.put(`episodes/${this.episode.id}/download/`).then(() => {
-            this.$message({type: 'success', message: `Downloading has been started.`});
-          })
-        } else {
-          this.$confirm('This will remove downloaded and reload new episode. Continue?', 'Warning', {
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Cancel',
-            type: 'warning'
-          }).then(() => {
-            axios.put(`episodes/${this.episode.id}/download/`).then(() => {
-              this.$message({type: 'success', message: `Downloading has been started.`});
-            })
-          });
-        }
-      }
-
+      downloadEpisode: downloadEpisode,
+      humanStatus: humanStatus,
     }
   }
 </script>
@@ -261,5 +232,15 @@
 }
 .cursor{
   cursor: pointer;
+}
+.episode-status{
+  .preload{
+    width: 50px;
+  }
+  p{
+    margin-top: 10px;
+    font-size: 14px;
+    color: #b1b1b1;
+  }
 }
 </style>
