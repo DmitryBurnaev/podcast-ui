@@ -5,7 +5,7 @@ import router from './router'
 import store from '@/store'
 // import messagePlugin from '@/utils/message.plugin'
 import interceptorsSetup from '@/utils/interceptors'
-import {dateFilter, sizeFilter, audioLengthFilter} from "@/utils/filters";
+import {dateFilter, sizeFilter, audioLengthFilter, humanStatusFilter} from "@/utils/filters";
 import { Dialog, Slider, Form, Switch, MessageBox, Message } from 'element-ui';
 
 Vue.component(Dialog.name, Dialog);
@@ -27,6 +27,7 @@ Vue.config.productionTip = false
 Vue.filter('date', dateFilter)
 Vue.filter('size', sizeFilter)
 Vue.filter('length', audioLengthFilter)
+Vue.filter('status', humanStatusFilter)
 Vue.use(Vuelidate)
 // Vue.use(messagePlugin)
 interceptorsSetup()

@@ -22,5 +22,15 @@ function audioLengthFilter(value){
     return new Date(value * 1000).toISOString().substr(11, 8)
 }
 
+function humanStatusFilter(status){
+    const statuses = {
+        "new": "New",
+        "downloading": "Downloading",
+        "published": "Published",
+        "archived": "Archived",
+        "error": "Error"
+    }
+    return statuses[status] || status
+}
 
-export {dateFilter, sizeFilter, audioLengthFilter}
+export {dateFilter, sizeFilter, audioLengthFilter, humanStatusFilter}
