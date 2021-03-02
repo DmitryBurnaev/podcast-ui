@@ -58,6 +58,12 @@ const router = new VueRouter({
   routes
 })
 
+// todo:
+//  1. request here 'me' API (if it is not cached)
+//  2. provide globalIsLoading in the store
+//  3. preloader on mainLayout
+//  4. return promise in the interceptor (support callbacks)
+
 router.beforeEach((to, from, next) => {
   const accessToken = store.getters.accessToken;
   const signInRequired = to.matched.some(record => record.meta.auth)

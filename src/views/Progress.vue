@@ -1,6 +1,5 @@
 <template>
   <div class="content content-podcast-progress">
-    <h2>Current Progress</h2>
     <div class="row">
       <div class="col-12">
       <div class="card">
