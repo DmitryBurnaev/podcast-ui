@@ -22,23 +22,15 @@
                   <br/>
                   <span
                       :class="{
-                        'text-success': (episode.status === 'published'),
                         'text-danger': (episode.status === 'error'),
                         'text-info': (['new', 'downloading'].includes(episode.status)),
-                        'text-gray': (episode.status === 'archived')
                       }">
-                    <small>{{episode.status | status}}</small>
+                    <small>{{episode.status_display }}</small>
                   </span>
                 </div>
                 <div class="col-md-2 col-2 text-right episode-controls">
-                    <img class="preload mr-1 mt-2" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
-                    <button
-                        v-if="episode.status !== 'downloading'"
-                        class="btn btn-sm btn-outline-danger btn-round btn-icon"
-                        @click="deleteEpisode(episode)">
-                      <i class="nc-icon nc-simple-remove"></i>
-                    </button>
-                  </div>
+                  {{episode.completed}}
+                </div>
               </div>
               <hr class="hr__row-episode">
             </li>
