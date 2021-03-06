@@ -1,42 +1,90 @@
 <template>
   <div class="content content-podcast-progress">
-      <h2>Current Progress</h2>
-      <div class="row">
-        <div class="col-md-8">
-          <div  v-for="progress in progressItems" :key="progress.episode_id">
-            <pre>
-              {{JSON.stringify(progress)}}
-            </pre>
-          </div>
+    <div class="row">
+      <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Episodes in progress</h4>
+        </div>
+        <div class="card-body">
+          <ul class="list-unstyled team-members">
+            <li
+                v-for="progress in progressItems"
+                :key="progress.episode.id">
+              <div class="row row-episode">
+                <div class="col-md-1 col-1 episode-content" @click="goToEpisode(progress)">
+                  <div class="episode-image">
+                    <img :src="progress.podcast.image_url" alt="Circle Image" class="podcast-cover img-circle img-no-padding img-responsive">
+                  </div>
+                </div>
+                <div class="col-md-11 col-11 episode-title episode-content" @click="goToEpisode(progress)">
+                  {{ progress.episode.title }}
+                  <br/>
+                  <span
+                      :class="{
+                        'text-danger': (progress.status === 'error'),
+                        'text-info': (['new', 'downloading'].includes(progress.status)),
+                      }">
+                    <small>{{progress.status_display }}</small>
+                  </span>
+                  <el-progress v-if="progress.status === 'error'" :percentage="progress.completed" status="exception"></el-progress>
+                  <el-progress v-else :percentage="progress.completed" ></el-progress>
+                </div>
+              </div>
+              <hr class="hr__row-episode">
+            </li>
+
+          </ul>
         </div>
       </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
   import axios from "axios";
+  import router from "@/router";
 
   export default {
     name: 'Progress',
     data: () => ({
-        loading: true,
         progressItems: [],
         timeInterval: null,
     }),
     async mounted() {
-      this.loading = true
-      this.timeInterval = setInterval(() => {
-        // this.progressItems = [{"episode_id": 1, "test": "foo"}]
-        const response = axios.get(`progress/`)
-        console.log(this.progressItems)
-        if (response){
-          this.progressItems = response.data
-        }
-      }, 500)
+      const response = await axios.get(`progress/`)
+      if (response){
+        this.progressItems = response.data
+      }
+      console.log(this.progressItems)
+
+      // this.timeInterval = setInterval(() => {
+      //   // this.progressItems = [{"episode_id": 1, "test": "foo"}]
+      //   const response = axios.get(`progress/`)
+      //   console.log(this.episodesInProgress)
+      //   if (response){
+      //     this.episodesInProgress = response.data
+      //   }
+      // }, 1000)
     },
     destroyed() {
       clearInterval(this.timeInterval)
+    },
+    methods: {
+      goToEpisode(progress){
+        router.push({name: 'episodeDetails', params: {'episodeID': progress.episode.id, 'podcastID': progress.podcast.id}})
+      },
     }
   }
 
 </script>
+<style lang="scss">
+.podcast-cover{
+  width: 70px;
+}
+.episode-content{
+  cursor: pointer;
+}
+
+</style>
