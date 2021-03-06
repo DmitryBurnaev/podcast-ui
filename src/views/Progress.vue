@@ -10,16 +10,15 @@
           <ul class="list-unstyled team-members">
             <li
                 v-for="progress in progressItems"
-                :key="progress.episode_id">
+                :key="progress.episode.id">
               <div class="row row-episode">
                 <div class="col-md-1 col-1 episode-content" @click="goToEpisode(progress)">
                   <div class="episode-image">
-<!--                todo: use sub-objects 'episode' / 'podcast' instead -->
-                    <img :src="progress.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                    <img :src="progress.podcast.image_url" alt="Circle Image" class="podcast-cover img-circle img-no-padding img-responsive">
                   </div>
                 </div>
-                <div class="col-md-9 col-9 episode-title episode-content" @click="goToEpisode(progress)">
-                  {{ progress.title }}
+                <div class="col-md-11 col-11 episode-title episode-content" @click="goToEpisode(progress)">
+                  {{ progress.episode.title }}
                   <br/>
                   <span
                       :class="{
@@ -28,9 +27,8 @@
                       }">
                     <small>{{progress.status_display }}</small>
                   </span>
-                </div>
-                <div class="col-md-2 col-2 text-right episode-controls">
-                  {{progress.completed}}
+                  <el-progress v-if="progress.status === 'error'" :percentage="progress.completed" status="exception"></el-progress>
+                  <el-progress v-else :percentage="progress.completed" ></el-progress>
                 </div>
               </div>
               <hr class="hr__row-episode">
@@ -75,9 +73,18 @@
     },
     methods: {
       goToEpisode(progress){
-        router.push({name: 'episodeDetails', params: {'episodeID': progress.episode_id, 'podcastID': progress.podcast_id}})
+        router.push({name: 'episodeDetails', params: {'episodeID': progress.episode.id, 'podcastID': progress.podcast.id}})
       },
     }
   }
 
 </script>
+<style lang="scss">
+.podcast-cover{
+  width: 70px;
+}
+.episode-content{
+  cursor: pointer;
+}
+
+</style>

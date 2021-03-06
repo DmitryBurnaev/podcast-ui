@@ -6,12 +6,13 @@ import store from '@/store'
 // import messagePlugin from '@/utils/message.plugin'
 import interceptorsSetup from '@/utils/interceptors'
 import {dateFilter, sizeFilter, audioLengthFilter, humanStatusFilter} from "@/utils/filters";
-import { Dialog, Slider, Form, Switch, MessageBox, Message } from 'element-ui';
+import { Dialog, Slider, Form, Switch, MessageBox, Message, Progress } from 'element-ui';
 
 Vue.component(Dialog.name, Dialog);
 Vue.component(Slider.name, Slider);
 Vue.component(Form.name, Form);
 Vue.component(Switch.name, Switch);
+Vue.component(Progress.name, Progress);
 
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$message = Message
