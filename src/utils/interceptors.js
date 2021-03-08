@@ -2,6 +2,7 @@ import axios from 'axios';
 import store from '@/store'
 import config from "@/config";
 import router from "@/router";
+import app from '@/main'
 
 axios.defaults.baseURL = config.apiURL
 
@@ -37,16 +38,23 @@ export default function setup() {
                         })
                         .catch((error) => {
                             console.log('interceptor | catch err:', error)
-                            router.push("/sign-in?message=session-expired").then(() => {})
+                            router.push({name: 'signIn', query: {'message': 'session-expired'}}).then(() => {})
                         })
                 }
                 else {
-                    router.push("/sign-in?message=need-sign-in").catch(() => {})
+                    router.push({name: 'signIn', query: {'message': 'need-sign-in'}}).then(() => {})
                 }
             }
-            store.commit('setError', error.response.data)
-            //TODO: use Vue.$error instead ?!
-            console.error("Catch error response: ", error.response.data)
+            if (error.response){
+                store.commit('setError', error.response.data)
+                app.$message({type: 'warning', message: error.response.data.details});
+                // console.error("Catch error response: ", error.response.data)
+            } else {
+                store.commit('setError', error.toString())
+                app.$message({type: 'warning', message: `Catch unknown error: ${error}`});
+                //TODO: use Vue.$error instead ?!
+                // console.error("Catch error response: ", error)
+            }
             return null
         }
     );

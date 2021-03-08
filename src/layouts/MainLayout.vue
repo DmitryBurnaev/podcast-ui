@@ -25,17 +25,6 @@ export default {
       return this.$store.getters.globalLoading
     }
   },
-  async mounted(){
-    console.log("MainLayout mounted")
-    // FIXME: why does this layout load for every page?
-    //        To prevent access to protected API we have to check that user is logged-in or not...
-
-    // if (this.$store.getters.accessToken){
-    //   await this.$store.dispatch('getPodcasts')
-    //   this.podcasts = this.$store.getters.podcasts
-    // }
-    // this.loading = false
-  }
 }
 </script>
 <style lang="scss">
