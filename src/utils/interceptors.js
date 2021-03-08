@@ -29,12 +29,17 @@ export default function setup() {
             if (status === 401) {
                 if (error.response.data.details.includes("Signature has expired")) {
                     console.log("interceptor | refresh", store.getters.refreshToken)
-                    axios
+                    return axios
                         .post("auth/refresh-token/", {'refresh_token': store.getters.refreshToken})
                         .then((response) => {
                             console.log('interceptor | token refreshed. response:', response)
                             store.commit('setTokens', response.data)
-                            return axios.request(error.config)
+                            if (error.config.method === 'get') {
+                                return axios.request(error.config)
+                            } else {
+                                app.$message({type: 'warning', message: 'Please, retry your action', showClose: true});
+
+                            }
                         })
                         .catch((error) => {
                             console.log('interceptor | catch err:', error)
@@ -44,15 +49,14 @@ export default function setup() {
                 else {
                     router.push({name: 'signIn', query: {'message': 'need-sign-in'}}).then(() => {})
                 }
-            }
-            if (error.response){
-                store.commit('setError', error.response.data)
-                app.$message({type: 'warning', message: error.response.data.details});
-                // console.error("Catch error response: ", error.response.data)
             } else {
-                store.commit('setError', error.toString())
-                app.$message({type: 'warning', message: `Catch unknown error: ${error}`});
-                //TODO: use Vue.$error instead ?!
+                let errorMessage;
+                if (error.response){
+                    errorMessage = error.response.data.details || error.response.data
+                } else {
+                    errorMessage = error.toString()
+                }
+                app.$message({type: 'error', message: errorMessage, showClose: true});
                 // console.error("Catch error response: ", error)
             }
             return null
