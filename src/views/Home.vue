@@ -13,11 +13,9 @@
                 :to="{name: 'podcastDetails', params: {'id': podcast.id}}"
             >
               <div class="row">
-                <div class="col-5 col-md-4">
-                  <div class="icon-big text-center icon-warning">
-                    <img v-if="podcast.image_url" :src="podcast.image_url" alt="">
-                    <i v-else class="nc-icon nc-globe text-warning"></i>
-                  </div>
+                <div class="col-5 col-md-4 podcast-cover-container">
+                    <img v-if="podcast.image_url" :src="podcast.image_url" :alt="podcast.name">
+                    <img v-else src="../assets/img/cover-default.jpg" :alt="podcast.name">
                 </div>
                 <div class="col-7 col-md-8">
                   <div class="numbers">
@@ -60,10 +58,14 @@ export default {
   }
 }
 </script>
-<style>
+<style lang="scss">
 
 .content-home .card-body{
   cursor: pointer;
 }
-
+.podcast-cover-container{
+  img{
+    height: 100px;
+  }
+}
 </style>

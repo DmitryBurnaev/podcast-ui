@@ -29,6 +29,7 @@ export default function setup() {
             if (status === 401) {
                 if (error.response.data.details.includes("Signature has expired")) {
                     console.log("interceptor | refresh", store.getters.refreshToken)
+                    let requestCanceled = false;
                     return axios
                         .post("auth/refresh-token/", {'refresh_token': store.getters.refreshToken})
                         .then((response) => {
@@ -37,13 +38,18 @@ export default function setup() {
                             if (error.config.method === 'get') {
                                 return axios.request(error.config)
                             } else {
+                                // we have to prevent non-get requests (because there are various callbacks)
                                 app.$message({type: 'warning', message: 'Please, retry your action', showClose: true});
-
+                                requestCanceled = true
                             }
                         })
                         .catch((error) => {
                             console.log('interceptor | catch err:', error)
                             router.push({name: 'signIn', query: {'message': 'session-expired'}}).then(() => {})
+                        }).finally( () => {
+                            if (requestCanceled){
+                                throw error
+                            }
                         })
                 }
                 else {
@@ -57,7 +63,6 @@ export default function setup() {
                     errorMessage = error.toString()
                 }
                 app.$message({type: 'error', message: errorMessage, showClose: true});
-                // console.error("Catch error response: ", error)
             }
             return null
         }
