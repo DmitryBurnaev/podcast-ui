@@ -35,7 +35,6 @@
 <script>
 export default {
   name: "Sidebar",
-  props: ['value', 'podcasts'],
   data: () => ({
     links: [
       {"title": "Home", "url": "/", "icon": "nc-badge", "exact": true},

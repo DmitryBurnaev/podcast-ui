@@ -17,10 +17,6 @@ export default {
       this.$error(serverError.details)
     }
   },
-  mounted(){
-    console.log("AuthLayout mounted")
-    // console.log(this.$router)
-  }
 }
 </script>
 

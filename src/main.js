@@ -3,7 +3,6 @@ import App from './App.vue'
 import Vuelidate from "vuelidate"
 import router from './router'
 import store from '@/store'
-// import messagePlugin from '@/utils/message.plugin'
 import interceptorsSetup from '@/utils/interceptors'
 import {dateFilter, sizeFilter, audioLengthFilter, humanStatusFilter} from "@/utils/filters";
 import { Dialog, Slider, Form, Switch, MessageBox, Message, Progress } from 'element-ui';
@@ -30,7 +29,6 @@ Vue.filter('size', sizeFilter)
 Vue.filter('length', audioLengthFilter)
 Vue.filter('status', humanStatusFilter)
 Vue.use(Vuelidate)
-// Vue.use(messagePlugin)
 interceptorsSetup()
 
 const app = new Vue({

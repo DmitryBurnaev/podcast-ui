@@ -65,15 +65,18 @@ const router = new VueRouter({
 //  4. return promise in the interceptor (support callbacks)
 
 router.beforeEach((to, from, next) => {
-  const accessToken = store.getters.accessToken;
   const signInRequired = to.matched.some(record => record.meta.auth)
 
-  if (signInRequired && !accessToken){
-    console.log('router.beforeEach | redirect to sign-in: ', `${from.path} -> ${to.path}`)
-    next('/sign-in?need-sign-in')
+  if (signInRequired) {
+    console.log("=> signInRequired ->")
+    store.dispatch('getMe').then(() => {
+      console.log('ME was given | all-right! go to the next page: ', `${from.path} -> ${to.path}`)
+      next()
+    })
   } else {
     console.log('router.beforeEach | all-right! go to the next page: ', `${from.path} -> ${to.path}`)
     next()
   }
+
 })
 export default router
