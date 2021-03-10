@@ -1,7 +1,7 @@
 <template>
-  <div class="auth">
-    <router-view/>
-  </div>
+      <div class="content content-auth">
+        <router-view/>
+      </div>
 </template>
 
 <script>
@@ -23,7 +23,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

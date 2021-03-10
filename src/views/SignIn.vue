@@ -1,8 +1,12 @@
 <template>
-  <div class="about">
-    <h1>Sign-IN</h1>
-
-    <form class="form-signin" method="post" @submit.prevent="submitSignIn" >
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Sign-IN</h4>
+        </div>
+        <div class="card-body">
+            <form class="form-signin" method="post" @submit.prevent="submitSignIn" >
         <input
             type="text" name="email" id="email" placeholder="email"
             v-model.trim="email"
@@ -31,7 +35,9 @@
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button><br/>
       or <router-link to="/sign-up?token=registration-invite">sign-up</router-link>
     </form>
-
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
