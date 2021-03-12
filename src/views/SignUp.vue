@@ -1,56 +1,59 @@
 <template>
-  <div class="about">
-    <h1>Sign-UP</h1>
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Sign UP</h4>
+      </div>
+      <div class="card-body">
+        <form class="form-signup" method="post" @submit.prevent="submitSignUp" >
+          <div class="form-group">
+            <input
+                type="text" name="email" id="email" placeholder="email"
+                v-model.trim="email" class="form-control"
+                :class="{invalid: ($v.email.$dirty && !$v.email.required ) || ($v.email.$dirty && !$v.email.email ) }">
+            <br/>
+            <small class="helper-text" v-if="($v.email.$dirty && !$v.email.required)">
+              Email is required field
+            </small>
+            <small class="helper-text" v-else-if="($v.email.$dirty && !$v.email.email )">
+              Email is invalid
+            </small>
+          </div>
 
-    <form class="form-signup" method="post" @submit.prevent="submitSignUp" >
-        <input
-            type="text" name="email" id="email" placeholder="email"
-            v-model.trim="email"
-            :class="{invalid: ($v.email.$dirty && !$v.email.required ) || ($v.email.$dirty && !$v.email.email ) }">
-        <br/>
-        <small class="helper-text" v-if="($v.email.$dirty && !$v.email.required)">
-          Email is required field
-        </small>
-        <small class="helper-text" v-else-if="($v.email.$dirty && !$v.email.email )">
-          Email is invalid
-        </small>
+          <div class="form-group">
+            <input
+                type="password" name="email" id="password_1" placeholder="password"
+                v-model.trim="password_1" class="form-control"
+                :class="{invalid: ($v.password_1.$dirty && !$v.password_1.required ) || ($v.password_1.$dirty && !$v.password_1.minLength ) }">
+            <br/>
 
-        <br/>
-        <input
-            type="password" name="email" id="password_1" placeholder="password"
-            v-model.trim="password_1"
-            :class="{invalid: ($v.password_1.$dirty && !$v.password_1.required ) || ($v.password_1.$dirty && !$v.password_1.minLength ) }">
-        <br/>
+            <small class="helper-text" v-if="($v.password_1.$dirty && !$v.password_1.required )">
+              Password is required field
+            </small>
+            <small class="helper-text" v-else-if="($v.password_1.$dirty && !$v.password_1.minLength )">
+              Password must be at least {{$v.password_1.$params.minLength.min}} chars. Now it is {{password_1.length}}
+            </small>
+          </div>
 
-        <small class="helper-text" v-if="($v.password_1.$dirty && !$v.password_1.required )">
-          Password is required field
-        </small>
-        <small class="helper-text" v-else-if="($v.password_1.$dirty && !$v.password_1.minLength )">
-          Password must be at least {{$v.password_1.$params.minLength.min}} chars. Now it is {{password_1.length}}
-        </small>
+          <div class="form-group">
+            <input
+                type="password" name="email" id="password_2"
+                placeholder="Repeat your password"
+                v-model.trim="password_2" class="form-control"
+                :class="{invalid: ($v.password_2.$dirty && !$v.password_2.required ) || ($v.password_2.$dirty && !$v.password_2.minLength ) }">
+            <br/>
 
-        <br/>
-        <input
-            type="password" name="email" id="password_2"
-            placeholder="Repeat your password"
-            v-model.trim="password_2"
-            :class="{invalid: ($v.password_2.$dirty && !$v.password_2.required ) || ($v.password_2.$dirty && !$v.password_2.minLength ) }">
-        <br/>
-
-        <small class="helper-text" v-if="($v.password_2.$dirty && !$v.password_2.required )">
-          Password is required field
-        </small>
-        <small class="helper-text" v-else-if="($v.password_2.$dirty && !$v.password_2.minLength )">
-          Password must be at least {{$v.password_2.$params.minLength.min}} chars. Now it is {{password_2.length}}
-        </small>
-        <br/>
-
-
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign UP</button><br/>
-        or <router-link to="/sign-in">sign-in</router-link>
-    </form>
-
-  </div>
+            <small class="helper-text" v-if="($v.password_2.$dirty && !$v.password_2.required )">
+              Password is required field
+            </small>
+            <small class="helper-text" v-else-if="($v.password_2.$dirty && !$v.password_2.minLength )">
+              Password must be at least {{$v.password_2.$params.minLength.min}} chars. Now it is {{password_2.length}}
+            </small>
+          </div>
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign UP</button><br/>
+          or <router-link to="/sign-in">Sign IN</router-link>
+        </form>
+      </div>
+    </div>
 </template>
 
 <script>
@@ -97,14 +100,3 @@ export default {
   }
 }
 </script>
-
-
-<style>
-form{
-  text-align: center;
-}
-.invalid{
-  background-color: red;
-}
-
-</style>

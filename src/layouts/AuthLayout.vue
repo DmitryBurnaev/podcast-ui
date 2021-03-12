@@ -1,7 +1,11 @@
 <template>
-      <div class="content content-auth">
-        <router-view/>
+    <div class="content content-auth">
+      <div class="row">
+        <div class="col-lg-4 auth-container">
+          <router-view/>
+        </div>
       </div>
+    </div>
 </template>
 
 <script>
@@ -17,9 +21,20 @@ export default {
       this.$error(serverError.details)
     }
   },
-  mounted(){
-    console.log("AuthLayout mounted")
-    // console.log(this.$router)
-  }
 }
 </script>
+<style lang="scss">
+  body{
+    background-color: #f4f2f2 !important;
+  }
+  form{
+    text-align: center;
+  }
+  .invalid{
+    background-color: red;
+  }
+  .auth-container{
+    margin-left: 30%;
+    margin-top: 100px;
+  }
+</style>
