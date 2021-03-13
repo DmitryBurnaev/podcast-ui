@@ -29,12 +29,17 @@ export default {
   }
   form{
     text-align: center;
+    input.invalid{
+      border-color: #cc0808;
+      color: #cc0808;
+    }
+    .helper-text{
+      color: #730606;
+    }
   }
-  .invalid{
-    background-color: red;
-  }
-  .auth-container{
+  .auth-container {
     margin-left: 30%;
     margin-top: 100px;
   }
+
 </style>

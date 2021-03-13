@@ -12,7 +12,7 @@
                       type="text" name="email" id="email" placeholder="email" class="form-control"
                       v-model.trim="email"
                       :class="{invalid: ($v.email.$dirty && !$v.email.required ) || ($v.email.$dirty && !$v.email.email ) }">
-                  <br/>
+
                   <small class="helper-text" v-if="($v.email.$dirty && !$v.email.required)">
                     Email is required field
                   </small>
@@ -25,8 +25,6 @@
                       type="password" name="password" id="password" placeholder="password" class="form-control"
                       v-model.trim="password"
                       :class="{invalid: ($v.password.$dirty && !$v.password.required ) || ($v.password.$dirty && !$v.password.minLength ) }">
-                  <br/>
-
                   <small class="helper-text" v-if="($v.password.$dirty && !$v.password.required )">
                     Password is required field
                   </small>
@@ -36,7 +34,7 @@
                 </div>
               </div>
             </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign IN</button><br/>
+            <button class="btn btn-lg btn-primary btn-block mt-4" type="submit">Sign IN</button>
             or <router-link to="/sign-up?token=registration-invite">Sign UP</router-link>
           </form>
       </div>
@@ -53,6 +51,10 @@ export default {
   data: () => ({
     email: "",
     password: "",
+    signInForm: {
+      email: "",
+      password: ""
+    },
   }),
   validations:{
     email: {email, required},
@@ -84,8 +86,3 @@ export default {
   }
 }
 </script>
-
-
-<style>
-
-</style>

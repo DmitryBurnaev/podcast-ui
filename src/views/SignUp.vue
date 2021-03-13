@@ -10,7 +10,6 @@
                 type="text" name="email" id="email" placeholder="email"
                 v-model.trim="email" class="form-control"
                 :class="{invalid: ($v.email.$dirty && !$v.email.required ) || ($v.email.$dirty && !$v.email.email ) }">
-            <br/>
             <small class="helper-text" v-if="($v.email.$dirty && !$v.email.required)">
               Email is required field
             </small>
@@ -24,8 +23,6 @@
                 type="password" name="email" id="password_1" placeholder="password"
                 v-model.trim="password_1" class="form-control"
                 :class="{invalid: ($v.password_1.$dirty && !$v.password_1.required ) || ($v.password_1.$dirty && !$v.password_1.minLength ) }">
-            <br/>
-
             <small class="helper-text" v-if="($v.password_1.$dirty && !$v.password_1.required )">
               Password is required field
             </small>
@@ -40,8 +37,6 @@
                 placeholder="Repeat your password"
                 v-model.trim="password_2" class="form-control"
                 :class="{invalid: ($v.password_2.$dirty && !$v.password_2.required ) || ($v.password_2.$dirty && !$v.password_2.minLength ) }">
-            <br/>
-
             <small class="helper-text" v-if="($v.password_2.$dirty && !$v.password_2.required )">
               Password is required field
             </small>
@@ -49,7 +44,7 @@
               Password must be at least {{$v.password_2.$params.minLength.min}} chars. Now it is {{password_2.length}}
             </small>
           </div>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign UP</button><br/>
+          <button class="btn btn-lg btn-primary btn-block mt-4" type="submit">Sign UP</button>
           or <router-link to="/sign-in">Sign IN</router-link>
         </form>
       </div>
