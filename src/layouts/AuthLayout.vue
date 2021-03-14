@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import app from "@/main";
+
 export default {
   name: "AuthLayout",
   computed: {
@@ -18,7 +20,7 @@ export default {
   },
   watch: {
     error(serverError){
-      this.$error(serverError.details)
+      app.$message({type: 'error', message: serverError.details});
     }
   },
 }

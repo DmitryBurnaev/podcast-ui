@@ -25,16 +25,11 @@ export default {
         }
     },
     actions: {
-        async signIn({dispatch, commit}, {email, password}) {
-            console.log(dispatch)
-            let response
-            try {
-                response = await axios.post("auth/sign-in/", {'email': email, 'password': password})
-            } catch (err) {
-                commit('setError', err.response.data)
-                return false
+        async signIn({commit}, {email, password}) {
+            const response = await axios.post("auth/sign-in/", {'email': email, 'password': password})
+            if (response){
+                commit('setTokens', response.data)
             }
-            commit('setTokens', response.data)
             return true
         },
         async signUp({dispatch, commit}, {email, password_1, password_2, token}){

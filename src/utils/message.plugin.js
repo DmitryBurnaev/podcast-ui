@@ -1,10 +1,12 @@
+import app from "@/main";
+
 export default {
     install(Vue){
         Vue.prototype.$message = function (msg){
-            console.log("[MESSAGE]: " + msg)
+            app.$message({type: 'success', message: msg});
         }
         Vue.prototype.$error = function (msg){
-            console.warn("[ERROR]: " + msg)
+            app.$message({type: 'error', message: msg});
         }
     }
 }

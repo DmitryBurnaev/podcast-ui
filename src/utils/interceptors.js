@@ -46,7 +46,7 @@ export default function setup() {
             }
             store.commit('setError', error.response.data)
             //TODO: use Vue.$error instead ?!
-            console.error("Catch error response: ", error.response.data)
+            // console.error("Catch error response: ", error.response.data)
             return null
         }
     );

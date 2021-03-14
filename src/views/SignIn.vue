@@ -45,6 +45,7 @@
 
 import {email, required, minLength} from "vuelidate/lib/validators";
 import messages from "@/utils/messages";
+import app from "@/main";
 
 export default {
   name: "SignIn",
@@ -71,7 +72,7 @@ export default {
       console.log("SignIn submitting")
       if (this.$v.$invalid){
         this.$v.$touch()
-        this.$error("Form is invalid..")
+        app.$message({type: 'error', message: "Form is invalid.."});
         return
       }
       const formData = {
