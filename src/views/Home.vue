@@ -54,9 +54,11 @@ export default {
   }),
   async mounted(){
     console.log("MainLayout mounted")
-    await this.$store.dispatch('getPodcasts')
-    this.podcasts = this.$store.getters.podcasts
-    this.loading = false
+    if (this.$store.getters.accessToken) {
+      await this.$store.dispatch('getPodcasts')
+      this.podcasts = this.$store.getters.podcasts
+      this.loading = false
+    }
   }
 }
 </script>
