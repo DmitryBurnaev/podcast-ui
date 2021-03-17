@@ -1,6 +1,6 @@
 <template>
     <div class="content content-auth">
-      <div class="row">
+      <div class="row d-flex justify-content-center">
         <div class="col-lg-4 auth-container">
           <router-view/>
         </div>
@@ -40,7 +40,6 @@ export default {
     }
   }
   .auth-container {
-    margin-left: 30%;
     margin-top: 100px;
   }
 

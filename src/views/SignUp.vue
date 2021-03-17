@@ -65,8 +65,8 @@ export default {
   }),
   validations:{
     email: {email, required},
-    password_1: {required, minLength: minLength(2)},
-    password_2: {required, minLength: minLength(2)},
+    password_1: {required, minLength: minLength(6)},
+    password_2: {required, minLength: minLength(6)},
   },
   mounted() {
     this.token = this.$route.query.token || "[UNKNOWN token]"

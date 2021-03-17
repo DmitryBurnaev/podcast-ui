@@ -35,20 +35,35 @@ export default {
         async signUp({dispatch, commit}, {email, password_1, password_2, token}){
             console.log(dispatch)
             let response
-            try {
-                const payload = {
-                    'email': email,
-                    'password_1': password_1,
-                    'password_2': password_2,
-                    'invite_token': token
-                }
-                response = await axios.post("auth/sign-up/", payload)
-            } catch (err) {
-                commit('setError', err.response.data)
-                return false
+            const payload = {
+                'email': email,
+                'password_1': password_1,
+                'password_2': password_2,
+                'invite_token': token
             }
-            commit('setTokens', response.data)
-            return true
+            response = await axios.post("auth/sign-up/", payload)
+            if (response){
+                commit('setTokens', response.data)
+                return true
+            }
+            return false
+            // try {
+            //     const payload = {
+            //         'email': email,
+            //         'password_1': password_1,
+            //         'password_2': password_2,
+            //         'invite_token': token
+            //     }
+            //     response = await axios.post("auth/sign-up/", payload)
+            //     if (response){
+            //         commit('setTokens', response.data)
+            //     }
+            // } catch (err) {
+            //     commit('setError', err.response.data)
+            //     return false
+            // }
+
+            // return true
         },
         async signOut({commit}){
             try {
