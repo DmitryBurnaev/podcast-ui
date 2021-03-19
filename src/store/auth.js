@@ -42,11 +42,15 @@ export default {
                 'invite_token': token
             }
             response = await axios.post("auth/sign-up/", payload)
-            if (response){
-                commit('setTokens', response.data)
-                return true
-            }
-            return false
+            console.log("auth/sign-up/", response)
+            if (!response){ throw Error }
+            commit('setTokens', response.data)
+            //
+            // if (response){
+            //     commit('setTokens', response.data)
+            //     return true
+            // }
+            // return false
             // try {
             //     const payload = {
             //         'email': email,

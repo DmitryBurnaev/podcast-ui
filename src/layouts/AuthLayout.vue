@@ -1,6 +1,6 @@
 <template>
     <div class="content content-auth">
-      <div class="row d-flex justify-content-center">
+      <div class="row d-flex justify-content-center ml-0 mr-0">
         <div class="col-lg-4 auth-container">
           <router-view/>
         </div>
@@ -20,7 +20,9 @@ export default {
   },
   watch: {
     error(serverError){
-      app.$message({type: 'error', message: serverError.details});
+      if ( typeof serverError.details !== 'object'){
+        app.$message({type: 'error', message: serverError.details});
+      }
     }
   },
 }

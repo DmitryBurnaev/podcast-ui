@@ -7,6 +7,11 @@
         <el-form :model="signUpForm" :rules="rules" ref="signUpForm" class="demo-signUpForm">
           <el-form-item prop="email">
             <el-input v-model="signUpForm.email" placeholder="Email"></el-input>
+<!--            TODO: iterate by errors -->
+            <small class="helper-text" v-if="serverErrors.email">{{serverErrors.email}}</small>
+<!--            <small class="helper-text" v-for="serverErrors.email" v-bind:key="error">-->
+<!--              {{error}}-->
+<!--            </small>            -->
           </el-form-item>
           <el-form-item prop="password_1">
             <el-input v-model="signUpForm.password_1" placeholder="Password"></el-input>
@@ -95,11 +100,28 @@ export default {
         {required: true, message: 'Please repeat your password', trigger: 'change'},
         {min: 6, max: 32, message: 'Password should be 6 to 32', trigger: 'blur'}
       ],
+    },
+    serverErrors: {
+      email: null,
+      password_1: [],
+      password_2: [],
     }
   }),
   mounted() {
-    this.token = this.$route.query.token || "[UNKNOWN token]"
-    console.log("invite token", this.token)
+    this.signUpForm.token = this.$route.query.token || "[UNKNOWN token]"
+    console.log("invite token", this.signUpForm.token)
+  },
+  computed: {
+    error() {
+      return this.$store.getters.error
+    }
+  },
+  watch: {
+    error(serverError){
+      if ( typeof serverError.details === 'object'){
+        this.serverErrors = serverError.details
+      }
+    }
   },
   methods: {
     // async submitSignUp() {
@@ -120,7 +142,7 @@ export default {
         if (valid) {
           console.log("Form is valid")
           // todo: fix sending!
-          // this.$store.dispatch('signUp', this.formData).then(() => {this.$router.push("/")})
+          this.$store.dispatch('signUp', this.signUpForm).then(() => {this.$router.push("/")})
         } else {
           console.log('error submit!!');
           return false;
