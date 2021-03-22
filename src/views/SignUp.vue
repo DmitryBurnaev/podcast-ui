@@ -5,19 +5,23 @@
       </div>
       <div class="card-body text-center">
         <el-form :model="signUpForm" :rules="rules" ref="signUpForm" class="demo-signUpForm">
-          <el-form-item prop="email">
+          <el-form-item prop="email" :class="{'is-error': serverErrors.email.length > 0}">
             <el-input v-model="signUpForm.email" placeholder="Email"></el-input>
-<!--            TODO: iterate by errors -->
-            <small class="helper-text" v-if="serverErrors.email">{{serverErrors.email}}</small>
-<!--            <small class="helper-text" v-for="serverErrors.email" v-bind:key="error">-->
-<!--              {{error}}-->
-<!--            </small>            -->
+            <div class="el-form-item__error" v-for="error in serverErrors.email" v-bind:key="error">
+              {{error}}
+            </div>
           </el-form-item>
           <el-form-item prop="password_1">
             <el-input v-model="signUpForm.password_1" placeholder="Password"></el-input>
+            <small class="helper-text" v-for="error in serverErrors.password_1" v-bind:key="error">
+              {{error}}
+            </small>
           </el-form-item>
           <el-form-item prop="password_2">
             <el-input v-model="signUpForm.password_2" placeholder="Repeat your password"></el-input>
+            <small class="helper-text" v-for="error in serverErrors.password_2" v-bind:key="error">
+              {{error}}
+            </small>
           </el-form-item>
         </el-form>
 
@@ -76,6 +80,7 @@
 </template>
 
 <script>
+// import Schema from 'async-validator';
 
 export default {
   name: "SignUp",
@@ -88,8 +93,10 @@ export default {
     },
     rules: {
       email: [
+        // { type: 'string', required: true, pattern: Schema.pattern.email },
+
         {required: true, message: 'Please input your email', trigger: 'blur'},
-        {min: 3, max: 5, message: 'Email should be 3 to 5', trigger: 'blur'},
+        // {min: 3, max: 5, message: 'Email should be 3 to 5', trigger: 'blur'},
         // TODO: ADD email validation here
       ],
       password_1: [
@@ -102,7 +109,7 @@ export default {
       ],
     },
     serverErrors: {
-      email: null,
+      email: [],
       password_1: [],
       password_2: [],
     }
