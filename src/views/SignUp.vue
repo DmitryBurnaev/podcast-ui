@@ -12,13 +12,13 @@
             </div>
           </el-form-item>
           <el-form-item prop="password_1">
-            <el-input v-model="signUpForm.password_1" placeholder="Password"></el-input>
+            <el-input v-model="signUpForm.password_1" placeholder="Password" type="password"></el-input>
             <small class="helper-text" v-for="error in serverErrors.password_1" v-bind:key="error">
               {{error}}
             </small>
           </el-form-item>
           <el-form-item prop="password_2">
-            <el-input v-model="signUpForm.password_2" placeholder="Repeat your password"></el-input>
+            <el-input v-model="signUpForm.password_2" placeholder="Repeat your password" type="password"></el-input>
             <small class="helper-text" v-for="error in serverErrors.password_2" v-bind:key="error">
               {{error}}
             </small>
@@ -28,59 +28,11 @@
           <button class="btn btn-lg btn-primary btn-block mt-4" @click="submitForm('signUpForm')">Sign UP</button>
           or <router-link to="/sign-in">Sign IN</router-link>
 
-
-
-
-
-<!--        <form class="form-signup" method="post" @submit.prevent="submitSignUp" >-->
-<!--          <div class="form-group">-->
-<!--            <input-->
-<!--                type="text" name="email" id="email" placeholder="email"-->
-<!--                v-model.trim="email" class="form-control"-->
-<!--                :class="{invalid: ($v.email.$dirty && !$v.email.required ) || ($v.email.$dirty && !$v.email.email ) }">-->
-<!--            <small class="helper-text" v-if="($v.email.$dirty && !$v.email.required)">-->
-<!--              Email is required field-->
-<!--            </small>-->
-<!--            <small class="helper-text" v-else-if="($v.email.$dirty && !$v.email.email )">-->
-<!--              Email is invalid-->
-<!--            </small>-->
-<!--          </div>-->
-
-<!--          <div class="form-group">-->
-<!--            <input-->
-<!--                type="password" name="email" id="password_1" placeholder="password"-->
-<!--                v-model.trim="password_1" class="form-control"-->
-<!--                :class="{invalid: ($v.password_1.$dirty && !$v.password_1.required ) || ($v.password_1.$dirty && !$v.password_1.minLength ) }">-->
-<!--            <small class="helper-text" v-if="($v.password_1.$dirty && !$v.password_1.required )">-->
-<!--              Password is required field-->
-<!--            </small>-->
-<!--            <small class="helper-text" v-else-if="($v.password_1.$dirty && !$v.password_1.minLength )">-->
-<!--              Password must be at least {{$v.password_1.$params.minLength.min}} chars. Now it is {{password_1.length}}-->
-<!--            </small>-->
-<!--          </div>-->
-
-<!--          <div class="form-group">-->
-<!--            <input-->
-<!--                type="password" name="email" id="password_2"-->
-<!--                placeholder="Repeat your password"-->
-<!--                v-model.trim="password_2" class="form-control"-->
-<!--                :class="{invalid: ($v.password_2.$dirty && !$v.password_2.required ) || ($v.password_2.$dirty && !$v.password_2.minLength ) }">-->
-<!--            <small class="helper-text" v-if="($v.password_2.$dirty && !$v.password_2.required )">-->
-<!--              Password is required field-->
-<!--            </small>-->
-<!--            <small class="helper-text" v-else-if="($v.password_2.$dirty && !$v.password_2.minLength )">-->
-<!--              Password must be at least {{$v.password_2.$params.minLength.min}} chars. Now it is {{password_2.length}}-->
-<!--            </small>-->
-<!--          </div>-->
-<!--          <button class="btn btn-lg btn-primary btn-block mt-4" type="submit">Sign UP</button>-->
-<!--          or <router-link to="/sign-in">Sign IN</router-link>-->
-<!--        </form>-->
       </div>
     </div>
 </template>
 
 <script>
-// import Schema from 'async-validator';
 
 export default {
   name: "SignUp",
@@ -93,11 +45,7 @@ export default {
     },
     rules: {
       email: [
-        // { type: 'string', required: true, pattern: Schema.pattern.email },
-
-        {required: true, message: 'Please input your email', trigger: 'blur'},
-        // {min: 3, max: 5, message: 'Email should be 3 to 5', trigger: 'blur'},
-        // TODO: ADD email validation here
+        { type: 'email', required: true, trigger: 'blur' },
       ],
       password_1: [
         {required: true, message: 'Please input your password', trigger: 'change'},
