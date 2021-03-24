@@ -25,8 +25,8 @@
           </el-form-item>
         </el-form>
 
-          <button class="btn btn-lg btn-primary btn-block mt-4" @click="submitForm('signUpForm')">Sign UP</button>
-          or <router-link to="/sign-in">Sign IN</router-link>
+        <button class="btn btn-lg btn-primary btn-block mt-4" @click="submitForm('signUpForm')">Sign UP</button>
+        or <router-link to="/sign-in">Sign IN</router-link>
 
       </div>
     </div>
@@ -64,7 +64,6 @@ export default {
   }),
   mounted() {
     this.signUpForm.token = this.$route.query.token || "[UNKNOWN token]"
-    console.log("invite token", this.signUpForm.token)
   },
   computed: {
     error() {
@@ -79,27 +78,12 @@ export default {
     }
   },
   methods: {
-    // async submitSignUp() {
-    //   console.log("SignUp submitting")
-    //   if (this.$v.$invalid) {
-    //     this.$v.$touch()
-    //     console.log("Is invalid..")
-    //     return
-    //   }
-    //   console.log(this.formData)
-    //   let success = await this.$store.dispatch('signUp', this.formData)
-    //   if (success) {
-    //     await this.$router.push("/")
-    //   }
-    // },
     async submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log("Form is valid")
-          // todo: fix sending!
           this.$store.dispatch('signUp', this.signUpForm).then(() => {this.$router.push("/")})
         } else {
-          console.log('error submit!!');
+          console.log("Form is invalid.")
           return false;
         }
       });
