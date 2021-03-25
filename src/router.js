@@ -58,22 +58,25 @@ const router = new VueRouter({
   routes
 })
 
-// todo:
-//  1. request here 'me' API (if it is not cached)
-//  2. provide globalIsLoading in the store
-//  3. preloader on mainLayout
-//  4. return promise in the interceptor (support callbacks)
-
 router.beforeEach((to, from, next) => {
   const accessToken = store.getters.accessToken;
   const signInRequired = to.matched.some(record => record.meta.auth)
 
-  if (signInRequired && !accessToken){
-    console.log('router.beforeEach | redirect to sign-in: ', `${from.path} -> ${to.path}`)
-    next('/sign-in?need-sign-in')
+  if (signInRequired){
+    if (accessToken){
+      console.log('router.beforeEach | all-right (access token exists)! go to the next page: ', `${from.path} -> ${to.path}`)
+      next()
+    } else {
+      console.log('router.beforeEach | redirect to sign-in: ', `${from.path} -> /sign-in/`)
+      next({name: 'signIn', query: {message: 'need-sign-in'}})
+    }
+  } else if (accessToken){
+    console.log('router.beforeEach | no sign-in required -> go to Home', `${from.path} -> /`)
+    next({name: 'Home'})
   } else {
     console.log('router.beforeEach | all-right! go to the next page: ', `${from.path} -> ${to.path}`)
     next()
   }
+
 })
 export default router

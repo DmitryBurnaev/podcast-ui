@@ -37,11 +37,12 @@ export default function setup() {
                         })
                         .catch((error) => {
                             console.log('interceptor | catch err:', error)
-                            router.push("/sign-in?message=session-expired").then(() => {})
+                            router.push({name: 'signIn', query: {'message': 'session-expired'}}).then(() => {})
                         })
                 }
                 else {
-                    router.push("/sign-in?message=need-sign-in").catch(() => {})
+                    store.commit('clearToken')
+                    router.push({name: 'signIn', query: {'message': 'need-sign-in'}}).then(() => {})
                 }
             }
             store.commit('setError', error.response.data)
