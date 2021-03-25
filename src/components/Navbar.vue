@@ -9,7 +9,7 @@
             <span class="navbar-toggler-bar bar3"></span>
           </button>
         </div>
-        <a class="navbar-brand" href="javascript:;">Paper Dashboard 2</a>
+        <a class="navbar-brand" href="javascript:;">Podcasts</a>
       </div>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -55,6 +55,11 @@
               <p>
                 <span class="d-lg-none d-md-block">Account</span>
               </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn-sign-out" @click="signOut" title="Sign Out">
+              <i class="nc-icon nc-button-power"></i>
             </a>
           </li>
         </ul>
@@ -106,7 +111,6 @@ export default {
   },
   methods: {
     async signOut() {
-      this.$message("SignOut here...")
       await this.$store.dispatch('signOut')
       await this.$router.push("/sign-in?message=signed-out")
     }
@@ -116,3 +120,9 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  .btn-sign-out{
+    cursor: pointer;
+  }
+
+</style>

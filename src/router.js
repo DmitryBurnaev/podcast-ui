@@ -58,12 +58,6 @@ const router = new VueRouter({
   routes
 })
 
-// todo:
-//  1. request here 'me' API (if it is not cached)
-//  2. provide globalIsLoading in the store
-//  3. preloader on mainLayout
-//  4. return promise in the interceptor (support callbacks)
-
 router.beforeEach((to, from, next) => {
   const signInRequired = to.matched.some(record => record.meta.auth)
 
@@ -77,6 +71,6 @@ router.beforeEach((to, from, next) => {
     console.log('router.beforeEach | all-right! go to the next page: ', `${from.path} -> ${to.path}`)
     next()
   }
-
+  // todo: redirect from sign-in if token exists
 })
 export default router

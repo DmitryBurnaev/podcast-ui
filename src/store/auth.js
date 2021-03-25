@@ -25,50 +25,34 @@ export default {
         }
     },
     actions: {
-        async signIn({dispatch, commit}, {email, password}) {
-            console.log(dispatch)
+        async signIn({commit}, {email, password}) {
             let response
-            try {
-                response = await axios.post("auth/sign-in/", {'email': email, 'password': password})
-            } catch (err) {
-                commit('setError', err.response.data)
-                return false
-            }
+            response = await axios.post("auth/sign-in/", {'email': email, 'password': password})
+            if (!response){ throw Error }
             commit('setTokens', response.data)
-            return true
         },
-        async signUp({dispatch, commit}, {email, password_1, password_2, token}){
-            console.log(dispatch)
+        async signUp({commit}, {email, password_1, password_2, token}){
             let response
-            try {
-                const payload = {
-                    'email': email,
-                    'password_1': password_1,
-                    'password_2': password_2,
-                    'invite_token': token
-                }
-                response = await axios.post("auth/sign-up/", payload)
-            } catch (err) {
-                commit('setError', err.response.data)
-                return false
-            }
+            response = await axios.post("auth/sign-up/", {
+                'email': email,
+                'password_1': password_1,
+                'password_2': password_2,
+                'invite_token': token
+            })
+            if (!response){ throw Error }
             commit('setTokens', response.data)
-            return true
         },
         async signOut({commit}){
-            try {
-                await axios.delete("auth/sign-out/")
-            } catch (err) {
-                commit('setError', err.response.data)
-            }
+            await axios.delete("auth/sign-out/")
             commit('clearToken')
         },
-        async refreshToken({dispatch, commit}) {
-            console.log(dispatch)
+        async refreshToken({commit}) {
             let response
             response = await axios.post("auth/refresh-token/", {'refresh_token': this.refreshToken})
-            commit('setTokens', response.data)
-            return true
+            if (response){
+                commit('setTokens', response.data)
+                return true
+            }
         },
     }
 }

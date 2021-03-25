@@ -53,6 +53,7 @@ export default function setup() {
                         })
                 }
                 else {
+                    store.commit('clearToken')
                     router.push({name: 'signIn', query: {'message': 'need-sign-in'}}).then(() => {})
                 }
             } else {
