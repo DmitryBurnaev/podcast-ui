@@ -67,7 +67,7 @@ export default {
 }
 .podcast-cover-container{
   img{
-    height: 100px;
+    //height: 100px;
   }
 }
 </style>

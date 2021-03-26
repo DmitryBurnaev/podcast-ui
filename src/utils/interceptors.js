@@ -27,7 +27,12 @@ export default function setup() {
             console.log(`interceptor | ${error}`)
             const status = error.response ? error.response.status : null
             if (status === 401) {
-                if (error.response.data.details.includes("Signature has expired")) {
+                const errorDetails = error.response.data.details;
+                if (errorDetails.includes("Email or password is invalid.")){
+                    app.$message({type: 'error', message: errorDetails, showClose: true});
+                    return null
+                }
+                if (errorDetails.includes("Signature has expired")) {
                     console.log("interceptor | refresh", store.getters.refreshToken)
                     let requestCanceled = false;
                     return axios
@@ -53,7 +58,6 @@ export default function setup() {
                         })
                 }
                 else {
-                    store.commit('clearToken')
                     router.push({name: 'signIn', query: {'message': 'need-sign-in'}}).then(() => {})
                 }
             } else {
