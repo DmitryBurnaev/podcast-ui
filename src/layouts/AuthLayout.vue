@@ -44,5 +44,13 @@ export default {
   .auth-container {
     margin-top: 100px;
   }
-
+  .card-background{
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    img{
+      -webkit-filter: blur(2px);
+      -ms-filter: blur(2px);
+      filter: blur(2px);
+    }
+  }
 </style>

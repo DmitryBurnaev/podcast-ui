@@ -3,7 +3,7 @@
     <div class="logo">
       <a href="https://www.creative-tim.com" class="simple-text logo-mini">
         <div class="logo-image-small">
-          <img src="../assets/img/podcast-logo.jpg">
+          <img src="../assets/img/podcast-logo.jpeg" alt="...">
         </div>
       </a>
       <a href="https://www.creative-tim.com" class="simple-text logo-normal">

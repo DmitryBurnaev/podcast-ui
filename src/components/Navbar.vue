@@ -9,7 +9,8 @@
             <span class="navbar-toggler-bar bar3"></span>
           </button>
         </div>
-        <a class="navbar-brand" href="javascript:;">Podcasts</a>
+        <!-- TODO: add breadcrumbs here -->
+        <router-link tag="a" :to="{name: 'podcastList'}" class="navbar-brand">Podcasts</router-link>
       </div>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -17,46 +18,18 @@
         <span class="navbar-toggler-bar navbar-kebab"></span>
       </button>
       <div class="collapse navbar-collapse justify-content-end" id="navigation">
-        <form>
-          <div class="input-group no-border">
-            <input type="text" value="" class="form-control" placeholder="Search...">
-            <div class="input-group-append">
-              <div class="input-group-text">
-                <i class="nc-icon nc-zoom-split"></i>
-              </div>
-            </div>
-          </div>
-        </form>
+<!--        <form>-->
+<!--          <div class="input-group no-border">-->
+<!--            <input type="text" value="" class="form-control" placeholder="Search...">-->
+<!--            <div class="input-group-append">-->
+<!--              <div class="input-group-text">-->
+<!--                <i class="nc-icon nc-zoom-split"></i>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </form>-->
         <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link btn-magnify" href="javascript:;">
-              <i class="nc-icon nc-layout-11"></i>
-              <p>
-                <span class="d-lg-none d-md-block">Stats</span>
-              </p>
-            </a>
-          </li>
-          <li class="nav-item btn-rotate dropdown">
-            <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i class="nc-icon nc-bell-55"></i>
-              <p>
-                <span class="d-lg-none d-md-block">Some Actions</span>
-              </p>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link btn-rotate" href="javascript:;">
-              <i class="nc-icon nc-settings-gear-65"></i>
-              <p>
-                <span class="d-lg-none d-md-block">Account</span>
-              </p>
-            </a>
-          </li>
+
           <li class="nav-item">
             <a class="nav-link btn-sign-out" @click="signOut" title="Sign Out">
               <i class="nc-icon nc-button-power"></i>
@@ -67,56 +40,16 @@
     </div>
   </nav>
 
-
-<!--  <nav class="navbar">-->
-<!--    <div class="date">{{date | date('datetime') }}</div>-->
-<!--    <div class="nav-wrapper">-->
-
-<!--      <div id="nav">-->
-<!--        <button style="margin-right: 5px" class="sandwich" @click="$emit('navClick')">X</button>-->
-<!--        <router-link to="/">Home</router-link>-->
-<!--        |-->
-<!--        <router-link to="/podcasts">Podcast List</router-link>-->
-<!--        |-->
-<!--        <router-link to="/sign-up">SignUp</router-link>-->
-<!--        |-->
-<!--        <router-link to="/sign-in">SignIn</router-link>-->
-<!--      </div>-->
-<!--    </div>-->
-
-<!--    <div class="dropdown">-->
-<!--      <ul>-->
-<!--        <li>-->
-<!--          <router-link to="/">Profile</router-link>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <a href="#" @click.prevent="signOut">Выйти</a>-->
-<!--        </li>-->
-<!--      </ul>-->
-
-<!--    </div>-->
-<!--  </nav>-->
 </template>
 
 <script>
 export default {
   name: "Navbar",
-  data: () => ({
-    date: new Date()
-  }),
-  mounted() {
-    this.interval = setInterval(() => {
-      this.date = new Date()
-    }, 1000)
-  },
   methods: {
     async signOut() {
       await this.$store.dispatch('signOut')
       await this.$router.push("/sign-in?message=signed-out")
     }
-  },
-  beforeDestroy() {
-    clearInterval(this.interval)
   }
 }
 </script>
@@ -124,5 +57,4 @@ export default {
   .btn-sign-out{
     cursor: pointer;
   }
-
 </style>

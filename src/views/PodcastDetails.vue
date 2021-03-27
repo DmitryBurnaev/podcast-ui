@@ -3,13 +3,14 @@
     <div class="row">
       <div class="col-md-4">
         <div class="card card-podcast-summary  card-user">
-          <div class="image">
-            <img src="../assets/img/damir-bosnjak.jpg" alt="...">
+          <div class="image card-background">
+            <img src="../assets/img/podcast-background.jpg" alt="podcast-background" >
           </div>
           <div class="card-body">
             <div class="author">
               <a href="#">
-                <img class="avatar border-gray" :src="podcast.image_url" alt="...">
+                <img v-if="podcast.image_url" class="avatar border-gray" :src="podcast.image_url" :alt="podcast.name">
+                <img v-else class="avatar border-gray" src="../assets/img/cover-default.jpeg" :alt="podcast.name">
                 <h5 class="title">{{ podcast.name }}</h5>
               </a>
             </div>
@@ -269,6 +270,7 @@ export default {
 }
 </script>
 <style lang="scss">
+
 .row-episode{
 }
 .row-episode .episode-content{
