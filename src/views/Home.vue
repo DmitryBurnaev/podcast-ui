@@ -21,7 +21,7 @@
                   <div class="numbers">
                     <p class="card-category">{{podcast.name}}</p>
                     <!-- TODO: implement `episodes_count` in list of podcasts -->
-                    <p class="card-title">{{podcast.episodes_count || 10}}</p>
+                    <p class="card-title">{{podcast.episodes_count || 0}}</p>
                   </div>
                 </div>
               </div>
@@ -45,7 +45,6 @@
 <script>
 export default {
   name: "Home",
-  // props: ['podcasts'],
   data: () => ({
     loading: true,
     podcasts: [],
@@ -64,10 +63,5 @@ export default {
 
 .content-home .card-body{
   cursor: pointer;
-}
-.podcast-cover-container{
-  img{
-    //height: 100px;
-  }
 }
 </style>
