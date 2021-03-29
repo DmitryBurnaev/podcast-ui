@@ -30,7 +30,7 @@
 
             <div class="card-footer ">
               <hr>
-              <div class="stats">
+              <div class="stats cursor-pointer" @click="openCreateEpisodeDialog(podcast)">
                 <i class="nc-icon nc-tap-01"></i>
                 Add new episode
               </div>
@@ -38,6 +38,19 @@
           </div>
         </div>
       </div>
+
+      <el-dialog title="Creating new episode" :visible.sync="dialogFormVisible">
+        <el-form :model="createEpisodeForm">
+          <el-form-item label="Link to the source">
+            <el-input v-model="createEpisodeForm.url" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">Cancel</el-button>
+          <el-button type="primary" @click="dialogFormVisible = false">Create</el-button>
+        </span>
+      </el-dialog>
+
     </div>
 
 </template>
@@ -48,6 +61,11 @@ export default {
   data: () => ({
     loading: true,
     podcasts: [],
+    dialogFormVisible: false,
+    // todo: add url validation
+    createEpisodeForm: {
+      url: ""
+    }
   }),
   async mounted(){
     console.log("MainLayout mounted")
@@ -55,6 +73,12 @@ export default {
       await this.$store.dispatch('getPodcasts')
       this.podcasts = this.$store.getters.podcasts
       this.loading = false
+    }
+  },
+  methods:{
+    openCreateEpisodeDialog(podcast){
+      console.log("Creating episode for ", podcast)
+      this.dialogFormVisible = true
     }
   }
 }

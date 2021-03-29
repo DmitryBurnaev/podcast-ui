@@ -34,4 +34,7 @@ export default {
       font-size: 50px;
     }
   }
+  .cursor-pointer{
+    cursor: pointer;
+  }
 </style>

@@ -41,12 +41,12 @@
             <form>
               <div class="row">
                 <div class="col-md-8 pr-1">
-                  <div class="form-group">
+                  <div class="form-group  text-left">
                     <label>Name</label>
                     <input v-model="form.name" type="text" class="form-control" placeholder="Podcast Name">
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 text-left">
                   <div class="form-group">
                     <label>Created At</label>
                     <input type="text" class="form-control" placeholder="Podcast name" disabled
@@ -55,7 +55,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 text-left">
                   <div class="form-group">
                     <label>Download Automatically</label>
                     <el-switch
@@ -69,7 +69,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 text-left">
                   <div class="form-group">
                     <label>Description</label>
                     <textarea class="form-control textarea" v-model="form.description" rows="4"></textarea>
