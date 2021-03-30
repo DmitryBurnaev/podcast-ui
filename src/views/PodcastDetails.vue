@@ -271,14 +271,6 @@ export default {
 </script>
 <style lang="scss">
 
-.row-episode{
-}
-.row-episode .episode-content{
-  cursor: pointer;
-}
-.row-episode .episode-title{
-  margin-top: -3px;
-}
 .hr__row-episode{
   margin-top: 0.5rem;
 }

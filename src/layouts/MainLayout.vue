@@ -37,4 +37,12 @@ export default {
   .cursor-pointer{
     cursor: pointer;
   }
+  .row-episode{
+  }
+  .row-episode .episode-content{
+    cursor: pointer;
+  }
+  .row-episode .episode-title{
+    margin-top: -3px;
+  }
 </style>

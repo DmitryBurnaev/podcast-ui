@@ -41,14 +41,51 @@
 
       <el-dialog title="Creating new episode" :visible.sync="dialogFormVisible">
         <el-form :model="createEpisodeForm">
-          <el-form-item label="Link to the source">
-            <el-input v-model="createEpisodeForm.url" autocomplete="off"></el-input>
-          </el-form-item>
+<!--          <el-form-item>-->
+<!--            <el-input v-model="createEpisodeForm.url" :disabled="createEpisodeForm.inProgress" autocomplete="off" placeholder="Link to the source"></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item>-->
+<!--            <el-button type="success" plain @click="createEpisode" :disabled="createEpisodeForm.inProgress">Create</el-button>-->
+<!--          </el-form-item>-->
+          <div>
+            <el-input placeholder="Link to the source" v-model="createEpisodeForm.link" :disabled="createEpisodeForm.inProgress">
+              <el-button slot="append" icon="el-icon-edit" type="success" @click="createEpisode"></el-button>
+            </el-input>
+          </div>
         </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">Create</el-button>
-        </span>
+        <div class="d-flex justify-content-center" v-if="createEpisodeForm.inProgress">
+          <img class="preload ml-1" src="../assets/img/down-arrow.gif" alt=""/>
+        </div>
+        <div v-if="createdEpisode">
+          <div class="row row-episode">
+            <div class="col-md-1 col-1 episode-content" @click="goToEpisode(createdEpisode)">
+              <div class="episode-image">
+                <img :src="createdEpisode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+              </div>
+            </div>
+            <div class="col-md-9 col-9 episode-title episode-content" @click="goToEpisode(createdEpisode)">
+              {{ createdEpisode.title }}
+              <br/>
+              <span
+                  :class="{
+                    'text-success': (createdEpisode.status === 'published'),
+                    'text-danger': (createdEpisode.status === 'error'),
+                    'text-info': (['new', 'downloading'].includes(createdEpisode.status)),
+                    'text-gray': (createdEpisode.status === 'archived')
+                  }">
+                <small>{{humanStatus(createdEpisode.status)}}</small>
+              </span>
+            </div>
+            <div class="col-md-2 col-2 text-right createdEpisode-controls">
+              <img class="preload mr-1 mt-2" v-if="createdEpisode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
+            </div>
+          </div>
+        </div>
+
+<!--        <span slot="footer" class="dialog-footer">-->
+<!--          <el-button @click="dialogFormVisible = false">Cancel</el-button>-->
+<!--          <el-button type="primary" @click="dialogFormVisible = false">Create</el-button>-->
+<!--        </span>-->
       </el-dialog>
 
     </div>
@@ -56,6 +93,8 @@
 </template>
 
 <script>
+import {goToEpisode, humanStatus} from "@/utils/podcast";
+
 export default {
   name: "Home",
   data: () => ({
@@ -64,8 +103,10 @@ export default {
     dialogFormVisible: false,
     // todo: add url validation
     createEpisodeForm: {
-      url: ""
-    }
+      link: "",
+      inProgress: false,
+    },
+    createdEpisode: null
   }),
   async mounted(){
     console.log("MainLayout mounted")
@@ -79,7 +120,12 @@ export default {
     openCreateEpisodeDialog(podcast){
       console.log("Creating episode for ", podcast)
       this.dialogFormVisible = true
-    }
+    },
+    createEpisode(){
+      this.createEpisodeForm.inProgress = true
+    },
+    goToEpisode: goToEpisode,
+    humanStatus: humanStatus,
   }
 }
 </script>
@@ -87,5 +133,9 @@ export default {
 
 .content-home .card-body{
   cursor: pointer;
+}
+.preload{
+  width: 50px;
+  margin-top: 30px;
 }
 </style>
