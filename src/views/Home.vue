@@ -20,7 +20,6 @@
                 <div class="col-7 col-md-8">
                   <div class="numbers">
                     <p class="card-category">{{podcast.name}}</p>
-                    <!-- TODO: implement `episodes_count` in list of podcasts -->
                     <p class="card-title">{{podcast.episodes_count || 0}}</p>
                   </div>
                 </div>
@@ -94,6 +93,7 @@
 
 <script>
 import {goToEpisode, humanStatus} from "@/utils/podcast";
+import axios from "axios";
 
 export default {
   name: "Home",
@@ -105,6 +105,7 @@ export default {
     createEpisodeForm: {
       link: "",
       inProgress: false,
+      podcastID: null,
     },
     createdEpisode: null
   }),
@@ -120,9 +121,15 @@ export default {
     openCreateEpisodeDialog(podcast){
       console.log("Creating episode for ", podcast)
       this.dialogFormVisible = true
+      this.createEpisodeForm.podcastID = podcast.id
     },
-    createEpisode(){
+    async createEpisode(){
       this.createEpisodeForm.inProgress = true
+      const response = await axios.post(`podcasts/${this.createEpisodeForm.podcastID}/episodes/`, this.createEpisodeForm)
+      if (response){
+        this.createdEpisode = response.data
+      }
+      this.createEpisodeForm.inProgress = false
     },
     goToEpisode: goToEpisode,
     humanStatus: humanStatus,
