@@ -47,36 +47,39 @@
 <!--            <el-button type="success" plain @click="createEpisode" :disabled="createEpisodeForm.inProgress">Create</el-button>-->
 <!--          </el-form-item>-->
           <div>
-            <el-input placeholder="Link to the source" v-model="createEpisodeForm.link" :disabled="createEpisodeForm.inProgress">
+            <el-input placeholder="Link to the source" v-model="createEpisodeForm.source_url" :disabled="createEpisodeForm.inProgress">
               <el-button slot="append" icon="el-icon-edit" type="success" @click="createEpisode"></el-button>
             </el-input>
+            <small class="helper-text" v-for="error in serverErrors.source_url" v-bind:key="error">
+              {{error}}
+            </small>
           </div>
         </el-form>
-        <div class="d-flex justify-content-center" v-if="createEpisodeForm.inProgress">
+        <div class="d-flex justify-content-center" v-if="createEpisodeData.inProgress">
           <img class="preload ml-1" src="../assets/img/down-arrow.gif" alt=""/>
         </div>
-        <div v-if="createdEpisode">
+        <div v-if="createEpisodeData.episode">
           <div class="row row-episode">
-            <div class="col-md-1 col-1 episode-content" @click="goToEpisode(createdEpisode)">
+            <div class="col-md-1 col-1 episode-content" @click="goToEpisode(createEpisodeData.episode)">
               <div class="episode-image">
-                <img :src="createdEpisode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                <img :src="createEpisodeData.episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
               </div>
             </div>
             <div class="col-md-9 col-9 episode-title episode-content" @click="goToEpisode(createdEpisode)">
-              {{ createdEpisode.title }}
+              {{ createEpisodeData.episode.title }}
               <br/>
               <span
                   :class="{
-                    'text-success': (createdEpisode.status === 'published'),
-                    'text-danger': (createdEpisode.status === 'error'),
-                    'text-info': (['new', 'downloading'].includes(createdEpisode.status)),
-                    'text-gray': (createdEpisode.status === 'archived')
+                    'text-success': (createEpisodeData.episode.status === 'published'),
+                    'text-danger': (createEpisodeData.episode.status === 'error'),
+                    'text-info': (['new', 'downloading'].includes(createEpisodeData.episode.status)),
+                    'text-gray': (createEpisodeData.episode.status === 'archived')
                   }">
-                <small>{{humanStatus(createdEpisode.status)}}</small>
+                <small>{{humanStatus(createEpisodeData.episode.status)}}</small>
               </span>
             </div>
-            <div class="col-md-2 col-2 text-right createdEpisode-controls">
-              <img class="preload mr-1 mt-2" v-if="createdEpisode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
+            <div class="col-md-2 col-2 text-right episode-controls">
+              <img class="preload mr-1 mt-2" v-if="createEpisodeData.episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
             </div>
           </div>
         </div>
@@ -103,12 +106,29 @@ export default {
     dialogFormVisible: false,
     // todo: add url validation
     createEpisodeForm: {
-      link: "",
+      source_url: "",
+    },
+    createEpisodeData: {
       inProgress: false,
       podcastID: null,
+      episode: null
     },
-    createdEpisode: null
+    serverErrors:{
+      source_url: [],
+    }
   }),
+  computed: {
+    error() {
+      return this.$store.getters.error
+    }
+  },
+  watch: {
+    error(serverError){
+      if ( typeof serverError.details === 'object'){
+        this.serverErrors = serverError.details
+      }
+    }
+  },
   async mounted(){
     console.log("MainLayout mounted")
     if (this.$store.getters.accessToken) {
@@ -121,15 +141,15 @@ export default {
     openCreateEpisodeDialog(podcast){
       console.log("Creating episode for ", podcast)
       this.dialogFormVisible = true
-      this.createEpisodeForm.podcastID = podcast.id
+      this.createEpisodeData.podcastID = podcast.id
     },
     async createEpisode(){
-      this.createEpisodeForm.inProgress = true
-      const response = await axios.post(`podcasts/${this.createEpisodeForm.podcastID}/episodes/`, this.createEpisodeForm)
+      this.createEpisodeData.inProgress = true
+      const response = await axios.post(`podcasts/${this.createEpisodeData.podcastID}/episodes/`, this.createEpisodeForm)
       if (response){
-        this.createdEpisode = response.data
+        this.createEpisodeData.episode = response.data
       }
-      this.createEpisodeForm.inProgress = false
+      this.createEpisodeData.inProgress = false
     },
     goToEpisode: goToEpisode,
     humanStatus: humanStatus,

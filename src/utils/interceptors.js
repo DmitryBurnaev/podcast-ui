@@ -67,6 +67,8 @@ export default function setup() {
                 } else {
                     errorMessage = error.toString()
                 }
+                // console.log(error.response, errorMessage)
+                store.commit('setError', errorMessage)
                 app.$message({type: 'error', message: errorMessage, showClose: true});
             }
             return null
