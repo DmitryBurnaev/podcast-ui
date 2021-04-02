@@ -47,12 +47,18 @@
 <!--            <el-button type="success" plain @click="createEpisode" :disabled="createEpisodeForm.inProgress">Create</el-button>-->
 <!--          </el-form-item>-->
           <div>
-            <el-input placeholder="Link to the source" v-model="createEpisodeForm.source_url" :disabled="createEpisodeForm.inProgress">
-              <el-button slot="append" icon="el-icon-edit" type="success" @click="createEpisode"></el-button>
-            </el-input>
-            <small class="helper-text" v-for="error in serverErrors.source_url" v-bind:key="error">
-              {{error}}
-            </small>
+            <el-form-item prop="source_url" :class="{'is-error': serverErrors.source_url.length > 0}">
+              <el-input
+                  placeholder="Link to the source"
+                  v-model="createEpisodeForm.source_url"
+                  :disabled="createEpisodeForm.inProgress"
+              >
+                <el-button slot="append" icon="el-icon-edit" type="success" @click="createEpisode"></el-button>
+              </el-input>
+              <small class="el-form-item__error" v-for="error in serverErrors.source_url" v-bind:key="error">
+                {{error}}
+              </small>
+            </el-form-item>
           </div>
         </el-form>
         <div class="d-flex justify-content-center" v-if="createEpisodeData.inProgress">
@@ -123,9 +129,21 @@ export default {
     }
   },
   watch: {
-    error(serverError){
-      if ( typeof serverError.details === 'object'){
-        this.serverErrors = serverError.details
+    error(serverErrors){
+      // todo: move this logic to common part (helper function)
+      if ( typeof serverErrors.details === 'object'){
+        for (let key in this.serverErrors){
+          let serverError = serverErrors.details[key]
+          console.log('key', key, serverError)
+          if (serverError){
+            if (Array.isArray(serverError)){
+              this.serverErrors[key] = serverError
+            } else {
+              this.serverErrors[key] = serverError
+            }
+          }
+        }
+        console.log(this.serverErrors)
       }
     }
   },

@@ -11,9 +11,9 @@
               {{error}}
             </div>
           </el-form-item>
-          <el-form-item prop="password">
+          <el-form-item prop="password" :class="{'is-error': serverErrors.password.length > 0}">
             <el-input v-model="signInForm.password" placeholder="Password" type="password"></el-input>
-            <small class="helper-text" v-for="error in serverErrors.password" v-bind:key="error">
+            <small class="el-form-item__error" v-for="error in serverErrors.password" v-bind:key="error">
               {{error}}
             </small>
           </el-form-item>
@@ -60,9 +60,15 @@ export default {
     }
   },
   watch: {
-    error(serverError){
-      if ( typeof serverError.details === 'object'){
-        this.serverErrors = serverError.details
+    error(serverErrors){
+      // todo: move this logic to common part (helper function)
+      if ( typeof serverErrors.details === 'object'){
+        for (let key in this.serverErrors){
+          if (serverErrors.details[key]){
+            this.serverErrors[key] = [serverErrors.details[key]]
+          }
+        }
+        console.log(this.serverErrors)
       }
     }
   },

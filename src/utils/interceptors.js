@@ -67,9 +67,14 @@ export default function setup() {
                 } else {
                     errorMessage = error.toString()
                 }
-                // console.log(error.response, errorMessage)
-                store.commit('setError', errorMessage)
-                app.$message({type: 'error', message: errorMessage, showClose: true});
+                store.commit('setError', error.response.data)
+                console.log('interc', errorMessage)
+                if (typeof errorMessage === 'object'){
+                    console.error('Couldn\'t request', errorMessage )
+                    app.$message({type: 'error', message: 'Sorry... Request could not be processed', showClose: true});
+                } else {
+                    app.$message({type: 'error', message: errorMessage, showClose: true});
+                }
             }
             return null
         }

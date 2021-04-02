@@ -9,22 +9,9 @@
 </template>
 
 <script>
-import app from "@/main";
 
 export default {
   name: "AuthLayout",
-  computed: {
-    error() {
-      return this.$store.getters.error
-    }
-  },
-  watch: {
-    error(serverError){
-      if ( typeof serverError.details !== 'object'){
-        app.$message({type: 'error', message: serverError.details});
-      }
-    }
-  },
 }
 </script>
 <style lang="scss">

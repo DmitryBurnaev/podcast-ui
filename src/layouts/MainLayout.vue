@@ -39,6 +39,16 @@ export default {
 }
 </script>
 <style lang="scss">
+  form{
+    text-align: center;
+    input.invalid{
+      border-color: #cc0808;
+      color: #cc0808;
+    }
+    .helper-text{
+      color: #730606;
+    }
+  }
   .preloader{
     padding-top: 75px;
     .icon{
