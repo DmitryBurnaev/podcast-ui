@@ -40,12 +40,6 @@
 
       <el-dialog title="Creating new episode" :visible.sync="dialogFormVisible">
         <el-form :model="createEpisodeForm">
-<!--          <el-form-item>-->
-<!--            <el-input v-model="createEpisodeForm.url" :disabled="createEpisodeForm.inProgress" autocomplete="off" placeholder="Link to the source"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item>-->
-<!--            <el-button type="success" plain @click="createEpisode" :disabled="createEpisodeForm.inProgress">Create</el-button>-->
-<!--          </el-form-item>-->
           <div>
             <el-form-item prop="source_url" :class="{'is-error': serverErrors.source_url.length > 0}">
               <el-input
@@ -66,7 +60,7 @@
         </div>
         <div v-if="createEpisodeData.episode">
           <div class="row row-episode">
-            <div class="col-md-1 col-1 episode-content" @click="goToEpisode(createEpisodeData.episode)">
+            <div class="col-md-2 col-1 episode-content" @click="goToEpisode(createEpisodeData.episode)">
               <div class="episode-image">
                 <img :src="createEpisodeData.episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
               </div>
@@ -84,7 +78,7 @@
                 <small>{{humanStatus(createEpisodeData.episode.status)}}</small>
               </span>
             </div>
-            <div class="col-md-2 col-2 text-right episode-controls">
+            <div class="col-md-1 col-1 text-right episode-controls">
               <img class="preload mr-1 mt-2" v-if="createEpisodeData.episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
             </div>
           </div>
