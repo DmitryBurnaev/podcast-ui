@@ -104,6 +104,7 @@
               <div class="row">
                 <div class="col-md-10 pr-1">
                   <div class="form-group">
+                    <!-- TODO: APPLY validation here (el-form) -->
                     <input v-model="newEpisodeForm.source_url" type="text" class="form-control" placeholder="Episode Source Link">
                   </div>
                 </div>
@@ -202,7 +203,20 @@ export default {
       source_url: ''
     },
     newEpisodeIsCreating: false,
+    episodeCreation: {
+      rules: {
+        source_url: [
+          { type: 'url', required: true, trigger: 'change' },
+        ],
+      },
+      serverErrors: {
+        source_url: [],
+      }
+    },
   }),
+  error() {
+    return this.$store.getters.error
+  },
   async created() {
     await this.fetchData()
     this.form.name = this.podcast.name;
@@ -212,7 +226,23 @@ export default {
   },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
-    $route: 'fetchData'
+    $route: 'fetchData',
+    error(serverErrors){
+      // todo: move this logic to common part (helper function)
+      if ( typeof serverErrors.details === 'object'){
+        for (let key in this.episodeCreation.serverErrors){
+          let serverError = serverErrors.details[key]
+          if (serverError){
+            if (Array.isArray(serverError)){
+              this.episodeCreation.serverErrors[key] = serverError
+            } else {
+              this.episodeCreation.serverErrors[key] = serverError
+            }
+          }
+        }
+        console.log(this.episodeCreation.serverErrors)
+      }
+    }
   },
   methods: {
     async fetchData() {

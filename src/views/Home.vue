@@ -38,7 +38,7 @@
       </div>
 
       <el-dialog :title="createEpisodeData.title" :visible.sync="dialogFormVisible" v-if="createEpisodeData.podcast">
-        <el-form :model="createEpisodeForm">
+        <el-form :model="createEpisodeForm" :rules="rules" >
           <el-form-item prop="source_url" :class="{'is-error': serverErrors.source_url.length > 0}">
             <el-input
                 placeholder="Link to the source"
@@ -95,7 +95,7 @@ export default {
     loading: true,
     podcasts: [],
     dialogFormVisible: false,
-    // todo: add url validation
+    // todo: combine into single object 'episodeCreation'
     createEpisodeForm: {
       source_url: "",
     },
@@ -107,7 +107,12 @@ export default {
     },
     serverErrors:{
       source_url: [],
-    }
+    },
+    rules: {
+      source_url: [
+        { type: 'url', required: true, trigger: 'change' },
+      ],
+    },
   }),
   computed: {
     error() {
