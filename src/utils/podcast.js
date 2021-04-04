@@ -43,8 +43,8 @@ function downloadEpisode(episode){
     }
 }
 
-function goToEpisode(episode){
-  router.push({name: 'episodeDetails', params: {'episodeID': episode.id, 'podcastID': this.podcast.id}}).then(() => {})
+function goToEpisode(episode, podcastID){
+  router.push({name: 'episodeDetails', params: {'episodeID': episode.id, 'podcastID': podcastID}}).then(() => {})
 }
 
 function humanStatus(status){

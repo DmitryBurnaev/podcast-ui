@@ -100,6 +100,7 @@
                       </div>
                       <div class="col-ms-10 col-10">
                         <a :href="episode.remote_url" target="_blank">{{ episode.remote_url }}</a>
+                        <br />
                         <span class="text-secondary"><small>Remote URL</small></span>
                       </div>
                     </div>
