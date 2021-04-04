@@ -3,13 +3,14 @@
     <div class="row">
       <div class="col-md-4">
         <div class="card card-podcast-summary  card-user">
-          <div class="image">
-            <img src="../assets/img/damir-bosnjak.jpg" alt="...">
+          <div class="image card-background">
+            <img src="../assets/img/podcast-background.jpg" alt="podcast-background" >
           </div>
           <div class="card-body">
             <div class="author">
               <a href="#">
-                <img class="avatar border-gray" :src="podcast.image_url" alt="...">
+                <img v-if="podcast.image_url" class="avatar border-gray" :src="podcast.image_url" :alt="podcast.name">
+                <img v-else class="avatar border-gray" src="../assets/img/cover-default.jpeg" :alt="podcast.name">
                 <h5 class="title">{{ podcast.name }}</h5>
               </a>
             </div>
@@ -40,12 +41,12 @@
             <form>
               <div class="row">
                 <div class="col-md-8 pr-1">
-                  <div class="form-group">
+                  <div class="form-group  text-left">
                     <label>Name</label>
                     <input v-model="form.name" type="text" class="form-control" placeholder="Podcast Name">
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 text-left">
                   <div class="form-group">
                     <label>Created At</label>
                     <input type="text" class="form-control" placeholder="Podcast name" disabled
@@ -54,7 +55,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 text-left">
                   <div class="form-group">
                     <label>Download Automatically</label>
                     <el-switch
@@ -68,7 +69,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 text-left">
                   <div class="form-group">
                     <label>Description</label>
                     <textarea class="form-control textarea" v-model="form.description" rows="4"></textarea>
@@ -103,6 +104,7 @@
               <div class="row">
                 <div class="col-md-10 pr-1">
                   <div class="form-group">
+                    <!-- TODO: APPLY validation here (el-form) -->
                     <input v-model="newEpisodeForm.source_url" type="text" class="form-control" placeholder="Episode Source Link">
                   </div>
                 </div>
@@ -201,7 +203,20 @@ export default {
       source_url: ''
     },
     newEpisodeIsCreating: false,
+    episodeCreation: {
+      rules: {
+        source_url: [
+          { type: 'url', required: true, trigger: 'change' },
+        ],
+      },
+      serverErrors: {
+        source_url: [],
+      }
+    },
   }),
+  error() {
+    return this.$store.getters.error
+  },
   async created() {
     await this.fetchData()
     this.form.name = this.podcast.name;
@@ -211,7 +226,23 @@ export default {
   },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
-    $route: 'fetchData'
+    $route: 'fetchData',
+    error(serverErrors){
+      // todo: move this logic to common part (helper function)
+      if ( typeof serverErrors.details === 'object'){
+        for (let key in this.episodeCreation.serverErrors){
+          let serverError = serverErrors.details[key]
+          if (serverError){
+            if (Array.isArray(serverError)){
+              this.episodeCreation.serverErrors[key] = serverError
+            } else {
+              this.episodeCreation.serverErrors[key] = serverError
+            }
+          }
+        }
+        console.log(this.episodeCreation.serverErrors)
+      }
+    }
   },
   methods: {
     async fetchData() {
@@ -269,14 +300,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.row-episode{
-}
-.row-episode .episode-content{
-  cursor: pointer;
-}
-.row-episode .episode-title{
-  margin-top: -3px;
-}
+
 .hr__row-episode{
   margin-top: 0.5rem;
 }

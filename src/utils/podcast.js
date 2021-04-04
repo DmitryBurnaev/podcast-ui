@@ -1,5 +1,6 @@
 import axios from "axios";
 import app from '@/main'
+import router from "@/router";
 
 
 function deleteEpisode(episode, callback){
@@ -42,6 +43,9 @@ function downloadEpisode(episode){
     }
 }
 
+function goToEpisode(episode, podcastID){
+  router.push({name: 'episodeDetails', params: {'episodeID': episode.id, 'podcastID': podcastID}}).then(() => {})
+}
 
 function humanStatus(status){
     const statuses = {
@@ -55,4 +59,4 @@ function humanStatus(status){
 }
 
 
-export {deleteEpisode, downloadEpisode, humanStatus}
+export {deleteEpisode, downloadEpisode, humanStatus, goToEpisode}

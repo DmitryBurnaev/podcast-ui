@@ -9,22 +9,9 @@
 </template>
 
 <script>
-import app from "@/main";
 
 export default {
   name: "AuthLayout",
-  computed: {
-    error() {
-      return this.$store.getters.error
-    }
-  },
-  watch: {
-    error(serverError){
-      if ( typeof serverError.details !== 'object'){
-        app.$message({type: 'error', message: serverError.details});
-      }
-    }
-  },
 }
 </script>
 <style lang="scss">
@@ -44,5 +31,13 @@ export default {
   .auth-container {
     margin-top: 100px;
   }
-
+  .card-background{
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    img{
+      -webkit-filter: blur(2px);
+      -ms-filter: blur(2px);
+      filter: blur(2px);
+    }
+  }
 </style>

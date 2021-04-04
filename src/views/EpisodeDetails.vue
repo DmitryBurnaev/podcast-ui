@@ -3,8 +3,9 @@
     <div class="row">
       <div class="col-md-4">
         <div class="card card-podcast card-user">
-          <div class="image">
-            <img :src="podcast.image_url" alt="...">
+          <div class="image card-background" >
+            <img v-if="podcast.image_url" :src="podcast.image_url" :alt="podcast.name">
+            <img v-else src="../assets/img/cover-default.jpeg" :alt="podcast.name">
           </div>
           <div class="card-body">
             <div class="author">
@@ -99,6 +100,7 @@
                       </div>
                       <div class="col-ms-10 col-10">
                         <a :href="episode.remote_url" target="_blank">{{ episode.remote_url }}</a>
+                        <br />
                         <span class="text-secondary"><small>Remote URL</small></span>
                       </div>
                     </div>
@@ -216,7 +218,9 @@
   }
 </script>
 <style lang="scss">
-
+.podcast-background{
+  filter: blur(1.2px);
+}
 .avatar-episode{
   width: 60% !important;
   height: auto !important;

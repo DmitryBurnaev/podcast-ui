@@ -60,6 +60,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const signInRequired = to.matched.some(record => record.meta.auth)
+  const accessToken = store.getters.accessToken;
 
   if (signInRequired) {
     console.log("=> signInRequired ->")
@@ -67,10 +68,13 @@ router.beforeEach((to, from, next) => {
       console.log('ME was given | all-right! go to the next page: ', `${from.path} -> ${to.path}`)
       next()
     })
-  } else {
-    console.log('router.beforeEach | all-right! go to the next page: ', `${from.path} -> ${to.path}`)
+  } else if (accessToken){
+    console.log('router.beforeEach | no sign-in required -> go to Home', `${from.path} -> /`)
+    next({name: 'Home'})
+  }
+  else {
+    console.log('router.beforeEach | no signInRequired go to the next page: ', `${from.path} -> ${to.path}`)
     next()
   }
-  // todo: redirect from sign-in if token exists
 })
 export default router
