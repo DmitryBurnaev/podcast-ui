@@ -58,5 +58,23 @@ function humanStatus(status){
     return statuses[status] || status
 }
 
+function fillFormErrors(serverErrors, formErrors){
+    console.log('serverErrors, formErrors', serverErrors, formErrors)
+    if ( typeof serverErrors.details === 'object'){
+        for (let key in serverErrors.details){
+            let serverError = serverErrors.details[key]
+            console.log('key', key, serverError)
+            if (serverError){
+                if (Array.isArray(serverError)){
+                  formErrors[key] = serverError
+                } else {
+                  formErrors[key] = [serverError]
+                }
+            }
+        }
+        console.log(serverErrors)
+    }
+}
 
-export {deleteEpisode, downloadEpisode, humanStatus, goToEpisode}
+
+export {deleteEpisode, downloadEpisode, humanStatus, goToEpisode, fillFormErrors}

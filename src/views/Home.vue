@@ -37,16 +37,16 @@
         </div>
       </div>
 
-      <el-dialog :title="createEpisodeData.title" :visible.sync="dialogFormVisible" v-if="createEpisodeData.podcast">
-        <el-form :model="createEpisodeForm" :rules="rules" >
-          <el-form-item prop="source_url" :class="{'is-error': serverErrors.source_url.length > 0}">
+      <el-dialog :title="createEpisodeData.title" :visible.sync="createEpisodeData.dialog" v-if="createEpisodeData.podcast">
+        <el-form :model="createEpisodeData.form" :rules="createEpisodeData.rules" >
+          <el-form-item prop="source_url" :class="{'is-error': createEpisodeData.serverErrors.source_url.length > 0}">
             <el-input
                 placeholder="Link to the source"
-                v-model="createEpisodeForm.source_url"
+                v-model="createEpisodeData.form.source_url"
             >
               <el-button slot="append" icon="el-icon-edit" type="success" @click="createEpisode"></el-button>
             </el-input>
-            <small class="el-form-item__error" v-for="error in serverErrors.source_url" v-bind:key="error">
+            <small class="el-form-item__error" v-for="error in createEpisodeData.serverErrors.source_url" v-bind:key="error">
               {{error}}
             </small>
           </el-form-item>
@@ -72,7 +72,7 @@
                     'text-info': (['new', 'downloading'].includes(createEpisodeData.episode.status)),
                     'text-gray': (createEpisodeData.episode.status === 'archived')
                   }">
-                <small>{{humanStatus(createEpisodeData.episode.status)}}</small>
+                <small>{{ humanStatus(createEpisodeData.episode.status) }}</small>
               </span>
             </div>
             <div class="col-md-1 col-1 text-right episode-controls">
@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import {goToEpisode, humanStatus} from "@/utils/podcast";
+import {goToEpisode, humanStatus, fillFormErrors} from "@/utils/podcast";
 import axios from "axios";
 
 export default {
@@ -94,24 +94,23 @@ export default {
   data: () => ({
     loading: true,
     podcasts: [],
-    dialogFormVisible: false,
-    // todo: combine into single object 'episodeCreation'
-    createEpisodeForm: {
-      source_url: "",
-    },
-    createEpisodeData: {
-      title: "",
+    createEpisodeData:{
+      dialog: false,
+      form: {
+        source_url: "",
+      },
+      rules: {
+        source_url: [
+          { type: 'url', required: true, trigger: 'change' },
+        ],
+      },
+      // todo: fix form errors filling
+      serverErrors:{
+        source_url: [],
+      },
       inProgress: false,
       podcast: null,
-      episode: null
-    },
-    serverErrors:{
-      source_url: [],
-    },
-    rules: {
-      source_url: [
-        { type: 'url', required: true, trigger: 'change' },
-      ],
+      episode: null,
     },
   }),
   computed: {
@@ -121,21 +120,7 @@ export default {
   },
   watch: {
     error(serverErrors){
-      // todo: move this logic to common part (helper function)
-      if ( typeof serverErrors.details === 'object'){
-        for (let key in this.serverErrors){
-          let serverError = serverErrors.details[key]
-          console.log('key', key, serverError)
-          if (serverError){
-            if (Array.isArray(serverError)){
-              this.serverErrors[key] = serverError
-            } else {
-              this.serverErrors[key] = serverError
-            }
-          }
-        }
-        console.log(this.serverErrors)
-      }
+      fillFormErrors(serverErrors, this.createEpisodeData.serverErrors)
     }
   },
   async mounted(){
@@ -149,18 +134,17 @@ export default {
   methods:{
     openCreateEpisodeDialog(podcast){
       console.log("Creating episode for ", podcast)
-      this.createEpisodeData = {
-        title: `Creating episode for podcast "${podcast.name}"`,
-        inProgress: false,
-        podcast: podcast,
-        episode: null
-      }
-      this.dialogFormVisible = true
+      this.createEpisodeData.title = `Creating episode for podcast "${podcast.name}"`
+      this.createEpisodeData.inProgress = false
+      this.createEpisodeData.podcast = podcast
+      this.createEpisodeData.episode = null
+      this.createEpisodeData.dialog = true
+      this.createEpisodeData.serverErrors.source_url = []
     },
     async createEpisode(){
+      this.createEpisodeData.serverErrors.source_url = []
       this.createEpisodeData.inProgress = true
-      this.serverErrors.source_url = []
-      const response = await axios.post(`podcasts/${this.createEpisodeData.podcast.id}/episodes/`, this.createEpisodeForm)
+      const response = await axios.post(`podcasts/${this.createEpisodeData.podcast.id}/episodes/`, this.createEpisodeData.form)
       if (response){
         this.createEpisodeData.episode = response.data
       }
