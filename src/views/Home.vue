@@ -157,10 +157,12 @@ export default {
 </script>
 <style lang="scss">
 
-.content-home .card-body{
-  cursor: pointer;
-}
-.preload{
-  width: 40px !important;
+.content-home{
+  .preload{
+    width: 40px;
+  }
+  .card-body{
+    cursor: pointer;
+  }
 }
 </style>

@@ -155,7 +155,7 @@
                     </span>
                   </div>
                   <div class="col-md-2 col-2 text-right episode-controls">
-                      <img class="preload mr-1 mt-2" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
+                      <img class="preload mt-2" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
                       <button
                           v-if="episode.status === 'new'"
                           class="btn btn-sm btn-outline-success btn-round btn-icon mr-1"
