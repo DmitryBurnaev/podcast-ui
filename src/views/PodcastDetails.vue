@@ -185,7 +185,7 @@
 <script>
 import axios from "axios";
 import router from "@/router";
-import {deleteEpisode, downloadEpisode, humanStatus} from "@/utils/podcast";
+import {deleteEpisode, downloadEpisode, fillFormErrors, humanStatus} from "@/utils/podcast";
 
 export default {
   name: 'PodcastDetails',
@@ -199,19 +199,19 @@ export default {
       description: '',
       download_automatically: false,
     },
-    newEpisodeForm: {
-      source_url: ''
-    },
-    newEpisodeIsCreating: false,
-    episodeCreation: {
+    createEpisodeData:{
+      form: {
+        source_url: "",
+      },
       rules: {
         source_url: [
           { type: 'url', required: true, trigger: 'change' },
         ],
       },
-      serverErrors: {
+      serverErrors:{
         source_url: [],
-      }
+      },
+      inProgress: false,
     },
   }),
   error() {
@@ -228,20 +228,9 @@ export default {
     // при изменениях маршрута запрашиваем данные снова
     $route: 'fetchData',
     error(serverErrors){
-      // todo: move this logic to common part (helper function)
-      if ( typeof serverErrors.details === 'object'){
-        for (let key in this.episodeCreation.serverErrors){
-          let serverError = serverErrors.details[key]
-          if (serverError){
-            if (Array.isArray(serverError)){
-              this.episodeCreation.serverErrors[key] = serverError
-            } else {
-              this.episodeCreation.serverErrors[key] = serverError
-            }
-          }
-        }
-        console.log(this.episodeCreation.serverErrors)
-      }
+      this.createEpisodeData.inProgress = false
+      // todo: fill errors for main form
+      fillFormErrors(serverErrors, this.createEpisodeData.serverErrors)
     }
   },
   methods: {
@@ -294,6 +283,7 @@ export default {
       })
     },
     goToEpisode(episode){
+      // todo: use common method
       router.push({name: 'episodeDetails', params: {'episodeID': episode.id, 'podcastID': this.podcast.id}})
     }
   }

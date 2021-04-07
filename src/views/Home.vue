@@ -43,6 +43,7 @@
             <el-input
                 placeholder="Link to the source"
                 v-model="createEpisodeData.form.source_url"
+                :disabled="createEpisodeData.inProgress"
             >
               <el-button slot="append" icon="el-icon-edit" type="success" @click="createEpisode"></el-button>
             </el-input>
@@ -104,7 +105,6 @@ export default {
           { type: 'url', required: true, trigger: 'change' },
         ],
       },
-      // todo: fix form errors filling
       serverErrors:{
         source_url: [],
       },
@@ -120,6 +120,7 @@ export default {
   },
   watch: {
     error(serverErrors){
+      this.createEpisodeData.inProgress = false
       fillFormErrors(serverErrors, this.createEpisodeData.serverErrors)
     }
   },
