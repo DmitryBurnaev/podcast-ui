@@ -100,29 +100,23 @@
             <h5 class="card-title">Create new episode</h5>
           </div>
           <div class="card-body">
-            <form>
-              <div class="row">
-                <div class="col-md-10 pr-1">
-                  <div class="form-group">
-                    <!-- TODO: APPLY validation here (el-form) -->
-                    <input v-model="newEpisodeForm.source_url" type="text" class="form-control" placeholder="Episode Source Link">
-                  </div>
-                </div>
-                <div class="col-md-2 pr-1 pl-1">
-                  <button
-                      type="button"
-                      class="btn btn-success btn-round"
-                      :disabled="newEpisodeIsCreating"
-                      @click="createEpisode">
-                    Add Episode
-                  </button>
-                  <img class="preload ml-1" v-if="newEpisodeIsCreating" src="../assets/img/down-arrow.gif" alt=""/>
-                </div>
-              </div>
-            </form>
+              <el-form :model="createEpisodeData.form" :rules="createEpisodeData.rules" >
+                <el-form-item prop="source_url" :class="{'is-error': createEpisodeData.serverErrors.source_url.length > 0}">
+                  <el-input
+                      placeholder="Episode Source Link"
+                      v-model="createEpisodeData.form.source_url"
+                      :disabled="createEpisodeData.inProgress"
+                  >
+                    <el-button slot="append" icon="el-icon-edit" type="success" @click="createEpisode"></el-button>
+                  </el-input>
+                  <small class="el-form-item__error" v-for="error in createEpisodeData.serverErrors.source_url" v-bind:key="error">
+                    {{error}}
+                  </small>
+                </el-form-item>
+              </el-form>
+            </div>
           </div>
         </div>
-      </div>
     </div>
     <div class="row">
       <div class="col-12">
@@ -228,6 +222,7 @@ export default {
     // при изменениях маршрута запрашиваем данные снова
     $route: 'fetchData',
     error(serverErrors){
+      // todo: watch doesn't work ?!
       this.createEpisodeData.inProgress = false
       // todo: fill errors for main form
       fillFormErrors(serverErrors, this.createEpisodeData.serverErrors)
@@ -262,17 +257,17 @@ export default {
       });
     },
     async createEpisode(){
-      this.newEpisodeIsCreating = true
-      const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.newEpisodeForm);
+      this.createEpisodeData.inProgress = false
+      const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.createEpisodeData.form);
       if ((response ? response.status : null) === 201){
         const newEpisode = response.data
         this.$message({type: 'success', message: `New episode #${newEpisode.id} was created`});
         if (!this.episodes.find((el) => el.id === newEpisode.id)){
           this.episodes.unshift(newEpisode)
         }
-        this.newEpisodeForm.source_url = ''
+        this.createEpisodeData.form.source_url = ''
       }
-      this.newEpisodeIsCreating = false
+      this.createEpisodeData.inProgress = false
     },
     downloadEpisode: downloadEpisode,
     humanStatus: humanStatus,
