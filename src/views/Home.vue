@@ -38,7 +38,7 @@
       </div>
 
       <el-dialog :title="createEpisodeData.title" :visible.sync="createEpisodeData.dialog" v-if="createEpisodeData.podcast">
-        <el-form :model="createEpisodeData.form" :rules="createEpisodeData.rules" >
+        <el-form :model="createEpisodeData.form" :rules="createEpisodeData.rules" ref="createEpisodeForm">
           <el-form-item prop="source_url" :class="{'is-error': createEpisodeData.serverErrors.source_url.length > 0}">
             <el-input
                 placeholder="Link to the source"
@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import {goToEpisode, humanStatus, fillFormErrors} from "@/utils/podcast";
+import {goToEpisode, humanStatus, fillFormErrors, formIsValid} from "@/utils/podcast";
 import axios from "axios";
 
 export default {
@@ -144,12 +144,15 @@ export default {
     },
     async createEpisode(){
       this.createEpisodeData.serverErrors.source_url = []
-      this.createEpisodeData.inProgress = true
-      const response = await axios.post(`podcasts/${this.createEpisodeData.podcast.id}/episodes/`, this.createEpisodeData.form)
-      if (response){
-        this.createEpisodeData.episode = response.data
+      const valid = await formIsValid(this, 'createEpisodeForm')
+      if (valid){
+        this.createEpisodeData.inProgress = true
+        const response = await axios.post(`podcasts/${this.createEpisodeData.podcast.id}/episodes/`, this.createEpisodeData.form)
+        if (response){
+          this.createEpisodeData.episode = response.data
+        }
+        this.createEpisodeData.inProgress = false
       }
-      this.createEpisodeData.inProgress = false
     },
     goToEpisode: goToEpisode,
     humanStatus: humanStatus,

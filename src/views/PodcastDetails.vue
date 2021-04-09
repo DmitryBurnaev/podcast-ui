@@ -100,7 +100,7 @@
             <h5 class="card-title">Create new episode</h5>
           </div>
           <div class="card-body">
-              <el-form :model="createEpisodeData.form" :rules="createEpisodeData.rules" >
+              <el-form :model="createEpisodeData.form" :rules="createEpisodeData.rules" ref="createEpisodeForm">
                 <el-form-item prop="source_url" :class="{'is-error': createEpisodeData.serverErrors.source_url.length > 0}">
                   <el-input
                       placeholder="Episode Source Link"
@@ -179,7 +179,7 @@
 <script>
 import axios from "axios";
 import router from "@/router";
-import {deleteEpisode, downloadEpisode, fillFormErrors, humanStatus} from "@/utils/podcast";
+import {deleteEpisode, downloadEpisode, fillFormErrors, humanStatus, formIsValid, goToEpisode} from "@/utils/podcast";
 
 export default {
   name: 'PodcastDetails',
@@ -208,8 +208,18 @@ export default {
       inProgress: false,
     },
   }),
-  error() {
-    return this.$store.getters.error
+  computed: {
+    error() {
+      return this.$store.getters.error
+    }
+  },
+  watch: {
+    // при изменениях маршрута запрашиваем данные снова
+    $route: 'fetchData',
+    error(serverErrors){
+      this.createEpisodeData.inProgress = false
+      fillFormErrors(serverErrors, this.createEpisodeData.serverErrors)
+    }
   },
   async created() {
     await this.fetchData()
@@ -218,16 +228,7 @@ export default {
     this.form.download_automatically = this.podcast.download_automatically;
     this.loading = false;
   },
-  watch: {
-    // при изменениях маршрута запрашиваем данные снова
-    $route: 'fetchData',
-    error(serverErrors){
-      // todo: watch doesn't work ?!
-      this.createEpisodeData.inProgress = false
-      // todo: fill errors for main form
-      fillFormErrors(serverErrors, this.createEpisodeData.serverErrors)
-    }
-  },
+
   methods: {
     async fetchData() {
       const podcastID = this.$route.params.id
@@ -257,17 +258,20 @@ export default {
       });
     },
     async createEpisode(){
-      this.createEpisodeData.inProgress = false
-      const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.createEpisodeData.form);
-      if ((response ? response.status : null) === 201){
-        const newEpisode = response.data
-        this.$message({type: 'success', message: `New episode #${newEpisode.id} was created`});
-        if (!this.episodes.find((el) => el.id === newEpisode.id)){
-          this.episodes.unshift(newEpisode)
+      const valid = await formIsValid(this, 'createEpisodeForm')
+      if (valid){
+        this.createEpisodeData.inProgress = true;
+        const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.createEpisodeData.form);
+        if (response){
+          const newEpisode = response.data
+          this.$message({type: 'success', message: `New episode #${newEpisode.id} was created`});
+          if (!this.episodes.find((el) => el.id === newEpisode.id)){
+            this.episodes.unshift(newEpisode)
+          }
+          this.createEpisodeData.form.source_url = ''
         }
-        this.createEpisodeData.form.source_url = ''
+        this.createEpisodeData.inProgress = false
       }
-      this.createEpisodeData.inProgress = false
     },
     downloadEpisode: downloadEpisode,
     humanStatus: humanStatus,
@@ -278,8 +282,7 @@ export default {
       })
     },
     goToEpisode(episode){
-      // todo: use common method
-      router.push({name: 'episodeDetails', params: {'episodeID': episode.id, 'podcastID': this.podcast.id}})
+      goToEpisode(episode, this.podcast.id)
     }
   }
 }

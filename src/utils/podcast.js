@@ -76,5 +76,16 @@ function fillFormErrors(serverErrors, formErrors){
     }
 }
 
+async function formIsValid(context, formRef){
+  try {
+    await context.$refs[formRef].validate()
+  } catch (err) {
+    console.log("form is not valid", formRef, err)
+    return false
+  }
+  console.log("form is valid")
+  return true
+}
 
-export {deleteEpisode, downloadEpisode, humanStatus, goToEpisode, fillFormErrors}
+
+export {deleteEpisode, downloadEpisode, humanStatus, goToEpisode, fillFormErrors, formIsValid}

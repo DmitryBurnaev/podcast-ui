@@ -16,7 +16,6 @@
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import app from "@/main";
 
 export default {
   name: "MainLayout",
@@ -27,13 +26,6 @@ export default {
     },
     loading () {
       return this.$store.getters.globalLoading
-    }
-  },
-  watch: {
-    error(serverError){
-      if ( typeof serverError.details !== 'object'){
-        app.$message({type: 'error', message: serverError.details});
-      }
     }
   },
 }
