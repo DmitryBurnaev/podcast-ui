@@ -38,12 +38,15 @@
             <h5 class="card-title">Edit Podcast</h5>
           </div>
           <div class="card-body">
-            <form>
+            <el-form :model="podcastEdit.form" :rules="podcastEdit.rules" ref="podcastEditForm">
               <div class="row">
                 <div class="col-md-8 pr-1">
                   <div class="form-group  text-left">
                     <label>Name</label>
-                    <input v-model="form.name" type="text" class="form-control" placeholder="Podcast Name">
+                    <el-form-item prop="name" :class="{'is-error': podcastEdit.serverErrors.name.length > 0}">
+                      <el-input placeholder="Podcast Name" v-model="podcastEdit.form.name"></el-input>
+                      <input-errors :errors="podcastEdit.serverErrors.name"></input-errors>
+                    </el-form-item>
                   </div>
                 </div>
                 <div class="col-md-4 text-left">
@@ -60,7 +63,7 @@
                     <label>Download Automatically</label>
                     <el-switch
                       style="display: block"
-                      v-model="form.download_automatically"
+                      v-model="podcastEdit.form.download_automatically"
                       active-color="rgb(107, 208, 152)"
                       inactive-color="rgb(203, 203, 203)"
                     >
@@ -72,7 +75,10 @@
                 <div class="col-md-12 text-left">
                   <div class="form-group">
                     <label>Description</label>
-                    <textarea class="form-control textarea" v-model="form.description" rows="4"></textarea>
+                    <el-form-item prop="description" :class="{'is-error': podcastEdit.serverErrors.description.length > 0}">
+                      <el-input type="textarea" rows="4" placeholder="Description" v-model="podcastEdit.form.description"></el-input>
+                      <input-errors :errors="podcastEdit.serverErrors.description"></input-errors>
+                    </el-form-item>
                   </div>
                 </div>
               </div>
@@ -88,7 +94,7 @@
                 </div>
 
               </div>
-            </form>
+            </el-form>
           </div>
         </div>
       </div>
@@ -100,18 +106,16 @@
             <h5 class="card-title">Create new episode</h5>
           </div>
           <div class="card-body">
-              <el-form :model="createEpisodeData.form" :rules="createEpisodeData.rules" ref="createEpisodeForm">
-                <el-form-item prop="source_url" :class="{'is-error': createEpisodeData.serverErrors.source_url.length > 0}">
+              <el-form :model="episodeCreation.form" :rules="episodeCreation.rules" ref="createEpisodeForm">
+                <el-form-item prop="source_url" :class="{'is-error': episodeCreation.serverErrors.source_url.length > 0}">
                   <el-input
                       placeholder="Episode Source Link"
-                      v-model="createEpisodeData.form.source_url"
-                      :disabled="createEpisodeData.inProgress"
+                      v-model="episodeCreation.form.source_url"
+                      :disabled="episodeCreation.inProgress"
                   >
                     <el-button slot="append" icon="el-icon-edit" type="success" @click="createEpisode"></el-button>
                   </el-input>
-                  <small class="el-form-item__error" v-for="error in createEpisodeData.serverErrors.source_url" v-bind:key="error">
-                    {{error}}
-                  </small>
+                  <input-errors :errors="episodeCreation.serverErrors.source_url"></input-errors>
                 </el-form-item>
               </el-form>
             </div>
@@ -180,26 +184,43 @@
 import axios from "axios";
 import router from "@/router";
 import {deleteEpisode, downloadEpisode, fillFormErrors, humanStatus, formIsValid, goToEpisode} from "@/utils/podcast";
+import InputErrors from "@/components/InputErrors";
 
 export default {
   name: 'PodcastDetails',
+  components: {InputErrors},
   data: () => ({
     loading: true,
     podcast: null,
     episodes: [],
     downloadAuto: false,
-    form: {
-      name: '',
-      description: '',
-      download_automatically: false,
+    podcastEdit:{
+      form: {
+        name: '',
+        description: '',
+        download_automatically: false,
+      },
+      rules: {
+        name: [
+          {min: 1, max: 32, message: 'Name should be from 1 tp 32 symbols', trigger: 'blur'}
+        ],
+        description: [
+          {min: 0, max: 100, message: 'Description should be less than 100 symbols', trigger: 'blur'}
+        ],
+      },
+      serverErrors:{
+        name: [],
+        description: [],
+      },
+      inProgress: false,
     },
-    createEpisodeData:{
+    episodeCreation:{
       form: {
         source_url: "",
       },
       rules: {
         source_url: [
-          { type: 'url', required: true, trigger: 'change' },
+          { type: 'url', required: true, trigger: 'blur', message: 'Input URL has invalid format' },
         ],
       },
       serverErrors:{
@@ -217,15 +238,18 @@ export default {
     // при изменениях маршрута запрашиваем данные снова
     $route: 'fetchData',
     error(serverErrors){
-      this.createEpisodeData.inProgress = false
-      fillFormErrors(serverErrors, this.createEpisodeData.serverErrors)
+      this.episodeCreation.inProgress = false
+      fillFormErrors(serverErrors, [
+          this.podcastEdit.serverErrors,
+          this.episodeCreation.serverErrors
+      ])
     }
   },
   async created() {
     await this.fetchData()
-    this.form.name = this.podcast.name;
-    this.form.description = this.podcast.description;
-    this.form.download_automatically = this.podcast.download_automatically;
+    this.podcastEdit.form.name = this.podcast.name;
+    this.podcastEdit.form.description = this.podcast.description;
+    this.podcastEdit.form.download_automatically = this.podcast.download_automatically;
     this.loading = false;
   },
 
@@ -237,7 +261,7 @@ export default {
       this.loading = false
     },
     async updatePodcast(){
-      const response = await axios.patch(`podcasts/${this.podcast.id}/`, this.form);
+      const response = await axios.patch(`podcasts/${this.podcast.id}/`, this.podcastEdit.form);
       this.podcast = response.data
       this.$message({type: 'success', message: 'Podcast successful updated.'});
     },
@@ -260,17 +284,17 @@ export default {
     async createEpisode(){
       const valid = await formIsValid(this, 'createEpisodeForm')
       if (valid){
-        this.createEpisodeData.inProgress = true;
-        const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.createEpisodeData.form);
+        this.episodeCreation.inProgress = true;
+        const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.episodeCreation.form);
         if (response){
           const newEpisode = response.data
           this.$message({type: 'success', message: `New episode #${newEpisode.id} was created`});
           if (!this.episodes.find((el) => el.id === newEpisode.id)){
             this.episodes.unshift(newEpisode)
           }
-          this.createEpisodeData.form.source_url = ''
+          this.episodeCreation.form.source_url = ''
         }
-        this.createEpisodeData.inProgress = false
+        this.episodeCreation.inProgress = false
       }
     },
     downloadEpisode: downloadEpisode,

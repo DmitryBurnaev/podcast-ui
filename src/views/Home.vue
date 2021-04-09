@@ -37,47 +37,45 @@
         </div>
       </div>
 
-      <el-dialog :title="createEpisodeData.title" :visible.sync="createEpisodeData.dialog" v-if="createEpisodeData.podcast">
-        <el-form :model="createEpisodeData.form" :rules="createEpisodeData.rules" ref="createEpisodeForm">
-          <el-form-item prop="source_url" :class="{'is-error': createEpisodeData.serverErrors.source_url.length > 0}">
+      <el-dialog :title="episodeCreation.title" :visible.sync="episodeCreation.dialog" v-if="episodeCreation.podcast">
+        <el-form :model="episodeCreation.form" :rules="episodeCreation.rules" ref="createEpisodeForm">
+          <el-form-item prop="source_url" :class="{'is-error': episodeCreation.serverErrors.source_url.length > 0}">
             <el-input
                 placeholder="Link to the source"
-                v-model="createEpisodeData.form.source_url"
-                :disabled="createEpisodeData.inProgress"
+                v-model="episodeCreation.form.source_url"
+                :disabled="episodeCreation.inProgress"
             >
               <el-button slot="append" icon="el-icon-edit" type="success" @click="createEpisode"></el-button>
             </el-input>
-            <small class="el-form-item__error" v-for="error in createEpisodeData.serverErrors.source_url" v-bind:key="error">
-              {{error}}
-            </small>
+            <input-errors :errors="episodeCreation.serverErrors.source_url"></input-errors>
           </el-form-item>
         </el-form>
         <hr class="hr__row-episode">
-        <div class="d-flex justify-content-center" v-if="createEpisodeData.inProgress">
+        <div class="d-flex justify-content-center" v-if="episodeCreation.inProgress">
           <img class="preload ml-1" src="../assets/img/down-arrow.gif" alt=""/>
         </div>
-        <div v-else-if="createEpisodeData.episode">
+        <div v-else-if="episodeCreation.episode">
           <div class="row row-episode">
-            <div class="col-md-2 col-1 episode-content" @click="goToEpisode(createEpisodeData.episode, createEpisodeData.podcast.id)">
+            <div class="col-md-2 col-1 episode-content" @click="goToEpisode(episodeCreation.episode, episodeCreation.podcast.id)">
               <div class="episode-image">
-                <img :src="createEpisodeData.episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                <img :src="episodeCreation.episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
               </div>
             </div>
-            <div class="col-md-9 col-9 episode-title episode-content" @click="goToEpisode(createEpisodeData.episode, createEpisodeData.podcast.id)">
-              {{ createEpisodeData.episode.title }}
+            <div class="col-md-9 col-9 episode-title episode-content" @click="goToEpisode(episodeCreation.episode, episodeCreation.podcast.id)">
+              {{ episodeCreation.episode.title }}
               <br/>
               <span
                   :class="{
-                    'text-success': (createEpisodeData.episode.status === 'published'),
-                    'text-danger': (createEpisodeData.episode.status === 'error'),
-                    'text-info': (['new', 'downloading'].includes(createEpisodeData.episode.status)),
-                    'text-gray': (createEpisodeData.episode.status === 'archived')
+                    'text-success': (episodeCreation.episode.status === 'published'),
+                    'text-danger': (episodeCreation.episode.status === 'error'),
+                    'text-info': (['new', 'downloading'].includes(episodeCreation.episode.status)),
+                    'text-gray': (episodeCreation.episode.status === 'archived')
                   }">
-                <small>{{ humanStatus(createEpisodeData.episode.status) }}</small>
+                <small>{{ humanStatus(episodeCreation.episode.status) }}</small>
               </span>
             </div>
             <div class="col-md-1 col-1 text-right episode-controls">
-              <img class="preload mr-1 mt-2" v-if="createEpisodeData.episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
+              <img class="preload mr-1 mt-2" v-if="episodeCreation.episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
             </div>
           </div>
         </div>
@@ -88,21 +86,23 @@
 
 <script>
 import {goToEpisode, humanStatus, fillFormErrors, formIsValid} from "@/utils/podcast";
+import InputErrors from "@/components/InputErrors";
 import axios from "axios";
 
 export default {
   name: "Home",
+  components: {InputErrors},
   data: () => ({
     loading: true,
     podcasts: [],
-    createEpisodeData:{
+    episodeCreation:{
       dialog: false,
       form: {
         source_url: "",
       },
       rules: {
         source_url: [
-          { type: 'url', required: true, trigger: 'change' },
+          { type: 'url', required: true, trigger: 'blur', message: 'Input URL has invalid format' },
         ],
       },
       serverErrors:{
@@ -120,8 +120,8 @@ export default {
   },
   watch: {
     error(serverErrors){
-      this.createEpisodeData.inProgress = false
-      fillFormErrors(serverErrors, this.createEpisodeData.serverErrors)
+      this.episodeCreation.inProgress = false
+      fillFormErrors(serverErrors, [this.episodeCreation.serverErrors])
     }
   },
   async mounted(){
@@ -135,23 +135,23 @@ export default {
   methods:{
     openCreateEpisodeDialog(podcast){
       console.log("Creating episode for ", podcast)
-      this.createEpisodeData.title = `Creating episode for podcast "${podcast.name}"`
-      this.createEpisodeData.inProgress = false
-      this.createEpisodeData.podcast = podcast
-      this.createEpisodeData.episode = null
-      this.createEpisodeData.dialog = true
-      this.createEpisodeData.serverErrors.source_url = []
+      this.episodeCreation.title = `Creating episode for podcast "${podcast.name}"`
+      this.episodeCreation.inProgress = false
+      this.episodeCreation.podcast = podcast
+      this.episodeCreation.episode = null
+      this.episodeCreation.dialog = true
+      this.episodeCreation.serverErrors.source_url = []
     },
     async createEpisode(){
-      this.createEpisodeData.serverErrors.source_url = []
+      this.episodeCreation.serverErrors.source_url = []
       const valid = await formIsValid(this, 'createEpisodeForm')
       if (valid){
-        this.createEpisodeData.inProgress = true
-        const response = await axios.post(`podcasts/${this.createEpisodeData.podcast.id}/episodes/`, this.createEpisodeData.form)
+        this.episodeCreation.inProgress = true
+        const response = await axios.post(`podcasts/${this.episodeCreation.podcast.id}/episodes/`, this.episodeCreation.form)
         if (response){
-          this.createEpisodeData.episode = response.data
+          this.episodeCreation.episode = response.data
         }
-        this.createEpisodeData.inProgress = false
+        this.episodeCreation.inProgress = false
       }
     },
     goToEpisode: goToEpisode,
