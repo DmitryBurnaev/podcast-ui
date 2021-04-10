@@ -76,23 +76,22 @@
                   <div class="form-group">
                     <label>Description</label>
                     <el-form-item prop="description" :class="{'is-error': podcastEdit.serverErrors.description.length > 0}">
-                      <el-input type="textarea" rows="4" placeholder="Description" v-model="podcastEdit.form.description"></el-input>
+                      <el-input type="textarea" rows="6" placeholder="Description" v-model="podcastEdit.form.description"></el-input>
                       <input-errors :errors="podcastEdit.serverErrors.description"></input-errors>
                     </el-form-item>
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="update ml-auto mr-auto">
-                  <button type="button" class="btn btn-success btn-round" @click="generateRSS">Regenerate RSS</button>
+              <div class="row mb-2">
+                <div class="col-md-4 text-left">
+                  <el-button type="primary" plain @click="generateRSS">Update Podcast</el-button>
                 </div>
-                <div class="update ml-auto mr-auto">
-                  <button type="button" class="btn btn-primary btn-round" @click="updatePodcast">Update Podcast</button>
+                <div class="col-md-4 text-center">
+                  <el-button type="success" plain @click="generateRSS">Regenerate RSS</el-button>
                 </div>
-                <div class="update ml-auto mr-auto">
-                  <button type="button" class="btn btn-danger btn-round" @click="deletePodcast">Delete Podcast</button>
+                <div class="col-md-4 text-right">
+                  <el-button type="danger" plain @click="generateRSS">Delete Podcast</el-button>
                 </div>
-
               </div>
             </el-form>
           </div>
@@ -327,7 +326,7 @@ export default {
   }
 }
 .card-podcast-summary{
-  min-height: 482px;
+  min-height: 479px;
 }
 .create-episode-card{
   .form-group{
