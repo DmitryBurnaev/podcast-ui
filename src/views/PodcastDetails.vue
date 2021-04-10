@@ -8,11 +8,9 @@
           </div>
           <div class="card-body">
             <div class="author">
-              <a href="#">
-                <img v-if="podcast.image_url" class="avatar border-gray" :src="podcast.image_url" :alt="podcast.name">
-                <img v-else class="avatar border-gray" src="../assets/img/cover-default.jpeg" :alt="podcast.name">
-                <h5 class="title">{{ podcast.name }}</h5>
-              </a>
+              <img v-if="podcast.image_url" class="avatar border-gray" :src="podcast.image_url" :alt="podcast.name">
+              <img v-else class="avatar border-gray" src="../assets/img/cover-default.jpeg" :alt="podcast.name">
+              <h5 class="podcast-title">{{ podcast.name }}</h5>
             </div>
             <p class="description text-center"> {{ podcast.description }} </p>
           </div>
@@ -84,13 +82,13 @@
               </div>
               <div class="row mb-2">
                 <div class="col-md-4 text-left">
-                  <el-button type="primary" plain @click="generateRSS">Update Podcast</el-button>
+                  <el-button type="info" plain @click="generateRSS">Update Podcast</el-button>
                 </div>
                 <div class="col-md-4 text-center">
-                  <el-button type="success" plain @click="generateRSS">Regenerate RSS</el-button>
+                  <el-button type="info" plain @click="generateRSS">Regenerate RSS</el-button>
                 </div>
                 <div class="col-md-4 text-right">
-                  <el-button type="danger" plain @click="generateRSS">Delete Podcast</el-button>
+                  <el-button type="info" plain @click="generateRSS">Delete Podcast</el-button>
                 </div>
               </div>
             </el-form>
@@ -159,12 +157,13 @@
                           @click="downloadEpisode(episode)">
                         <i class="nc-icon nc-cloud-download-93"></i>
                       </button>
-                      <button
+                      <div
                           v-if="episode.status !== 'downloading'"
-                          class="btn btn-sm btn-outline-danger btn-round btn-icon"
+                          class="btn-outline-gray btn-icon"
                           @click="deleteEpisode(episode)">
                         <i class="nc-icon nc-simple-remove"></i>
-                      </button>
+                      </div>
+
                     </div>
                 </div>
                 <hr class="hr__row-episode">
@@ -311,7 +310,10 @@ export default {
 }
 </script>
 <style lang="scss">
-
+.podcast-title{
+  color: #6bd098;
+  font-weight: bold;
+}
 .hr__row-episode{
   margin-top: 0.5rem;
 }
@@ -337,6 +339,16 @@ export default {
   }
   img.preload{
     width: 20px;
+  }
+}
+.btn-outline-gray{
+  background-color: white;
+  color: gray;
+  cursor: pointer;
+  margin-top: 9%;
+  :hover{
+    //background-color: white !important;
+    color: black;
   }
 }
 </style>
