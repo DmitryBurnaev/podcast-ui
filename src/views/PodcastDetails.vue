@@ -82,13 +82,13 @@
               </div>
               <div class="row mb-2">
                 <div class="col-md-4 text-left">
-                  <el-button type="info" plain @click="generateRSS">Update Podcast</el-button>
+                  <el-button type="info" plain @click="updatePodcast" icon="el-icon-edit">Update</el-button>
                 </div>
                 <div class="col-md-4 text-center">
-                  <el-button type="info" plain @click="generateRSS">Regenerate RSS</el-button>
+                  <el-button type="info" plain @click="generateRSS" icon="el-icon-magic-stick">Regenerate RSS</el-button>
                 </div>
                 <div class="col-md-4 text-right">
-                  <el-button type="info" plain @click="generateRSS">Delete Podcast</el-button>
+                  <el-button type="info" plain @click="deletePodcast" icon="el-icon-delete">Delete</el-button>
                 </div>
               </div>
             </el-form>
@@ -141,9 +141,8 @@
                     <br/>
                     <span
                         :class="{
-                          'text-success': (episode.status === 'published'),
                           'text-danger': (episode.status === 'error'),
-                          'text-info': (['new', 'downloading'].includes(episode.status)),
+                          'text-success': (['new', 'downloading', 'published'].includes(episode.status)),
                           'text-gray': (episode.status === 'archived')
                         }">
                       <small>{{humanStatus(episode.status)}}</small>
@@ -151,15 +150,15 @@
                   </div>
                   <div class="col-md-2 col-2 text-right episode-controls">
                       <img class="preload mt-2" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
-                      <button
+                      <div
                           v-if="episode.status === 'new'"
-                          class="btn btn-sm btn-outline-success btn-round btn-icon mr-1"
+                          class="btn-outline-gray btn-icon float-right ml-2"
                           @click="downloadEpisode(episode)">
                         <i class="nc-icon nc-cloud-download-93"></i>
-                      </button>
+                      </div>
                       <div
                           v-if="episode.status !== 'downloading'"
-                          class="btn-outline-gray btn-icon"
+                          class="btn-outline-gray btn-icon float-right"
                           @click="deleteEpisode(episode)">
                         <i class="nc-icon nc-simple-remove"></i>
                       </div>

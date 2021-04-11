@@ -119,7 +119,7 @@
             <el-form ref="form" :model="form">
               <div class="row">
                 <div class="col-md-12 pr-1">
-                  <div class="form-group">
+                  <div class="form-group text-left">
                     <label>Title</label>
                     <textarea class="form-control textarea" v-model="form.title" rows="2" placeholder="Podcast Title"></textarea>
                   </div>
@@ -127,7 +127,7 @@
               </div>
               <div class="row">
                 <div class="col-md-12 pr-1">
-                  <div class="form-group">
+                  <div class="form-group text-left">
                     <label>Author</label>
                     <input type="text" class="form-control textarea" v-model="form.author" placeholder="Podcast Title">
                   </div>
@@ -135,21 +135,21 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <div class="form-group">
+                  <div class="form-group text-left">
                     <label>Description</label>
-                    <textarea class="form-control textarea" v-model="form.description" rows="10"></textarea>
+                    <textarea class="form-control textarea" v-model="form.description" rows="13"></textarea>
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="update ml-auto mr-auto">
-                  <button type="button" class="btn btn-success btn-round" @click="downloadEpisode(episode)">Download Episode</button>
+              <div class="row mb-2">
+                <div class="col-md-4 text-left">
+                  <el-button type="info" plain @click="updateEpisode" icon="el-icon-edit">Update</el-button>
                 </div>
-                <div class="update ml-auto mr-auto">
-                  <button type="button" class="btn btn-primary btn-round" @click="updateEpisode">Update Episode</button>
+                <div class="col-md-4 text-center">
+                  <el-button type="info" plain @click="downloadEpisode(episode)" icon="el-icon-thumb">Download</el-button>
                 </div>
-                <div class="update ml-auto mr-auto">
-                  <button type="button" class="btn btn-danger btn-round" @click="deleteEpisode">Delete Episode</button>
+                <div class="col-md-4 text-right">
+                  <el-button type="info" plain @click="deleteEpisode" icon="el-icon-delete">Delete</el-button>
                 </div>
               </div>
             </el-form>
