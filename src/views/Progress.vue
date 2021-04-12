@@ -20,15 +20,16 @@
                 <div class="col-md-11 col-11 episode-title episode-content" @click="goToEpisode(progress)">
                   {{ progress.episode.title }}
                   <br/>
-                  <span
-                      :class="{
-                        'text-danger': (progress.status === 'error'),
-                        'text-info': (['new', 'downloading'].includes(progress.status)),
-                      }">
-                    <small>{{progress.status_display }}</small>
-                  </span>
+                  <small
+                    :class="{
+                      'text-danger': (progress.status === 'error'),
+                      'text-muted': (['new', 'downloading'].includes(progress.episode.status)),
+                    }"
+                  >
+                    {{progress.status_display }}
+                  </small>
                   <el-progress v-if="progress.status === 'error'" :percentage="progress.completed" status="exception"></el-progress>
-                  <el-progress v-else :percentage="progress.completed" ></el-progress>
+                  <el-progress v-else :percentage="parseInt(progress.completed)" ></el-progress>
                 </div>
               </div>
               <hr class="hr__row-episode">

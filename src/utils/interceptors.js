@@ -34,7 +34,6 @@ export default function setup() {
                 }
                 if (errorDetails.includes("Signature has expired")) {
                     console.log("interceptor | refresh", store.getters.refreshToken)
-                    // store.commit('clearToken')
                     let requestCanceled = false;
                     return axios
                         .post("auth/refresh-token/", {'refresh_token': store.getters.refreshToken})
@@ -50,6 +49,7 @@ export default function setup() {
                             }
                         })
                         .catch((error) => {
+                            store.commit('clearToken')
                             console.log('interceptor | catch err:', error)
                             router.push({name: 'signIn', query: {'message': 'session-expired'}}).then(() => {})
                         }).finally( () => {

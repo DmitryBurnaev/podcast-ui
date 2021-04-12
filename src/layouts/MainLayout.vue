@@ -58,4 +58,18 @@ export default {
   .row-episode .episode-title{
     margin-top: -3px;
   }
+  .btn-outline-gray{
+    color: gray;
+    cursor: pointer;
+    vertical-align: middle;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    float: right;
+    margin-right: 5px;
+    :hover{
+      color: black;
+    }
+  }
+
 </style>

@@ -89,5 +89,19 @@ async function formIsValid(context, formRef) {
     return true
 }
 
+function deletePodcast(podcast, callback){
+  this.$confirm('This will permanently delete the podcast and included episodes. Continue?', 'Warning', {
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel',
+    type: 'warning'
+  }).then(() => {
+    axios.delete(`podcasts/${podcast.id}/`).then(() => {
+      this.$message({type: 'success', message: `Podcast '${podcast.name}' successful deleted.`});
+      if (callback) {
+         callback()
+      }
+    })
+  });
+}
 
-export {deleteEpisode, downloadEpisode, humanStatus, goToEpisode, fillFormErrors, formIsValid}
+export {deleteEpisode, downloadEpisode, deletePodcast, humanStatus, goToEpisode, fillFormErrors, formIsValid}

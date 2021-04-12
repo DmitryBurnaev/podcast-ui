@@ -152,13 +152,13 @@
                       <img class="preload mt-2" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
                       <div
                           v-if="episode.status === 'new'"
-                          class="btn-outline-gray btn-icon float-right ml-2"
+                          class="btn-outline-gray btn-icon"
                           @click="downloadEpisode(episode)">
                         <i class="nc-icon nc-cloud-download-93"></i>
                       </div>
                       <div
                           v-if="episode.status !== 'downloading'"
-                          class="btn-outline-gray btn-icon float-right"
+                          class="btn-outline-gray btn-icon"
                           @click="deleteEpisode(episode)">
                         <i class="nc-icon nc-simple-remove"></i>
                       </div>
@@ -180,7 +180,7 @@
 <script>
 import axios from "axios";
 import router from "@/router";
-import {deleteEpisode, downloadEpisode, fillFormErrors, humanStatus, formIsValid, goToEpisode} from "@/utils/podcast";
+import {deleteEpisode, downloadEpisode, fillFormErrors, humanStatus, formIsValid, goToEpisode, deletePodcast} from "@/utils/podcast";
 import InputErrors from "@/components/InputErrors";
 
 export default {
@@ -266,18 +266,6 @@ export default {
       await axios.put(`podcasts/${this.podcast.id}/generate_rss/`);
       this.$message({type: 'success', message: 'RSS will be regenerated soon.'});
     },
-    deletePodcast(){
-      this.$confirm('This will permanently delete the podcast and included episodes. Continue?', 'Warning', {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type: 'warning'
-      }).then(() => {
-        axios.delete(`podcasts/${this.episode.id}/`).then(() => {
-          this.$message({type: 'success', message: `Podcast '${this.podcast.name}' successful deleted.`});
-          router.push(`/podcasts`).then(() => {})
-        })
-      });
-    },
     async createEpisode(){
       const valid = await formIsValid(this, 'createEpisodeForm')
       if (valid){
@@ -293,6 +281,9 @@ export default {
         }
         this.episodeCreation.inProgress = false
       }
+    },
+    deletePodcast(){
+      deletePodcast(this.podcast, () => {router.push(`/podcasts`).then(() => {})})
     },
     downloadEpisode: downloadEpisode,
     humanStatus: humanStatus,
@@ -310,7 +301,7 @@ export default {
 </script>
 <style lang="scss">
 .podcast-title{
-  color: #6bd098;
+  color: #7b7979;
   font-weight: bold;
 }
 .hr__row-episode{
@@ -338,16 +329,6 @@ export default {
   }
   img.preload{
     width: 20px;
-  }
-}
-.btn-outline-gray{
-  background-color: white;
-  color: gray;
-  cursor: pointer;
-  margin-top: 9%;
-  :hover{
-    //background-color: white !important;
-    color: black;
   }
 }
 </style>
