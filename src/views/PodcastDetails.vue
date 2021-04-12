@@ -8,11 +8,9 @@
           </div>
           <div class="card-body">
             <div class="author">
-              <a href="#">
-                <img v-if="podcast.image_url" class="avatar border-gray" :src="podcast.image_url" :alt="podcast.name">
-                <img v-else class="avatar border-gray" src="../assets/img/cover-default.jpeg" :alt="podcast.name">
-                <h5 class="title">{{ podcast.name }}</h5>
-              </a>
+              <img v-if="podcast.image_url" class="avatar border-gray" :src="podcast.image_url" :alt="podcast.name">
+              <img v-else class="avatar border-gray" src="../assets/img/cover-default.jpeg" :alt="podcast.name">
+              <h5 class="podcast-title">{{ podcast.name }}</h5>
             </div>
             <p class="description text-center"> {{ podcast.description }} </p>
           </div>
@@ -38,12 +36,15 @@
             <h5 class="card-title">Edit Podcast</h5>
           </div>
           <div class="card-body">
-            <form>
+            <el-form :model="podcastEdit.form" :rules="podcastEdit.rules" ref="podcastEditForm">
               <div class="row">
                 <div class="col-md-8 pr-1">
                   <div class="form-group  text-left">
                     <label>Name</label>
-                    <input v-model="form.name" type="text" class="form-control" placeholder="Podcast Name">
+                    <el-form-item prop="name" :class="{'is-error': podcastEdit.serverErrors.name.length > 0}">
+                      <el-input placeholder="Podcast Name" v-model="podcastEdit.form.name"></el-input>
+                      <input-errors :errors="podcastEdit.serverErrors.name"></input-errors>
+                    </el-form-item>
                   </div>
                 </div>
                 <div class="col-md-4 text-left">
@@ -60,7 +61,7 @@
                     <label>Download Automatically</label>
                     <el-switch
                       style="display: block"
-                      v-model="form.download_automatically"
+                      v-model="podcastEdit.form.download_automatically"
                       active-color="rgb(107, 208, 152)"
                       inactive-color="rgb(203, 203, 203)"
                     >
@@ -72,23 +73,25 @@
                 <div class="col-md-12 text-left">
                   <div class="form-group">
                     <label>Description</label>
-                    <textarea class="form-control textarea" v-model="form.description" rows="4"></textarea>
+                    <el-form-item prop="description" :class="{'is-error': podcastEdit.serverErrors.description.length > 0}">
+                      <el-input type="textarea" rows="6" placeholder="Description" v-model="podcastEdit.form.description"></el-input>
+                      <input-errors :errors="podcastEdit.serverErrors.description"></input-errors>
+                    </el-form-item>
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="update ml-auto mr-auto">
-                  <button type="button" class="btn btn-success btn-round" @click="generateRSS">Regenerate RSS</button>
+              <div class="row mb-2">
+                <div class="col-md-4 text-left">
+                  <el-button type="info" plain @click="updatePodcast" icon="el-icon-edit">Update</el-button>
                 </div>
-                <div class="update ml-auto mr-auto">
-                  <button type="button" class="btn btn-primary btn-round" @click="updatePodcast">Update Podcast</button>
+                <div class="col-md-4 text-center">
+                  <el-button type="info" plain @click="generateRSS" icon="el-icon-magic-stick">Regenerate RSS</el-button>
                 </div>
-                <div class="update ml-auto mr-auto">
-                  <button type="button" class="btn btn-danger btn-round" @click="deletePodcast">Delete Podcast</button>
+                <div class="col-md-4 text-right">
+                  <el-button type="info" plain @click="deletePodcast" icon="el-icon-delete">Delete</el-button>
                 </div>
-
               </div>
-            </form>
+            </el-form>
           </div>
         </div>
       </div>
@@ -100,29 +103,21 @@
             <h5 class="card-title">Create new episode</h5>
           </div>
           <div class="card-body">
-            <form>
-              <div class="row">
-                <div class="col-md-10 pr-1">
-                  <div class="form-group">
-                    <!-- TODO: APPLY validation here (el-form) -->
-                    <input v-model="newEpisodeForm.source_url" type="text" class="form-control" placeholder="Episode Source Link">
-                  </div>
-                </div>
-                <div class="col-md-2 pr-1 pl-1">
-                  <button
-                      type="button"
-                      class="btn btn-success btn-round"
-                      :disabled="newEpisodeIsCreating"
-                      @click="createEpisode">
-                    Add Episode
-                  </button>
-                  <img class="preload ml-1" v-if="newEpisodeIsCreating" src="../assets/img/down-arrow.gif" alt=""/>
-                </div>
-              </div>
-            </form>
+              <el-form :model="episodeCreation.form" :rules="episodeCreation.rules" ref="createEpisodeForm">
+                <el-form-item prop="source_url" :class="{'is-error': episodeCreation.serverErrors.source_url.length > 0}">
+                  <el-input
+                      placeholder="Episode Source Link"
+                      v-model="episodeCreation.form.source_url"
+                      :disabled="episodeCreation.inProgress"
+                  >
+                    <el-button slot="append" icon="el-icon-edit" type="success" @click="createEpisode"></el-button>
+                  </el-input>
+                  <input-errors :errors="episodeCreation.serverErrors.source_url"></input-errors>
+                </el-form-item>
+              </el-form>
+            </div>
           </div>
         </div>
-      </div>
     </div>
     <div class="row">
       <div class="col-12">
@@ -146,28 +141,28 @@
                     <br/>
                     <span
                         :class="{
-                          'text-success': (episode.status === 'published'),
                           'text-danger': (episode.status === 'error'),
-                          'text-info': (['new', 'downloading'].includes(episode.status)),
+                          'text-success': (['new', 'downloading', 'published'].includes(episode.status)),
                           'text-gray': (episode.status === 'archived')
                         }">
                       <small>{{humanStatus(episode.status)}}</small>
                     </span>
                   </div>
                   <div class="col-md-2 col-2 text-right episode-controls">
-                      <img class="preload mr-1 mt-2" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
-                      <button
+                      <img class="preload mt-2" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
+                      <div
                           v-if="episode.status === 'new'"
-                          class="btn btn-sm btn-outline-success btn-round btn-icon mr-1"
+                          class="btn-outline-gray btn-icon"
                           @click="downloadEpisode(episode)">
                         <i class="nc-icon nc-cloud-download-93"></i>
-                      </button>
-                      <button
+                      </div>
+                      <div
                           v-if="episode.status !== 'downloading'"
-                          class="btn btn-sm btn-outline-danger btn-round btn-icon"
+                          class="btn-outline-gray btn-icon"
                           @click="deleteEpisode(episode)">
                         <i class="nc-icon nc-simple-remove"></i>
-                      </button>
+                      </div>
+
                     </div>
                 </div>
                 <hr class="hr__row-episode">
@@ -185,65 +180,76 @@
 <script>
 import axios from "axios";
 import router from "@/router";
-import {deleteEpisode, downloadEpisode, humanStatus} from "@/utils/podcast";
+import {deleteEpisode, downloadEpisode, fillFormErrors, humanStatus, formIsValid, goToEpisode, deletePodcast} from "@/utils/podcast";
+import InputErrors from "@/components/InputErrors";
 
 export default {
   name: 'PodcastDetails',
+  components: {InputErrors},
   data: () => ({
     loading: true,
     podcast: null,
     episodes: [],
     downloadAuto: false,
-    form: {
-      name: '',
-      description: '',
-      download_automatically: false,
-    },
-    newEpisodeForm: {
-      source_url: ''
-    },
-    newEpisodeIsCreating: false,
-    episodeCreation: {
+    podcastEdit:{
+      form: {
+        name: '',
+        description: '',
+        download_automatically: false,
+      },
       rules: {
-        source_url: [
-          { type: 'url', required: true, trigger: 'change' },
+        name: [
+          {min: 1, max: 32, message: 'Name should be from 1 tp 32 symbols', trigger: 'blur'}
+        ],
+        description: [
+          {min: 0, max: 100, message: 'Description should be less than 100 symbols', trigger: 'blur'}
         ],
       },
-      serverErrors: {
+      serverErrors:{
+        name: [],
+        description: [],
+      },
+      inProgress: false,
+    },
+    episodeCreation:{
+      form: {
+        source_url: "",
+      },
+      rules: {
+        source_url: [
+          { type: 'url', required: true, trigger: 'blur', message: 'Input URL has invalid format' },
+        ],
+      },
+      serverErrors:{
         source_url: [],
-      }
+      },
+      inProgress: false,
     },
   }),
-  error() {
-    return this.$store.getters.error
-  },
-  async created() {
-    await this.fetchData()
-    this.form.name = this.podcast.name;
-    this.form.description = this.podcast.description;
-    this.form.download_automatically = this.podcast.download_automatically;
-    this.loading = false;
+  computed: {
+    error() {
+      return this.$store.getters.error
+    }
   },
   watch: {
     // при изменениях маршрута запрашиваем данные снова
     $route: 'fetchData',
     error(serverErrors){
-      // todo: move this logic to common part (helper function)
-      if ( typeof serverErrors.details === 'object'){
-        for (let key in this.episodeCreation.serverErrors){
-          let serverError = serverErrors.details[key]
-          if (serverError){
-            if (Array.isArray(serverError)){
-              this.episodeCreation.serverErrors[key] = serverError
-            } else {
-              this.episodeCreation.serverErrors[key] = serverError
-            }
-          }
-        }
-        console.log(this.episodeCreation.serverErrors)
-      }
+      this.episodeCreation.inProgress = false
+      fillFormErrors(serverErrors, [
+          this.podcastEdit.serverErrors,
+          this.episodeCreation.serverErrors
+      ])
     }
   },
+  async created() {
+    await this.fetchData()
+    this.podcastEdit.form.name = this.podcast.name;
+    this.podcastEdit.form.description = this.podcast.description;
+    this.podcastEdit.form.download_automatically = this.podcast.download_automatically;
+    this.loading = false;
+  },
+
   methods: {
     async fetchData() {
       const podcastID = this.$route.params.id
@@ -252,7 +258,7 @@ export default {
       this.loading = false
     },
     async updatePodcast(){
-      const response = await axios.patch(`podcasts/${this.podcast.id}/`, this.form);
+      const response = await axios.patch(`podcasts/${this.podcast.id}/`, this.podcastEdit.form);
       this.podcast = response.data
       this.$message({type: 'success', message: 'Podcast successful updated.'});
     },
@@ -260,30 +266,24 @@ export default {
       await axios.put(`podcasts/${this.podcast.id}/generate_rss/`);
       this.$message({type: 'success', message: 'RSS will be regenerated soon.'});
     },
-    deletePodcast(){
-      this.$confirm('This will permanently delete the podcast and included episodes. Continue?', 'Warning', {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type: 'warning'
-      }).then(() => {
-        axios.delete(`podcasts/${this.episode.id}/`).then(() => {
-          this.$message({type: 'success', message: `Podcast '${this.podcast.name}' successful deleted.`});
-          router.push(`/podcasts`).then(() => {})
-        })
-      });
-    },
     async createEpisode(){
-      this.newEpisodeIsCreating = true
-      const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.newEpisodeForm);
-      if ((response ? response.status : null) === 201){
-        const newEpisode = response.data
-        this.$message({type: 'success', message: `New episode #${newEpisode.id} was created`});
-        if (!this.episodes.find((el) => el.id === newEpisode.id)){
-          this.episodes.unshift(newEpisode)
+      const valid = await formIsValid(this, 'createEpisodeForm')
+      if (valid){
+        this.episodeCreation.inProgress = true;
+        const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.episodeCreation.form);
+        if (response){
+          const newEpisode = response.data
+          this.$message({type: 'success', message: `New episode #${newEpisode.id} was created`});
+          if (!this.episodes.find((el) => el.id === newEpisode.id)){
+            this.episodes.unshift(newEpisode)
+          }
+          this.episodeCreation.form.source_url = ''
         }
-        this.newEpisodeForm.source_url = ''
+        this.episodeCreation.inProgress = false
       }
-      this.newEpisodeIsCreating = false
+    },
+    deletePodcast(){
+      deletePodcast(this.podcast, () => {router.push(`/podcasts`).then(() => {})})
     },
     downloadEpisode: downloadEpisode,
     humanStatus: humanStatus,
@@ -294,13 +294,16 @@ export default {
       })
     },
     goToEpisode(episode){
-      router.push({name: 'episodeDetails', params: {'episodeID': episode.id, 'podcastID': this.podcast.id}})
+      goToEpisode(episode, this.podcast.id)
     }
   }
 }
 </script>
 <style lang="scss">
-
+.podcast-title{
+  color: #7b7979;
+  font-weight: bold;
+}
 .hr__row-episode{
   margin-top: 0.5rem;
 }
@@ -315,7 +318,7 @@ export default {
   }
 }
 .card-podcast-summary{
-  min-height: 482px;
+  min-height: 479px;
 }
 .create-episode-card{
   .form-group{

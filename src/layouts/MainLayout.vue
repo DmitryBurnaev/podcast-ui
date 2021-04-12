@@ -16,7 +16,6 @@
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import app from "@/main";
 
 export default {
   name: "MainLayout",
@@ -27,13 +26,6 @@ export default {
     },
     loading () {
       return this.$store.getters.globalLoading
-    }
-  },
-  watch: {
-    error(serverError){
-      if ( typeof serverError.details !== 'object'){
-        app.$message({type: 'error', message: serverError.details});
-      }
     }
   },
 }
@@ -66,4 +58,18 @@ export default {
   .row-episode .episode-title{
     margin-top: -3px;
   }
+  .btn-outline-gray{
+    color: gray;
+    cursor: pointer;
+    vertical-align: middle;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    float: right;
+    margin-right: 5px;
+    :hover{
+      color: black;
+    }
+  }
+
 </style>

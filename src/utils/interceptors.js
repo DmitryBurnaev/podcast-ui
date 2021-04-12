@@ -49,6 +49,7 @@ export default function setup() {
                             }
                         })
                         .catch((error) => {
+                            store.commit('clearToken')
                             console.log('interceptor | catch err:', error)
                             router.push({name: 'signIn', query: {'message': 'session-expired'}}).then(() => {})
                         }).finally( () => {
