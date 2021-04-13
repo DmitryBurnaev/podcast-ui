@@ -44,6 +44,13 @@ const routes = [
     component: () => import('./views/PodcastDetails.vue')
   },
   {
+    path: '/podcasts/create',
+    name: 'podcastCreate',
+    meta: {layout: 'main', auth: true},
+    props: true,
+    component: () => import('./views/PodcastDetails.vue')
+  },
+  {
     path: '/podcasts/:podcastID/episodes/:episodeID',
     name: 'episodeDetails',
     meta: {layout: 'main', auth: true},
