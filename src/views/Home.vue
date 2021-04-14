@@ -35,6 +35,24 @@
             </div>
           </div>
         </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 ">
+          <router-link
+              tag="div"
+              class="card card-add-podcast"
+              :to="{name: 'podcastCreate'}"
+          >
+            <div class="card-body">
+              <span>+</span>
+            </div>
+            <div class="card-footer">
+              <hr>
+              <div class="stats cursor-pointer">
+                <i class="nc-icon nc-tap-01"></i>
+                Add new podcast
+              </div>
+            </div>
+          </router-link>
+        </div>
       </div>
 
       <el-dialog :title="episodeCreation.title" :visible.sync="episodeCreation.dialog" v-if="episodeCreation.podcast">
@@ -161,12 +179,24 @@ export default {
 </script>
 <style lang="scss">
 
-.content-home{
-  .preload{
-    width: 40px;
+  .content-home{
+    .preload{
+      width: 40px;
+    }
+    .card{
+      height: 140px;
+      .card-body{
+        cursor: pointer;
+      }
+    }
+    .card-add-podcast{
+      background-color: inherit;
+      border: 1px dashed;
+      .card-body{
+        text-align: center;
+        font-size: 40px;
+      }
+      cursor: pointer;
+    }
   }
-  .card-body{
-    cursor: pointer;
-  }
-}
 </style>

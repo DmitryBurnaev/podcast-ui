@@ -33,7 +33,9 @@
       <div class="col-md-8">
         <div class="card card-podcast card-user">
           <div class="card-header">
-            <h5 class="card-title">Edit Podcast</h5>
+
+            <h5 v-if="podcast.id" class="card-title">Edit Podcast</h5>
+            <h5 v-else class="card-title">Create Podcast</h5>
           </div>
           <div class="card-body">
             <el-form :model="podcastEdit.form" :rules="podcastEdit.rules" ref="podcastEditForm">
@@ -50,7 +52,7 @@
                 <div class="col-md-4 text-left">
                   <div class="form-group">
                     <label>Created At</label>
-                    <input type="text" class="form-control" placeholder="Podcast name" disabled
+                    <input type="text" class="form-control" disabled
                            :value="podcast.created_at | date('datetime')">
                   </div>
                 </div>
@@ -80,7 +82,13 @@
                   </div>
                 </div>
               </div>
-              <div class="row mb-2">
+
+              <div class="row mb-2" v-if="!podcast.id">
+                <div class="col-md-4 text-left">
+                  <el-button type="info" plain @click="createPodcast" icon="el-icon-edit">Create</el-button>
+                </div>
+              </div>
+              <div class="row mb-2" v-else>
                 <div class="col-md-4 text-left">
                   <el-button type="info" plain @click="updatePodcast" icon="el-icon-edit">Update</el-button>
                 </div>
@@ -96,7 +104,7 @@
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row" v-if="podcast.id">
       <div class="col-12">
         <div class="card create-episode-card">
           <div class="card-header">
@@ -119,7 +127,7 @@
           </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" v-if="episodes.length > 0">
       <div class="col-12">
         <div class="card">
           <div class="card-header">
@@ -244,18 +252,31 @@ export default {
   },
   async created() {
     await this.fetchData()
-    this.podcastEdit.form.name = this.podcast.name;
-    this.podcastEdit.form.description = this.podcast.description;
-    this.podcastEdit.form.download_automatically = this.podcast.download_automatically;
-    this.loading = false;
+    if (this.podcast){
+      this.podcastEdit.form.name = this.podcast.name;
+      this.podcastEdit.form.description = this.podcast.description;
+      this.podcastEdit.form.download_automatically = this.podcast.download_automatically;
+    }
   },
 
   methods: {
     async fetchData() {
+      this.loading = true
       const podcastID = this.$route.params.id
-      this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
-      this.episodes = await this.$store.dispatch('getEpisodes', podcastID)
+      if (podcastID && podcastID !== 'create'){
+        this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
+        this.episodes = await this.$store.dispatch('getEpisodes', podcastID)
+      } else {
+        this.podcast = {}
+      }
       this.loading = false
+    },
+    async createPodcast(){
+      const response = await axios.post(`podcasts/`, this.podcastEdit.form);
+      if (response){
+        this.$message({type: 'success', message: 'Podcast successful created.'});
+        setTimeout(() => {router.push(`/podcasts/${response.data.id}`).then(() => {})}, 500)
+      }
     },
     async updatePodcast(){
       const response = await axios.patch(`podcasts/${this.podcast.id}/`, this.podcastEdit.form);

@@ -4,8 +4,15 @@
         <div class="row">
           <div class="col-12">
             <div class="card">
-              <div class="card-header">
+              <div class="card-header" >
                 <h4 class="card-title">Podcasts</h4>
+                  <router-link
+                      tag="div"
+                      class="create-podcast-control"
+                      :to="{name: 'podcastCreate'}"
+                  >
+                    <el-button type="info" plain icon="el-icon-edit">Create new</el-button>
+                  </router-link>
               </div>
               <div class="card-body">
                 <ul class="list-unstyled">
@@ -93,4 +100,15 @@
     color: #ACABAB !important;
     font-size: 12px;
   }
+  .card{
+    .card-header{
+      position: relative;
+      .create-podcast-control{
+        position: absolute;
+        top: 23px;
+        right: 14px;
+      }
+    }
+  }
+
 </style>

@@ -1,4 +1,7 @@
 function dateFilter(value, format='date'){
+    if (!value){
+        return ''
+    }
     const options = {}
     if (format.includes('date')){
         options.day = '2-digit'
