@@ -18,12 +18,17 @@
             <hr>
             <div class="button-container">
               <div class="row">
-                <div class="col-lg-12 col-md-12 col-12 ml-auto text-center">
-                  <h5 v-if="!loading">
+                <div class="col-lg-6 col-md-6 col-6 ml-auto text-center" >
+                  <h5>
                     {{ episodes.length }}<br>
                     <small>Episodes</small>
                   </h5>
-                  <small v-else>loading</small>
+                </div>
+                <div class="col-lg-6 col-md-6 col-6 ml-auto text-center">
+                  <h5>
+                    <a :href="podcast.rss_link" target="_blank">RSS</a><br>
+                    <small>Link</small>
+                  </h5>
                 </div>
               </div>
             </div>
@@ -351,5 +356,9 @@ export default {
   img.preload{
     width: 20px;
   }
+}
+.podcast-info-item{
+  float: left;
+  font-size: 16px;
 }
 </style>
