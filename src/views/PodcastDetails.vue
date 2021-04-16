@@ -79,6 +79,25 @@
               <div class="row">
                 <div class="col-md-12 text-left">
                   <div class="form-group">
+                    <label>RSS link</label>
+                    <!--                        TODO: fix click on input!-->
+                    <el-input
+                        class="rss-link-input"
+                        placeholder="Podcast RSS link"
+                        v-model="podcast.rss_link"
+                        disabled
+
+                        @click="goToLink(podcast.rss_link)"
+                    >
+                      <el-button slot="append" icon="el-icon-copy-document" type="success" @click="copyToClipboard(podcast.rss_link)"></el-button>
+                    </el-input>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 text-left">
+                  <div class="form-group">
                     <label>Description</label>
                     <el-form-item prop="description" :class="{'is-error': podcastEdit.serverErrors.description.length > 0}">
                       <el-input type="textarea" rows="6" placeholder="Description" v-model="podcastEdit.form.description"></el-input>
@@ -193,7 +212,16 @@
 <script>
 import axios from "axios";
 import router from "@/router";
-import {deleteEpisode, downloadEpisode, fillFormErrors, humanStatus, formIsValid, goToEpisode, deletePodcast} from "@/utils/podcast";
+import {
+  deleteEpisode,
+  downloadEpisode,
+  fillFormErrors,
+  humanStatus,
+  formIsValid,
+  goToEpisode,
+  deletePodcast,
+  copyToClipboard
+} from "@/utils/podcast";
 import InputErrors from "@/components/InputErrors";
 
 export default {
@@ -321,7 +349,11 @@ export default {
     },
     goToEpisode(episode){
       goToEpisode(episode, this.podcast.id)
-    }
+    },
+    goToLink(link){
+       window.open(link, "_blank");
+    },
+    copyToClipboard: copyToClipboard
   }
 }
 </script>
@@ -360,5 +392,10 @@ export default {
 .podcast-info-item{
   float: left;
   font-size: 16px;
+}
+.rss-link-input{
+  input{
+    cursor: alias !important;
+  }
 }
 </style>

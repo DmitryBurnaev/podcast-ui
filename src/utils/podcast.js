@@ -104,4 +104,20 @@ function deletePodcast(podcast, callback){
   });
 }
 
-export {deleteEpisode, downloadEpisode, deletePodcast, humanStatus, goToEpisode, fillFormErrors, formIsValid}
+function copyToClipboard(value){
+    const el = document.createElement('textarea');
+    el.value = value;
+    el.setAttribute('readonly', '');
+    el.style.position = 'absolute';
+    el.style.left = '-9999px';
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    app.$message({type: 'success', message: `Copied`});
+}
+
+export {
+    deleteEpisode, downloadEpisode, deletePodcast, humanStatus, goToEpisode, fillFormErrors, formIsValid,
+    copyToClipboard
+}
