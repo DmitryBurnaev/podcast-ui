@@ -18,16 +18,10 @@
             <hr>
             <div class="button-container">
               <div class="row">
-                <div class="col-lg-6 col-md-6 col-6 ml-auto text-center" >
+                <div class="col-lg-12 col-md-12 col-12 ml-auto text-center" >
                   <h5>
                     {{ episodes.length }}<br>
                     <small>Episodes</small>
-                  </h5>
-                </div>
-                <div class="col-lg-6 col-md-6 col-6 ml-auto text-center">
-                  <h5>
-                    <a :href="podcast.rss_link" target="_blank">RSS</a><br>
-                    <small>Link</small>
                   </h5>
                 </div>
               </div>
@@ -57,22 +51,12 @@
                 <div class="col-md-4 text-left">
                   <div class="form-group">
                     <label>Created At</label>
-                    <input type="text" class="form-control" disabled
-                           :value="podcast.created_at | date('datetime')">
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12 text-left">
-                  <div class="form-group">
-                    <label>Download Automatically</label>
-                    <el-switch
-                      style="display: block"
-                      v-model="podcastEdit.form.download_automatically"
-                      active-color="rgb(107, 208, 152)"
-                      inactive-color="rgb(203, 203, 203)"
+                    <el-input
+                        placeholder="Created AT"
+                        :value="podcast.created_at | date('datetime')"
+                        disabled
                     >
-                    </el-switch>
+                    </el-input>
                   </div>
                 </div>
               </div>
@@ -80,14 +64,11 @@
                 <div class="col-md-12 text-left">
                   <div class="form-group">
                     <label>RSS link</label>
-                    <!--                        TODO: fix click on input!-->
                     <el-input
                         class="rss-link-input"
                         placeholder="Podcast RSS link"
                         v-model="podcast.rss_link"
                         disabled
-
-                        @click="goToLink(podcast.rss_link)"
                     >
                       <el-button slot="append" icon="el-icon-copy-document" type="success" @click="copyToClipboard(podcast.rss_link)"></el-button>
                     </el-input>
@@ -133,6 +114,16 @@
         <div class="card create-episode-card">
           <div class="card-header">
             <h5 class="card-title">Create new episode</h5>
+            <div class="header-controls">
+              <el-switch
+                v-model="podcastEdit.form.download_automatically"
+                active-color="rgb(107, 208, 152)"
+                inactive-color="rgb(203, 203, 203)"
+                inactive-text="Download Automatically"
+                @change="updatePodcast"
+              >
+              </el-switch>
+            </div>
           </div>
           <div class="card-body">
               <el-form :model="episodeCreation.form" :rules="episodeCreation.rules" ref="createEpisodeForm">
@@ -183,18 +174,17 @@
                   <div class="col-md-2 col-2 text-right episode-controls">
                       <img class="preload mt-2" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
                       <div
-                          v-if="episode.status === 'new'"
-                          class="btn-outline-gray btn-icon"
-                          @click="downloadEpisode(episode)">
-                        <i class="nc-icon nc-cloud-download-93"></i>
-                      </div>
-                      <div
                           v-if="episode.status !== 'downloading'"
                           class="btn-outline-gray btn-icon"
                           @click="deleteEpisode(episode)">
                         <i class="nc-icon nc-simple-remove"></i>
                       </div>
-
+                      <div
+                          v-if="episode.status === 'new'"
+                          class="btn-outline-gray btn-icon"
+                          @click="downloadEpisode(episode)">
+                        <i class="nc-icon nc-cloud-download-93"></i>
+                      </div>
                     </div>
                 </div>
                 <hr class="hr__row-episode">
@@ -243,7 +233,7 @@ export default {
           {min: 1, max: 32, message: 'Name should be from 1 tp 32 symbols', trigger: 'blur'}
         ],
         description: [
-          {min: 0, max: 100, message: 'Description should be less than 100 symbols', trigger: 'blur'}
+          {min: 0, max: 180, message: 'Description should be less than 100 symbols', trigger: 'blur'}
         ],
       },
       serverErrors:{
@@ -258,7 +248,7 @@ export default {
       },
       rules: {
         source_url: [
-          { type: 'url', required: true, trigger: 'blur', message: 'Input URL has invalid format' },
+          { type: 'url', max: 250, trigger: 'blur', message: 'Input URL has invalid format' },
         ],
       },
       serverErrors:{
@@ -312,9 +302,12 @@ export default {
       }
     },
     async updatePodcast(){
-      const response = await axios.patch(`podcasts/${this.podcast.id}/`, this.podcastEdit.form);
-      this.podcast = response.data
-      this.$message({type: 'success', message: 'Podcast successful updated.'});
+      const valid = await formIsValid(this, 'podcastEditForm')
+      if (valid){
+        const response = await axios.patch(`podcasts/${this.podcast.id}/`, this.podcastEdit.form);
+        this.podcast = response.data
+        this.$message({type: 'success', message: 'Podcast successful updated.'});
+      }
     },
     async generateRSS(){
       await axios.put(`podcasts/${this.podcast.id}/generate_rss/`);
@@ -322,7 +315,7 @@ export default {
     },
     async createEpisode(){
       const valid = await formIsValid(this, 'createEpisodeForm')
-      if (valid){
+      if (valid && this.episodeCreation.form.source_url.length !== 0){
         this.episodeCreation.inProgress = true;
         const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.episodeCreation.form);
         if (response){
@@ -376,7 +369,7 @@ export default {
   }
 }
 .card-podcast-summary{
-  min-height: 479px;
+  height: 500px;
 }
 .create-episode-card{
   .form-group{
@@ -387,6 +380,25 @@ export default {
   }
   img.preload{
     width: 20px;
+  }
+  .card-header{
+    position: relative;
+    .card-title{
+      margin-top: 5px;
+    }
+    .header-controls{
+        position: absolute;
+        right: 15px;
+        top: 24px;
+        .el-switch__label{
+          &.is-active{
+            color: #A1A4A9 !important;
+          }
+        }
+        div{
+          margin-left: 5px;
+        }
+    }
   }
 }
 .podcast-info-item{

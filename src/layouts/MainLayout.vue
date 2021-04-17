@@ -40,6 +40,9 @@ export default {
     .helper-text{
       color: #730606;
     }
+    textarea:focus, input:focus{
+      border-color: #6bd098 !important;
+    }
   }
   .preloader{
     padding-top: 75px;

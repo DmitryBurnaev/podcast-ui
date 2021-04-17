@@ -2,7 +2,12 @@ import axios from "axios";
 
 export default {
     state: {
-        podcasts: null
+        podcasts: null,
+        // todo: use this for:
+        //  - committing actual breadcrumbs,
+        //  - drawing main breadcrumbs,
+
+        breadcrumbs: [{"title": "Podcasts", "url": "podcasts/"}]
     },
     mutations: {
         setPodcasts(state, podcasts){
@@ -14,7 +19,6 @@ export default {
     },
     actions: {
         async getPodcasts({commit}) {
-            console.log(commit)
             const response = await axios.get(`podcasts/`, )
             if (response){
                 commit('setPodcasts', response.data)

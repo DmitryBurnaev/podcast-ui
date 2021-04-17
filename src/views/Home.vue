@@ -192,6 +192,7 @@ export default {
     .card-add-podcast{
       background-color: inherit;
       border: 1px dashed;
+      box-shadow: none;
       .card-body{
         text-align: center;
         font-size: 40px;

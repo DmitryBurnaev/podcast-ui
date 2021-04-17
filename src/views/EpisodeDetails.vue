@@ -30,7 +30,7 @@
                     <div class="col-lg-2 col-md-2 col-2 ml-auto pr-1 pl-1 text-center">
                       <h2>
                         <i
-                            class="nc-icon text-primary"
+                            class="nc-icon text-success"
                             :title="humanStatus(episode.status)"
                             :class="{
                               'nc-tap-01 cursor': episode.status === 'new',
@@ -49,65 +49,59 @@
             </div>
           </div>
         </div>
-        <div class="card">
-              <div class="card-header">
-                <h4 class="card-title">Episode details</h4>
-              </div>
-              <div class="card-body">
-                <ul class="list-unstyled episode-details">
-                  <li>
-                    <div class="row">
-                      <div class="col-md-2 col-2">
-                        <div class="icon-episode-detail text-center icon-warning"><i class="nc-icon nc-ruler-pencil text-success"></i></div>
-                      </div>
-                      <div class="col-md-7 col-7">
-                        {{ episode.created_at | date}}
-                        <br />
-                        <span class="text-secondary"><small>Created At</small></span>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="row">
-                      <div class="col-md-2 col-2">
-                        <div class="icon-episode-detail text-center"><i class="nc-icon nc-spaceship text-info"></i></div>
-                      </div>
-                      <div class="col-md-7 col-7">
-                        {{ episode.published_at | date}}
-                        <br />
-                        <span class="text-secondary"><small>Published At</small></span>
-                      </div>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="row">
-                      <div class="col-md-2 col-2">
-                        <div class="icon-episode-detail text-center"><i class="nc-icon nc-world-2 text-success"></i></div>
-                      </div>
-                      <div class="col-ms-10 col-10">
-                        <a :href="episode.watch_url" target="_blank">{{ episode.watch_url }}</a>
-                        <br />
-                        <span class="text-secondary"><small>Watch URL</small></span>
-                      </div>
-                    </div>
-                  </li>
-
-                  <li v-if="episode.remote_url">
-                    <div class="row">
-                      <div class="col-md-2 col-2">
-                        <div class="icon-episode-detail text-center"><i class="nc-icon nc-note-03 text-info"></i></div>
-                      </div>
-                      <div class="col-ms-10 col-10">
-                        <a :href="episode.remote_url" target="_blank">{{ episode.remote_url }}</a>
-                        <br />
-                        <span class="text-secondary"><small>Remote URL</small></span>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
+        <div class="card card-episode-details">
+          <div class="card-header">
+            <h4 class="card-title">Episode details</h4>
+          </div>
+          <div class="card-body">
+            <ul class="list-unstyled episode-details">
+              <li>
+                <div class="row">
+                  <div class="col-md-2 col-2">
+                    <div class="icon-episode-detail text-center icon-warning"><i class="nc-icon nc-ruler-pencil text-success"></i></div>
+                  </div>
+                  <div class="col-md-7 col-7">
+                    {{ episode.created_at | date}}
+                    <br />
+                    <span class="text-secondary"><small>Created At</small></span>
+                  </div>
+                </div>
+              </li>
+              <li v-if="episode.published_at">
+                <div class="row">
+                  <div class="col-md-2 col-2">
+                    <div class="icon-episode-detail text-center"><i class="nc-icon nc-spaceship text-info"></i></div>
+                  </div>
+                  <div class="col-md-7 col-7">
+                    {{ episode.published_at | date}}
+                    <br />
+                    <span class="text-secondary"><small>Published At</small></span>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="row">
+                  <div class="col-md-2 col-2">
+                    <div class="icon-episode-detail text-center"><i class="nc-icon nc-world-2 text-success"></i></div>
+                  </div>
+                  <div class="col-ms-10 col-10">
+                    <a :href="episode.watch_url" target="_blank">Source URL</a>
+                  </div>
+                </div>
+              </li>
+              <li v-if="episode.remote_url">
+                <div class="row">
+                  <div class="col-md-2 col-2">
+                    <div class="icon-episode-detail text-center"><i class="nc-icon nc-note-03 text-info"></i></div>
+                  </div>
+                  <div class="col-ms-10 col-10">
+                    <a :href="episode.remote_url" target="_blank">Media URL</a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
 
       </div>
       <div class="col-md-8">
@@ -218,33 +212,42 @@
   }
 </script>
 <style lang="scss">
-.podcast-background{
-  filter: blur(1.2px);
-}
-.avatar-episode{
-  width: 60% !important;
-  height: auto !important;
-  border-radius: 6px !important;
-}
-.episode-details{
-  li{
-    padding-bottom: 10px;
+  .podcast-background{
+    filter: blur(1.2px);
   }
-  .icon-episode-detail{
-    font-size: 1.5em;
+  .avatar-episode{
+    width: 60% !important;
+    height: auto !important;
+    border-radius: 6px !important;
   }
-}
-.cursor{
-  cursor: pointer;
-}
-.episode-status{
-  .preload{
-    width: 50px;
+  .card-episode-details{
+    height: 279px;
   }
-  p{
-    margin-top: 10px;
-    font-size: 14px;
-    color: #b1b1b1;
+  .episode-details{
+    li{
+      padding-bottom: 10px;
+    }
+    .icon-episode-detail{
+      font-size: 1.5em;
+    }
+    a{
+      color: #393836;
+      :hover{
+        color: #393836;
+      }
+    }
   }
-}
+  .cursor{
+    cursor: pointer;
+  }
+  .episode-status{
+    .preload{
+      width: 50px;
+    }
+    p{
+      margin-top: 10px;
+      font-size: 14px;
+      color: #b1b1b1;
+    }
+  }
 </style>
