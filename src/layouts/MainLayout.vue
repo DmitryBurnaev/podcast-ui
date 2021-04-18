@@ -74,5 +74,20 @@ export default {
       color: black;
     }
   }
-
+  .el-breadcrumb__inner{
+    font-size: 16px !important;
+    a:hover{
+      color: #6bd098 !important;
+    }
+    &.is-link{
+      font-weight: inherit;
+      :hover{
+        color: #6bd098 !important;
+      }
+    }
+  }
+  .el-breadcrumb__inner a:hover, .el-breadcrumb__inner.is-link:hover {
+    color: #186a30 !important;
+    cursor: pointer;
+  }
 </style>

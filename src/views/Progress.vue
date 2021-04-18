@@ -54,20 +54,21 @@
         timeInterval: null,
     }),
     async mounted() {
-      const response = await axios.get(`progress/`)
-      if (response){
-        this.progressItems = response.data
-      }
-      console.log(this.progressItems)
-
-      // this.timeInterval = setInterval(() => {
-      //   // this.progressItems = [{"episode_id": 1, "test": "foo"}]
-      //   const response = axios.get(`progress/`)
-      //   console.log(this.episodesInProgress)
-      //   if (response){
-      //     this.episodesInProgress = response.data
-      //   }
-      // }, 1000)
+      this.$store.commit('setBreadcrumbs', [
+        {
+          "title": "Home",
+          "route": {name: "Home"}
+        },
+        {
+          "title": "Progress",
+          "route": null
+        },
+      ])
+      this.timeInterval = setInterval(() => {
+        axios.get(`progress/`).then((response) => {
+          this.progressItems = response.data
+        })
+      }, 1000)
     },
     destroyed() {
       clearInterval(this.timeInterval)

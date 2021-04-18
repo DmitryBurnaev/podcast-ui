@@ -61,7 +61,17 @@
     }),
     async mounted(){
       await this.$store.dispatch('getPodcasts')
-      this.podcasts = this.$store.getters.podcasts
+      this.podcasts = this.$store.getters.podcasts,
+      this.$store.commit('setBreadcrumbs', [
+        {
+          "title": "Home",
+          "route": {name: "Home"}
+        },
+        {
+          "title": "Podcasts",
+          "route": null
+        },
+      ])
     },
     methods: {
       goToPodcast(podcast){

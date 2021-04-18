@@ -9,8 +9,14 @@
             <span class="navbar-toggler-bar bar3"></span>
           </button>
         </div>
-        <!-- TODO: add breadcrumbs here -->
-        <router-link tag="a" :to="{name: 'podcastList'}" class="navbar-brand">Podcasts</router-link>
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+          <el-breadcrumb-item
+              v-for="breadcrumb in breadcrumbs"
+              :key="breadcrumb.title"
+              :to="breadcrumb.route">
+            {{breadcrumb.title}}
+          </el-breadcrumb-item>
+        </el-breadcrumb>
       </div>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -50,7 +56,12 @@ export default {
       await this.$store.dispatch('signOut')
       await this.$router.push("/sign-in?message=signed-out")
     }
-  }
+  },
+  computed: {
+    breadcrumbs() {
+      return this.$store.getters.breadcrumbs
+    }
+  },
 }
 </script>
 <style lang="scss">

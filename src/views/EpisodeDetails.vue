@@ -12,7 +12,7 @@
                 <img class="avatar avatar-episode border-gray" :src="episode.image_url" alt="...">
                 <p class="title">{{ episode.title }}</p>
             </div>
-            <div class="episode-content text-center">
+            <div class="episode-content text-center mt-3">
               <Audio v-if="episode.status === 'published'" :src="episode.remote_url" :length="episode.length" ></Audio>
               <div v-else class="episode-status text-center">
                 <img class="preload" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
@@ -28,7 +28,7 @@
                       <h5>{{ episode.length | length }}<br><small>Length</small></h5>
                     </div>
                     <div class="col-lg-2 col-md-2 col-2 ml-auto pr-1 pl-1 text-center">
-                      <h2>
+                      <span class="episode-status-icon">
                         <i
                             class="nc-icon text-success"
                             :title="humanStatus(episode.status)"
@@ -40,7 +40,7 @@
                             @click="downloadEpisode(episode)"
                         >
                         </i>
-                      </h2>
+                      </span>
                     </div>
                     <div class="col-lg-5 col-md-5 col-5 ml-auto mr-auto text-center">
                       <h5>{{ episode.file_size | size }} MB<br><small>Size</small></h5>
@@ -184,6 +184,25 @@
       this.form.author = this.episode.author;
       this.form.description = this.episode.description;
       this.loading = false;
+      this.$store.commit('setBreadcrumbs', [
+        {
+          "title": "Home",
+          "route": {name: "Home"}
+        },
+        {
+          "title": this.podcast.name,
+          "route": {
+            name: "podcastDetails",
+            params: {
+              id: this.podcast.id
+            }
+          }
+        },
+        {
+          "title": this.episode.title,
+          "route": null
+        },
+      ])
     },
     watch: {
       // при изменениях маршрута запрашиваем данные снова
@@ -221,7 +240,7 @@
     border-radius: 6px !important;
   }
   .card-episode-details{
-    height: 279px;
+    height: 294px;
   }
   .episode-details{
     li{
@@ -249,5 +268,8 @@
       font-size: 14px;
       color: #b1b1b1;
     }
+  }
+  .episode-status-icon{
+    font-size: 30px;
   }
 </style>

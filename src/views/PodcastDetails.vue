@@ -222,6 +222,7 @@ export default {
     podcast: null,
     episodes: [],
     downloadAuto: false,
+    podcastTitle: null,
     podcastEdit:{
       form: {
         name: '',
@@ -275,13 +276,25 @@ export default {
   },
   async created() {
     await this.fetchData()
-    if (this.podcast){
+    if (this.podcast.id){
       this.podcastEdit.form.name = this.podcast.name;
       this.podcastEdit.form.description = this.podcast.description;
       this.podcastEdit.form.download_automatically = this.podcast.download_automatically;
+      this.podcastTitle = this.podcast.name;
+    } else {
+      this.podcastTitle = "New podcast"
     }
+    this.$store.commit('setBreadcrumbs', [
+      {
+        "title": "Home",
+        "route": {name: "Home"}
+      },
+      {
+        "title": this.podcastTitle,
+        "route": null
+      },
+    ])
   },
-
   methods: {
     async fetchData() {
       this.loading = true

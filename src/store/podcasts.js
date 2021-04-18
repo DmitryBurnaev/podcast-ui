@@ -3,19 +3,22 @@ import axios from "axios";
 export default {
     state: {
         podcasts: null,
-        // todo: use this for:
-        //  - committing actual breadcrumbs,
-        //  - drawing main breadcrumbs,
-
-        breadcrumbs: [{"title": "Podcasts", "url": "podcasts/"}]
+        breadcrumbs: [
+            {"title": "Home", "route": null},
+        ]
     },
     mutations: {
         setPodcasts(state, podcasts){
             state.podcasts = podcasts
+        },
+        setBreadcrumbs(state, breadcrumbs){
+            state.breadcrumbs = breadcrumbs
         }
     },
     getters: {
         podcasts: s => s.podcasts,
+        breadcrumbs: s => s.breadcrumbs,
+
     },
     actions: {
         async getPodcasts({commit}) {

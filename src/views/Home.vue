@@ -149,6 +149,12 @@ export default {
       this.podcasts = this.$store.getters.podcasts
       this.loading = false
     }
+    this.$store.commit('setBreadcrumbs', [
+      {
+        "title": "Home",
+        "route": null
+      },
+    ])
   },
   methods:{
     openCreateEpisodeDialog(podcast){

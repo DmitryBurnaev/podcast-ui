@@ -5,7 +5,7 @@ import router from './router'
 import store from '@/store'
 import interceptorsSetup from '@/utils/interceptors'
 import {dateFilter, sizeFilter, audioLengthFilter, humanStatusFilter} from "@/utils/filters";
-import { Dialog, Slider, Form, FormItem, Input, Button, Switch, MessageBox, Message, Progress } from 'element-ui';
+import { Dialog, Slider, Form, FormItem, Input, Button, Switch, MessageBox, Message, Progress, Breadcrumb, BreadcrumbItem } from 'element-ui';
 
 Vue.component(Dialog.name, Dialog);
 Vue.component(Slider.name, Slider);
@@ -15,6 +15,8 @@ Vue.component(Input.name, Input);
 Vue.component(Button.name, Button);
 Vue.component(Switch.name, Switch);
 Vue.component(Progress.name, Progress);
+Vue.component(Breadcrumb.name, Breadcrumb);
+Vue.component(BreadcrumbItem.name, BreadcrumbItem);
 
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$message = Message
