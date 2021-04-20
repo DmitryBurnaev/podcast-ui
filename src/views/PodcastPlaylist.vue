@@ -35,23 +35,22 @@
                   v-for="video in playlistItems"
                   :key="video.id">
                 <div class="row row-episode">
-<!--                  <div class="col-md-1 col-1 episode-content" @click="goToEpisode(episode)">-->
-<!--                    <div class="episode-image">-->
-<!--                      <img :src="episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                  <div class="col-md-9 col-9 episode-title episode-content" @click="goToEpisode(episode)">-->
-<!--                    {{ episode.title }}-->
-<!--                    <br/>-->
-<!--                    <span-->
-<!--                        :class="{-->
-<!--                          'text-danger': (episode.status === 'error'),-->
-<!--                          'text-success': (['new', 'downloading', 'published'].includes(episode.status)),-->
-<!--                          'text-gray': (episode.status === 'archived')-->
-<!--                        }">-->
-<!--                      <small>{{humanStatus(episode.status)}}</small>-->
-<!--                    </span>-->
-<!--                  </div>-->
+
+                  <div class="col-md-1 col-1 episode-content">
+                    <el-checkbox label="Online activities" v-model="video.checked"></el-checkbox>
+                  </div>
+                  <div class="col-md-2 col-2 episode-content">
+                    <div class="episode-image">
+                      <img :src="video.thumbnail" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                    </div>
+                  </div>
+                  <div class="col-md-9 col-9 episode-title episode-content" @click="goToEpisode(episode)">
+                    {{ video.title }}
+                    <br/>
+                    <span class="text-muted">
+                      <small>{{video.description}}</small>
+                    </span>
+                  </div>
 
                 </div>
                 <hr class="hr__row-episode">
@@ -68,9 +67,7 @@
 
 <script>
 import axios from "axios";
-import {
-  fillFormErrors, formIsValid,
-} from "@/utils/podcast";
+import {fillFormErrors, formIsValid} from "@/utils/podcast";
 import InputErrors from "@/components/InputErrors";
 
 export default {
