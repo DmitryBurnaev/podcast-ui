@@ -4,10 +4,10 @@
       <div class="col-12">
         <div class="card create-episode-card">
           <div class="card-header">
-            <h5 class="card-title">Download playlist</h5>
+            <h5 class="card-title">Add episodes from playlist</h5>
           </div>
           <div class="card-body">
-              <el-form :model="playlistData.form" :rules="playlistData.rules" ref="createEpisodeForm">
+              <el-form :model="playlistData.form" :rules="playlistData.rules" ref="playlistForm">
                 <el-form-item prop="source_url" :class="{'is-error': playlistData.serverErrors.source_url.length > 0}">
                   <el-input
                       placeholder="Playlist Source Link"
@@ -76,9 +76,8 @@ export default {
   data: () => ({
     loading: true,
     podcast: null,
+    playlistTitle: [],
     playlistItems: [],
-    downloadAuto: false,
-    podcastTitle: null,
     playlistData:{
       form: {
         source_url: "",
@@ -110,30 +109,40 @@ export default {
     }
   },
   async created() {
+    await this.fetchData()
     this.$store.commit('setBreadcrumbs', [
       {
         "title": "Home",
         "route": {name: "Home"}
       },
       {
-        "title": this.podcastTitle,
+        "title": this.podcast.name,
+        "route": {
+          name: "podcastDetails",
+          params: {
+            id: this.podcast.id
+          }
+        }
+      },
+      {
+        "title": "playlist",
         "route": null
       },
     ])
   },
   methods: {
-    async createEpisode(){
-      const valid = await formIsValid(this, 'createEpisodeForm')
+    async fetchData() {
+      const podcastID = this.$route.params.podcastID
+      this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
+    },
+    async fetchPlaylist(){
+      const valid = await formIsValid(this, 'playlistForm')
       if (valid && this.playlistData.form.source_url.length !== 0){
         this.playlistData.inProgress = true;
-        const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.playlistData.form);
-        if (response){
-          const newEpisode = response.data
-          this.$message({type: 'success', message: `New episode #${newEpisode.id} was created`});
-          if (!this.episodes.find((el) => el.id === newEpisode.id)){
-            this.episodes.unshift(newEpisode)
-          }
-          this.playlistData.form.source_url = ''
+        const response = await axios.post(`playlist/`, this.playlistData.form);
+        if (response.data){
+          this.playlistTitle = response.data.title
+          this.playlistItems = response.data.entries
         }
         this.playlistData.inProgress = false
       }

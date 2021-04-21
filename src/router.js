@@ -56,6 +56,12 @@ const routes = [
     meta: {layout: 'main', auth: true},
     component: () => import('./views/EpisodeDetails.vue')
   },
+  {
+    path: '/podcasts/:podcastID/playlist',
+    name: 'playlist',
+    meta: {layout: 'main', auth: true},
+    component: () => import('./views/Playlist.vue')
+  },
 ]
 
 const router = new VueRouter({
