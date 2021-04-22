@@ -34,6 +34,8 @@
 
 <script>
 
+import {fillFormErrors, formIsValid} from "@/utils/podcast";
+
 export default {
   name: "SignUp",
   data: () => ({
@@ -72,27 +74,15 @@ export default {
   },
   watch: {
     error(serverErrors){
-      // todo: move this logic to common part (helper function)
-      if ( typeof serverErrors.details === 'object'){
-        for (let key in this.serverErrors){
-          if (serverErrors.details[key]){
-            this.serverErrors[key] = [serverErrors.details[key]]
-          }
-        }
-        console.log(this.serverErrors)
-      }
+      fillFormErrors(serverErrors, [this.serverErrors])
     }
   },
   methods: {
     async submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.$store.dispatch('signUp', this.signUpForm).then(() => {this.$router.push("/")})
-        } else {
-          console.log("Form is invalid.")
-          return false;
-        }
-      });
+      const valid = await formIsValid(this, formName)
+      if (valid){
+        this.$store.dispatch('signUp', this.signUpForm).then(() => {this.$router.push("/")})
+      }
     },
   }
 }

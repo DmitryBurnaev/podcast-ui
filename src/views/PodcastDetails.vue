@@ -308,10 +308,13 @@ export default {
       this.loading = false
     },
     async createPodcast(){
-      const response = await axios.post(`podcasts/`, this.podcastEdit.form);
-      if (response){
-        this.$message({type: 'success', message: 'Podcast successful created.'});
-        setTimeout(() => {router.push(`/podcasts/${response.data.id}`).then(() => {})}, 500)
+      const valid = await formIsValid(this, 'podcastEditForm')
+      if (valid){
+        const response = await axios.post(`podcasts/`, this.podcastEdit.form);
+        if (response){
+          this.$message({type: 'success', message: 'Podcast successful created.'});
+          setTimeout(() => {router.push(`/podcasts/${response.data.id}`).then(() => {})}, 500)
+        }
       }
     },
     async updatePodcast(){
@@ -328,18 +331,24 @@ export default {
     },
     async createEpisode(){
       const valid = await formIsValid(this, 'createEpisodeForm')
-      if (valid && this.episodeCreation.form.source_url.length !== 0){
-        this.episodeCreation.inProgress = true;
-        const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.episodeCreation.form);
-        if (response){
-          const newEpisode = response.data
-          this.$message({type: 'success', message: `New episode #${newEpisode.id} was created`});
-          if (!this.episodes.find((el) => el.id === newEpisode.id)){
-            this.episodes.unshift(newEpisode)
-          }
-          this.episodeCreation.form.source_url = ''
+      const sourceURL = this.episodeCreation.form.source_url
+      if (valid && sourceURL.length !== 0){
+        if (sourceURL.indexOf("playlist") !== -1){
+          await this.$router.push({name: 'playlist', params: {podcastID: this.podcast.id}, query: {playlist: sourceURL}})
         }
-        this.episodeCreation.inProgress = false
+        else {
+          this.episodeCreation.inProgress = true;
+          const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.episodeCreation.form);
+          if (response){
+            const newEpisode = response.data
+            this.$message({type: 'success', message: `New episode #${newEpisode.id} was created`});
+            if (!this.episodes.find((el) => el.id === newEpisode.id)){
+              this.episodes.unshift(newEpisode)
+            }
+            this.episodeCreation.form.source_url = ''
+          }
+          this.episodeCreation.inProgress = false
+        }
       }
     },
     deletePodcast(){
