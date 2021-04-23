@@ -79,6 +79,7 @@ export default {
     playlistTitle: [],
     playlistItems: [],
     playlistData:{
+      formRef: 'playlistForm',
       form: {
         source_url: "",
       },
@@ -100,7 +101,7 @@ export default {
   },
   watch: {
     // // при изменениях маршрута запрашиваем данные снова
-    // $route: 'fetchData',
+    $route: 'fetchData',
     error(serverErrors){
       this.playlistData.inProgress = false
       fillFormErrors(serverErrors, [
@@ -110,6 +111,7 @@ export default {
   },
   async created() {
     await this.fetchData()
+
     this.$store.commit('setBreadcrumbs', [
       {
         "title": "Home",
@@ -136,13 +138,23 @@ export default {
       this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
       if (this.$route.query.playlist){
         this.playlistData.form.source_url = this.$route.query.playlist
-        await this.fetchPlaylist()
+        // we can't use `formIsValid` method in the `created` step
+        let formValid
+        try {
+          formValid = await this.$refs[this.playlistData.formRef].validate()
+        } catch (err) {
+          console.log('Form is invalid')
+        }
+        await this.fetchPlaylist(formValid)
       }
       this.loading = false;
     },
-    async fetchPlaylist(){
-      const valid = await formIsValid(this, 'playlistForm')
-      if (valid && this.playlistData.form.source_url.length !== 0){
+    async fetchPlaylist(formValid){
+      if (formValid === undefined){
+        formValid = await formIsValid(this, 'playlistForm')
+      }
+
+      if (formValid && this.playlistData.form.source_url.length !== 0){
         // todo: fix validation problems
         this.playlistData.inProgress = true;
         this.playlistTitle = "Test playlist 1"
