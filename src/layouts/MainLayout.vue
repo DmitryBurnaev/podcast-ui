@@ -31,6 +31,11 @@ export default {
 }
 </script>
 <style lang="scss">
+  .nav .active{
+    a, i{
+      color: #6bd098 !important;
+    }
+    }
   form{
     text-align: center;
     input.invalid{
@@ -89,5 +94,27 @@ export default {
   .el-breadcrumb__inner a:hover, .el-breadcrumb__inner.is-link:hover {
     color: #186a30 !important;
     cursor: pointer;
+  }
+  .card{
+    .card-header-with-controls{
+      position: relative;
+      .controls{
+        position: absolute;
+        top: 20px;
+        right: 14px;
+        img{
+          width: 25px;
+          margin-right: 10px;
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+  button:disabled,
+  button[disabled]{
+    cursor: not-allowed;
+    background-color: #f5f7fa !important;
+    color: #a0a3a8 !important;
+    border-color: #ddd !important;
   }
 </style>

@@ -7,16 +7,16 @@
             <h5 class="card-title">Add episodes from playlist</h5>
           </div>
           <div class="card-body">
-              <el-form :model="playlistData.form" :rules="playlistData.rules" ref="playlistForm" @submit="fetchPlaylist">
-                <el-form-item prop="source_url" :class="{'is-error': playlistData.serverErrors.source_url.length > 0}">
+              <el-form :model="playlistSrc.form" :rules="playlistSrc.rules" ref="playlistForm" @submit="fetchPlaylist">
+                <el-form-item prop="source_url" :class="{'is-error': playlistSrc.serverErrors.source_url.length > 0}">
                   <el-input
                       placeholder="Playlist Source Link"
-                      v-model="playlistData.form.source_url"
-                      :disabled="playlistData.inProgress"
+                      v-model="playlistSrc.form.source_url"
+                      :disabled="playlistSrc.inProgress"
                   >
                     <el-button slot="append" icon="el-icon-view" type="success" ref="tbtn" @click="fetchPlaylist"></el-button>
                   </el-input>
-                  <input-errors :errors="playlistData.serverErrors.source_url"></input-errors>
+                  <input-errors :errors="playlistSrc.serverErrors.source_url"></input-errors>
                 </el-form-item>
               </el-form>
             </div>
@@ -26,8 +26,18 @@
     <div class="row" v-if="playlistItems.length > 0">
       <div class="col-12">
         <div class="card">
-          <div class="card-header">
-            <h4 class="card-title">Videos</h4>
+          <div class="card-header card-header-with-controls">
+            <h4 class="card-title">{{playlistTitle}} <i class="el-icon-caret-right"></i> {{podcast.name}}</h4>
+            <div class="controls">
+              <img class="preload mt-2" v-if="playlistDownloading" src="../assets/img/down-arrow.gif" alt=""/>
+              <button
+                  type="button"
+                  class="el-button el-button--info is-plain"
+                  @click="createEpisodes"
+                  :disabled="playlistDownloading">
+                <i class="el-icon-edit"></i><span>Add chosen</span>
+              </button>
+            </div>
           </div>
           <div class="card-body">
             <ul class="list-unstyled team-members">
@@ -36,22 +46,32 @@
                   :key="item.id">
                 <div class="row row-episode">
 
-                  <div class="col-md-1 col-1 episode-content">
-                    <el-checkbox v-model="item.checked"></el-checkbox>
-                  </div>
-                  <div class="col-md-2 col-2 episode-content">
-                    <div class="episode-image">
-                      <img :src="item.thumbnail_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                  <div class="col-md-1 col-1 text-center pt-2">
+                    <el-switch
+                      v-model="item.checked"
+                      active-color="rgb(107, 208, 152)"
+                      inactive-color="rgb(203, 203, 203)"
+                      :disabled="playlistDownloading"
+                    >
+                    </el-switch>
+                    <div v-if="item.downloading">
+                      <i class="el-icon-loading"></i>
+<!--                      <img class="preload mt-2" v-if="playlistDownloading" src="../assets/img/down-arrow.gif" alt=""/>-->
+                    </div>
+                    <div v-else-if="item.downloaded">
+                      <i class="el-icon-finished"></i>
                     </div>
                   </div>
-                  <div class="col-md-9 col-9 episode-title episode-content">
-                    {{ item.title }}
+                  <div class="col-md-2 col-2 image-container">
+                    <img :src="item.thumbnail_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                  </div>
+                  <div class="col-md-9 col-9 item-details">
+                    <a :href="item.url" target="_blank" :title="item.title"> {{ item.title }}</a>
                     <br/>
                     <span class="text-muted">
                       <small>{{item.description}}</small>
                     </span>
                   </div>
-
                 </div>
                 <hr class="hr__row-episode">
               </li>
@@ -69,6 +89,8 @@
 // import axios from "axios";
 import {fillFormErrors, formIsValid} from "@/utils/podcast";
 import InputErrors from "@/components/InputErrors";
+// import axios from "axios";
+import app from "@/main";
 
 export default {
   name: 'PodcastDetails',
@@ -78,7 +100,8 @@ export default {
     podcast: null,
     playlistTitle: [],
     playlistItems: [],
-    playlistData:{
+    playlistDownloading: false,
+    playlistSrc:{
       formRef: 'playlistForm',
       formValid: null,
       form: {
@@ -104,9 +127,9 @@ export default {
     // // при изменениях маршрута запрашиваем данные снова
     $route: 'fetchData',
     error(serverErrors){
-      this.playlistData.inProgress = false
+      this.playlistSrc.inProgress = false
       fillFormErrors(serverErrors, [
-          this.playlistData.serverErrors
+          this.playlistSrc.serverErrors
       ])
     }
   },
@@ -139,8 +162,8 @@ export default {
       this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
       console.log('aaa', this)
       if (this.$route.query.playlist){
-        this.playlistData.form.source_url = this.$route.query.playlist
-        // this.playlistData.form.validate()
+        this.playlistSrc.form.source_url = this.$route.query.playlist
+        // this.playlistSrc.form.validate()
         // we can't use `formIsValid` method in the `created` step
         // let formValid = true
         // // eslint-disable-next-line no-debugger
@@ -148,17 +171,17 @@ export default {
         //   this.$nextTick(() => {
         //     // Code that will run only after the
         //     // entire view has been rendered
-        //     console.log('bbbb', this, this.$refs['playlistForm'], this.playlistData.formRef, )
+        //     console.log('bbbb', this, this.$refs['playlistForm'], this.playlistSrc.formRef, )
         //   })
 
         // try {
-        //   console.log(this.$refs, this.playlistData.formRef)
-        //   await this.$refs[this.playlistData.formRef].validate()
+        //   console.log(this.$refs, this.playlistSrc.formRef)
+        //   await this.$refs[this.playlistSrc.formRef].validate()
         // } catch (err) {
         //   console.log('Form is invalid', err)
         //   formValid = false
         // }
-        this.playlistData.formValid = true;
+        this.playlistSrc.formValid = true;
         await this.fetchPlaylist()
       }
       this.loading = false;
@@ -167,14 +190,14 @@ export default {
       // if (formValid === undefined){
       //
       //
-      if (this.playlistData.formValid === null){
-        this.playlistData.formValid = await formIsValid(this, 'playlistForm')
+      if (this.playlistSrc.formValid === null){
+        this.playlistSrc.formValid = await formIsValid(this, 'playlistForm')
       }
       // const formValid = await formIsValid(this, 'playlistForm')
       // console.log('formValid', formValid)
-      if (this.playlistData.formValid && this.playlistData.form.source_url.length !== 0){
+      if (this.playlistSrc.formValid && this.playlistSrc.form.source_url.length !== 0){
         // todo: fix validation problems
-        this.playlistData.inProgress = true;
+        this.playlistSrc.inProgress = true;
         this.playlistTitle = "Test playlist 1"
         this.playlistItems = []
 
@@ -183,13 +206,44 @@ export default {
         //   this.playlistTitle = response.data.title
         //   this.playlistItems = response.data.entries
         // }
-        this.playlistData.inProgress = false
+        this.playlistSrc.inProgress = false
       }
-       this.playlistData.formValid = null
+       this.playlistSrc.formValid = null
     },
+    async createEpisodes() {
+      this.playlistDownloading = true
+      for (let index in this.playlistItems){
+        let item = this.playlistItems[index];
+        console.log(`Creating episode ${item.url}`)
+        item.downloading = true;
+        // const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, {source_url: item.url});
+        // if (! response){
+        //   item.failed = true
+        // }
+        // item.downloading = false
+      }
+      // this.playlistDownloading = false
+      app.$message({type: 'info', message: `Episodes from playlist ${this.playlistItems}`, showClose: true});
+    }
   }
 }
 </script>
 <style lang="scss">
-
+  .image-container{
+    padding-left: 0;
+    padding-right: 0;
+    img{
+      width: 85%;
+    }
+    text-align: center;
+  }
+  .item-details{
+    a{
+      color: #55a87a;
+      text-decoration: none;
+    }
+  }
+  .preload{
+    height: 25px;
+  }
 </style>
