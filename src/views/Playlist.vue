@@ -29,7 +29,9 @@
           <div class="card-header card-header-with-controls">
             <h4 class="card-title">{{playlistTitle}} <i class="el-icon-caret-right"></i> {{podcast.name}}</h4>
             <div class="controls">
-              <img class="preload mt-2" v-if="playlistDownloading" src="../assets/img/down-arrow.gif" alt=""/>
+              <div class="icon-container">
+                <i v-if="playlistDownloading" class="el-icon-loading"></i>
+              </div>
               <button
                   type="button"
                   class="el-button el-button--info is-plain"
@@ -54,12 +56,9 @@
                       :disabled="playlistDownloading"
                     >
                     </el-switch>
-                    <div v-if="item.downloading">
-                      <i class="el-icon-loading"></i>
-<!--                      <img class="preload mt-2" v-if="playlistDownloading" src="../assets/img/down-arrow.gif" alt=""/>-->
-                    </div>
-                    <div v-else-if="item.downloaded">
-                      <i class="el-icon-finished"></i>
+                    <div class="item-status">
+                      <i v-if="item.downloading" class="el-icon-loading"></i>
+                      <i v-else-if="item.downloaded" class="el-icon-finished"></i>
                     </div>
                   </div>
                   <div class="col-md-2 col-2 image-container">
@@ -243,7 +242,16 @@ export default {
       text-decoration: none;
     }
   }
-  .preload{
-    height: 25px;
+  .controls{
+    .icon-container{
+      float: left;
+      margin-right: 10px;
+      padding-top: 5px;
+      font-size: 20px;
+    }
+  }
+  .item-status{
+    font-size: 24px;
+    margin-top: 5px;
   }
 </style>
