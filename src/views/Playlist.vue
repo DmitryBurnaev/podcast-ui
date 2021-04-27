@@ -57,8 +57,9 @@
                     >
                     </el-switch>
                     <div class="item-status">
-                      <i v-if="item.downloading" class="el-icon-loading"></i>
-                      <i v-else-if="item.downloaded" class="el-icon-finished"></i>
+                      <i v-if="item.downloading" class="el-icon-loading" title="episode is creating now"></i>
+                      <i v-else-if="item.downloaded" class="el-icon-finished" title="episode successfully created"></i>
+                      <i v-else-if="item.failed" class="el-icon-document-delete invalid" title="episode creation failed"></i>
                     </div>
                   </div>
                   <div class="col-md-2 col-2 image-container">
@@ -85,10 +86,9 @@
 </template>
 
 <script>
-// import axios from "axios";
 import {fillFormErrors, formIsValid} from "@/utils/podcast";
 import InputErrors from "@/components/InputErrors";
-// import axios from "axios";
+import axios from "axios";
 import app from "@/main";
 
 export default {
@@ -215,14 +215,16 @@ export default {
         let item = this.playlistItems[index];
         console.log(`Creating episode ${item.url}`)
         item.downloading = true;
-        // const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, {source_url: item.url});
-        // if (! response){
-        //   item.failed = true
-        // }
-        // item.downloading = false
+        const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, {source_url: item.url});
+        if (! response){
+          item.failed = true
+        } else {
+          item.downloaded = true
+        }
+        item.downloading = false
       }
-      // this.playlistDownloading = false
-      app.$message({type: 'info', message: `Episodes from playlist ${this.playlistItems}`, showClose: true});
+      this.playlistDownloading = false
+      app.$message({type: 'info', message: `Episodes added from playlist ${this.playlistTitle} to podcast '${this.podcast.name}'`, showClose: true});
     }
   }
 }

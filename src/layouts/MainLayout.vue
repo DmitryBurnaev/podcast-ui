@@ -49,6 +49,9 @@ export default {
       border-color: #6bd098 !important;
     }
   }
+  .invalid{
+    color: #cc0808;
+  }
   .preloader{
     padding-top: 75px;
     .icon{
