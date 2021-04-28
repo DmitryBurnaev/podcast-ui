@@ -8,15 +8,15 @@
           </div>
           <div class="card-body">
               <el-form :model="playlistSrc.form" :rules="playlistSrc.rules" ref="playlistForm" @submit="fetchPlaylist">
-                <el-form-item prop="source_url" :class="{'is-error': playlistSrc.serverErrors.source_url.length > 0}">
+                <el-form-item prop="source_url" :class="{'is-error': playlistSrc.serverErrors.url.length > 0}">
                   <el-input
                       placeholder="Playlist Source Link"
-                      v-model="playlistSrc.form.source_url"
+                      v-model="playlistSrc.form.url"
                       :disabled="playlistSrc.inProgress"
                   >
-                    <el-button slot="append" icon="el-icon-view" type="success" ref="tbtn" @click="fetchPlaylist"></el-button>
+                    <el-button slot="append" icon="el-icon-view" type="success" @click="fetchPlaylist"></el-button>
                   </el-input>
-                  <input-errors :errors="playlistSrc.serverErrors.source_url"></input-errors>
+                  <input-errors :errors="playlistSrc.serverErrors.url"></input-errors>
                 </el-form-item>
               </el-form>
             </div>
@@ -53,7 +53,7 @@
                       v-model="item.checked"
                       active-color="rgb(107, 208, 152)"
                       inactive-color="rgb(203, 203, 203)"
-                      :disabled="playlistDownloading"
+                      :disabled="playlistDownloading || item.downloaded"
                     >
                     </el-switch>
                     <div class="item-status">
@@ -104,15 +104,15 @@ export default {
       formRef: 'playlistForm',
       formValid: null,
       form: {
-        source_url: "",
+        url: "",
       },
       rules: {
-        source_url: [
+        url: [
           { type: 'url', max: 250, trigger: 'blur', message: 'Input URL has invalid format' },
         ],
       },
       serverErrors:{
-        source_url: [],
+        url: [],
       },
       inProgress: false,
     },
@@ -159,52 +159,31 @@ export default {
     async fetchData() {
       const podcastID = this.$route.params.podcastID
       this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
-      console.log('aaa', this)
       if (this.$route.query.playlist){
-        this.playlistSrc.form.source_url = this.$route.query.playlist
-        // this.playlistSrc.form.validate()
-        // we can't use `formIsValid` method in the `created` step
-        // let formValid = true
-        // // eslint-disable-next-line no-debugger
-        // debugger;
-        //   this.$nextTick(() => {
-        //     // Code that will run only after the
-        //     // entire view has been rendered
-        //     console.log('bbbb', this, this.$refs['playlistForm'], this.playlistSrc.formRef, )
-        //   })
-
-        // try {
-        //   console.log(this.$refs, this.playlistSrc.formRef)
-        //   await this.$refs[this.playlistSrc.formRef].validate()
-        // } catch (err) {
-        //   console.log('Form is invalid', err)
-        //   formValid = false
-        // }
+        this.playlistSrc.form.url = this.$route.query.playlist
         this.playlistSrc.formValid = true;
         await this.fetchPlaylist()
       }
       this.loading = false;
     },
     async fetchPlaylist(){
-      // if (formValid === undefined){
-      //
-      //
       if (this.playlistSrc.formValid === null){
         this.playlistSrc.formValid = await formIsValid(this, 'playlistForm')
       }
-      // const formValid = await formIsValid(this, 'playlistForm')
-      // console.log('formValid', formValid)
-      if (this.playlistSrc.formValid && this.playlistSrc.form.source_url.length !== 0){
-        // todo: fix validation problems
+      if (this.playlistSrc.formValid && this.playlistSrc.form.url.length !== 0){
         this.playlistSrc.inProgress = true;
         this.playlistTitle = "Test playlist 1"
         this.playlistItems = []
-
-        // const response = await axios.post(`playlist/`, this.playlistData.form);
-        // if (response.data){
-        //   this.playlistTitle = response.data.title
-        //   this.playlistItems = response.data.entries
-        // }
+        const response = await axios.get(`playlist/?url=${this.playlistSrc.form.url}`);
+        if (response.data){
+          this.playlistTitle = response.data.title
+          this.playlistItems = response.data.entries
+          this.playlistItems.forEach((item) => {
+            item.checked = false
+            item.downloaded = false
+            item.downloading = false
+          })
+        }
         this.playlistSrc.inProgress = false
       }
        this.playlistSrc.formValid = null
@@ -213,15 +192,20 @@ export default {
       this.playlistDownloading = true
       for (let index in this.playlistItems){
         let item = this.playlistItems[index];
-        console.log(`Creating episode ${item.url}`)
-        item.downloading = true;
-        const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, {source_url: item.url});
-        if (! response){
-          item.failed = true
-        } else {
-          item.downloaded = true
+        if ( item.checked && !item.downloaded ){
+          console.log(`Creating episode ${item.url}`)
+          item.downloading = true;
+          const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, {source_url: item.url});
+          if (! response){
+            item.failed = true
+          } else {
+            item.downloaded = true
+          }
+          item.downloading = false
         }
-        item.downloading = false
+        else {
+          console.log(`Episode ${item.url} not checked or already created `)
+        }
       }
       this.playlistDownloading = false
       app.$message({type: 'info', message: `Episodes added from playlist ${this.playlistTitle} to podcast '${this.podcast.name}'`, showClose: true});
