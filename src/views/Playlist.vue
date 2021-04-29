@@ -14,7 +14,12 @@
                       v-model="playlistSrc.form.url"
                       :disabled="playlistSrc.inProgress"
                   >
-                    <el-button slot="append" icon="el-icon-view" type="success" @click="fetchPlaylist"></el-button>
+<!--                todo: fix preloading -->
+                    <el-button
+                        slot="append"
+                        :icon="{'el-icon-view': !playlistSrc.inProgress, 'el-icon-loading': playlistSrc.inProgress}"
+                        type="success" @click="fetchPlaylist">
+                    </el-button>
                   </el-input>
                   <input-errors :errors="playlistSrc.serverErrors.url"></input-errors>
                 </el-form-item>
@@ -27,22 +32,27 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header card-header-with-controls">
-            <h4 class="card-title">{{playlistTitle}} <i class="el-icon-caret-right"></i> {{podcast.name}}</h4>
+            <h4 class="card-title">
+              <span v-if="!playlistSrc.inProgress && playlistTitle">{{playlistTitle}}</span>
+              <i v-else class="el-icon-loading" title="Playlist wasn't loaded yet"></i>
+              <i class="el-icon-caret-right"></i> <!-- " > " -->
+              {{podcast.name}}
+            </h4>
             <div class="controls">
               <div class="icon-container">
-                <i v-if="playlistDownloading" class="el-icon-loading"></i>
+                <i v-if="episodesCreating" class="el-icon-loading"></i>
               </div>
               <button
                   type="button"
                   class="el-button el-button--info is-plain"
                   @click="createEpisodes"
-                  :disabled="playlistDownloading">
+                  :disabled="episodesCreating || playlistSrc.inProgress">
                 <i class="el-icon-edit"></i><span>Add chosen</span>
               </button>
             </div>
           </div>
           <div class="card-body">
-            <ul class="list-unstyled team-members">
+            <ul class="list-unstyled team-members" v-if="!playlistSrc.inProgress">
               <li
                   v-for="item in playlistItems"
                   :key="item.id">
@@ -53,7 +63,7 @@
                       v-model="item.checked"
                       active-color="rgb(107, 208, 152)"
                       inactive-color="rgb(203, 203, 203)"
-                      :disabled="playlistDownloading || item.downloaded"
+                      :disabled="episodesCreating || item.downloaded"
                     >
                     </el-switch>
                     <div class="item-status">
@@ -99,7 +109,7 @@ export default {
     podcast: null,
     playlistTitle: [],
     playlistItems: [],
-    playlistDownloading: false,
+    episodesCreating: false,
     playlistSrc:{
       formRef: 'playlistForm',
       formValid: null,
@@ -159,19 +169,21 @@ export default {
     async fetchData() {
       const podcastID = this.$route.params.podcastID
       this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
+      this.loading = false;
       if (this.$route.query.playlist){
         this.playlistSrc.form.url = this.$route.query.playlist
         this.playlistSrc.formValid = true;
-        await this.fetchPlaylist()
+        //
+        this.playlistSrc.inProgress = true;
+        // await this.fetchPlaylist()
       }
-      this.loading = false;
     },
     async fetchPlaylist(){
+      this.playlistSrc.inProgress = true;
       if (this.playlistSrc.formValid === null){
         this.playlistSrc.formValid = await formIsValid(this, 'playlistForm')
       }
       if (this.playlistSrc.formValid && this.playlistSrc.form.url.length !== 0){
-        this.playlistSrc.inProgress = true;
         this.playlistTitle = "Test playlist 1"
         this.playlistItems = []
         const response = await axios.get(`playlist/?url=${this.playlistSrc.form.url}`);
@@ -184,12 +196,12 @@ export default {
             item.downloading = false
           })
         }
-        this.playlistSrc.inProgress = false
       }
-       this.playlistSrc.formValid = null
+      this.playlistSrc.inProgress = false
+      this.playlistSrc.formValid = null
     },
     async createEpisodes() {
-      this.playlistDownloading = true
+      this.episodesCreating = true
       for (let index in this.playlistItems){
         let item = this.playlistItems[index];
         if ( item.checked && !item.downloaded ){
@@ -207,7 +219,7 @@ export default {
           console.log(`Episode ${item.url} not checked or already created `)
         }
       }
-      this.playlistDownloading = false
+      this.episodesCreating = false
       app.$message({type: 'info', message: `Episodes added from playlist ${this.playlistTitle} to podcast '${this.podcast.name}'`, showClose: true});
     }
   }
