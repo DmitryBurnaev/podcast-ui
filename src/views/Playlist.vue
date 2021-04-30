@@ -14,12 +14,8 @@
                       v-model="playlistSrc.form.url"
                       :disabled="playlistSrc.inProgress"
                   >
-<!--                todo: fix preloading -->
-                    <el-button
-                        slot="append"
-                        :icon="{'el-icon-view': !playlistSrc.inProgress, 'el-icon-loading': playlistSrc.inProgress}"
-                        type="success" @click="fetchPlaylist">
-                    </el-button>
+                    <el-button v-if="!playlistSrc.inProgress" slot="append" icon='el-icon-view' @click="fetchPlaylist"></el-button>
+                    <el-button v-else slot="append" icon="el-icon-loading" title="Playlist wasn't loaded yet"></el-button>
                   </el-input>
                   <input-errors :errors="playlistSrc.serverErrors.url"></input-errors>
                 </el-form-item>
@@ -34,7 +30,6 @@
           <div class="card-header card-header-with-controls">
             <h4 class="card-title">
               <span v-if="!playlistSrc.inProgress && playlistTitle">{{playlistTitle}}</span>
-              <i v-else class="el-icon-loading" title="Playlist wasn't loaded yet"></i>
               <i class="el-icon-caret-right"></i> <!-- " > " -->
               {{podcast.name}}
             </h4>
@@ -46,7 +41,9 @@
                   type="button"
                   class="el-button el-button--info is-plain"
                   @click="createEpisodes"
-                  :disabled="episodesCreating || playlistSrc.inProgress">
+                  :disabled="episodesCreating || playlistSrc.inProgress"
+              >
+
                 <i class="el-icon-edit"></i><span>Add chosen</span>
               </button>
             </div>
@@ -63,8 +60,9 @@
                       v-model="item.checked"
                       active-color="rgb(107, 208, 152)"
                       inactive-color="rgb(203, 203, 203)"
-                      :disabled="episodesCreating || item.downloaded"
+
                     >
+<!--                      :disabled="episodesCreating || item.downloaded"-->
                     </el-switch>
                     <div class="item-status">
                       <i v-if="item.downloading" class="el-icon-loading" title="episode is creating now"></i>
@@ -144,7 +142,6 @@ export default {
   },
   async mounted() {
     await this.fetchData()
-
     this.$store.commit('setBreadcrumbs', [
       {
         "title": "Home",
@@ -173,9 +170,7 @@ export default {
       if (this.$route.query.playlist){
         this.playlistSrc.form.url = this.$route.query.playlist
         this.playlistSrc.formValid = true;
-        //
-        this.playlistSrc.inProgress = true;
-        // await this.fetchPlaylist()
+        await this.fetchPlaylist()
       }
     },
     async fetchPlaylist(){
@@ -184,7 +179,6 @@ export default {
         this.playlistSrc.formValid = await formIsValid(this, 'playlistForm')
       }
       if (this.playlistSrc.formValid && this.playlistSrc.form.url.length !== 0){
-        this.playlistTitle = "Test playlist 1"
         this.playlistItems = []
         const response = await axios.get(`playlist/?url=${this.playlistSrc.form.url}`);
         if (response.data){
@@ -196,6 +190,7 @@ export default {
             item.downloading = false
           })
         }
+        console.log(this.playlistItems)
       }
       this.playlistSrc.inProgress = false
       this.playlistSrc.formValid = null
