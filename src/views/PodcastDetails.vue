@@ -126,7 +126,7 @@
             </div>
           </div>
           <div class="card-body">
-              <el-form :model="episodeCreation.form" :rules="episodeCreation.rules" ref="createEpisodeForm">
+              <el-form :model="episodeCreation.form" :rules="episodeCreation.rules" ref="createEpisodeForm" @submit.native.prevent="createEpisode">
                 <el-form-item prop="source_url" :class="{'is-error': episodeCreation.serverErrors.source_url.length > 0}">
                   <el-input
                       placeholder="Episode Source Link"

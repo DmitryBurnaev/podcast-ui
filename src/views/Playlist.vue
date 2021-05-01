@@ -7,7 +7,7 @@
             <h5 class="card-title">Add episodes from playlist</h5>
           </div>
           <div class="card-body">
-              <el-form :model="playlistSrc.form" :rules="playlistSrc.rules" ref="playlistForm" @submit="fetchPlaylist">
+              <el-form :model="playlistSrc.form" :rules="playlistSrc.rules" ref="playlistForm" @submit.native.prevent="fetchPlaylist">
                 <el-form-item prop="source_url" :class="{'is-error': playlistSrc.serverErrors.url.length > 0}">
                   <el-input
                       placeholder="Playlist Source Link"
@@ -43,7 +43,6 @@
                   @click="createEpisodes"
                   :disabled="episodesCreating || playlistSrc.inProgress"
               >
-
                 <i class="el-icon-edit"></i><span>Add chosen</span>
               </button>
             </div>
@@ -60,9 +59,8 @@
                       v-model="item.checked"
                       active-color="rgb(107, 208, 152)"
                       inactive-color="rgb(203, 203, 203)"
-
+                      :disabled="episodesCreating || item.downloaded"
                     >
-<!--                      :disabled="episodesCreating || item.downloaded"-->
                     </el-switch>
                     <div class="item-status">
                       <i v-if="item.downloading" class="el-icon-loading" title="episode is creating now"></i>
@@ -183,20 +181,21 @@ export default {
         const response = await axios.get(`playlist/?url=${this.playlistSrc.form.url}`);
         if (response.data){
           this.playlistTitle = response.data.title
-          this.playlistItems = response.data.entries
-          this.playlistItems.forEach((item) => {
+          let playlistItems = response.data.entries
+          playlistItems.forEach((item) => {
             item.checked = false
             item.downloaded = false
             item.downloading = false
           })
+          this.playlistItems = playlistItems
         }
-        console.log(this.playlistItems)
       }
       this.playlistSrc.inProgress = false
       this.playlistSrc.formValid = null
     },
     async createEpisodes() {
       this.episodesCreating = true
+      let createdEpisodesCount = 0
       for (let index in this.playlistItems){
         let item = this.playlistItems[index];
         if ( item.checked && !item.downloaded ){
@@ -207,6 +206,7 @@ export default {
             item.failed = true
           } else {
             item.downloaded = true
+            createdEpisodesCount += 1
           }
           item.downloading = false
         }
@@ -215,7 +215,11 @@ export default {
         }
       }
       this.episodesCreating = false
-      app.$message({type: 'info', message: `Episodes added from playlist ${this.playlistTitle} to podcast '${this.podcast.name}'`, showClose: true});
+      if (createdEpisodesCount > 0){
+        const msg = `Successful added ${createdEpisodesCount} episode to podcast '${this.podcast.name}'`
+        app.$message({type: 'success', message: msg, showClose: true});
+      }
+
     }
   }
 }

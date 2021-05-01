@@ -56,7 +56,7 @@
       </div>
 
       <el-dialog :title="episodeCreation.title" :visible.sync="episodeCreation.dialog" v-if="episodeCreation.podcast">
-        <el-form :model="episodeCreation.form" :rules="episodeCreation.rules" ref="createEpisodeForm">
+        <el-form :model="episodeCreation.form" :rules="episodeCreation.rules" ref="createEpisodeForm" @submit.native.prevent="createEpisode">
           <el-form-item prop="source_url" :class="{'is-error': episodeCreation.serverErrors.source_url.length > 0}">
             <el-input
                 placeholder="Link to the source"
