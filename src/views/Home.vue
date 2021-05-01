@@ -12,11 +12,11 @@
                 :to="{name: 'podcastDetails', params: {'id': podcast.id}}"
             >
               <div class="row">
-                <div class="col-5 col-md-4 podcast-cover-container">
+                <div class="col-4 col-md-4 podcast-cover-container">
                     <img v-if="podcast.image_url" :src="podcast.image_url" :alt="podcast.name">
                     <img v-else src="../assets/img/cover-default.jpeg" :alt="podcast.name">
                 </div>
-                <div class="col-7 col-md-8">
+                <div class="col-8 col-md-8">
                   <div class="numbers">
                     <p class="card-category">{{podcast.name}}</p>
                     <p class="card-title">{{podcast.episodes_count || 0}}</p>
@@ -190,18 +190,20 @@ export default {
       width: 40px;
     }
     .card{
-      height: 140px;
       .card-body{
         cursor: pointer;
       }
     }
     .card-add-podcast{
+      @media (max-width: 576px) {height: 162px;}
+      height: 145px;
       background-color: inherit;
       border: 1px dashed;
       box-shadow: none;
       .card-body{
         text-align: center;
         font-size: 40px;
+        @media (max-width: 576px) {padding-top: 25px;}
       }
       cursor: pointer;
     }
