@@ -56,7 +56,7 @@
       </div>
 
       <el-dialog :title="episodeCreation.title" :visible.sync="episodeCreation.dialog" v-if="episodeCreation.podcast">
-        <el-form :model="episodeCreation.form" :rules="episodeCreation.rules" ref="createEpisodeForm">
+        <el-form :model="episodeCreation.form" :rules="episodeCreation.rules" ref="createEpisodeForm" @submit.native.prevent="createEpisode">
           <el-form-item prop="source_url" :class="{'is-error': episodeCreation.serverErrors.source_url.length > 0}">
             <el-input
                 placeholder="Link to the source"
@@ -149,6 +149,12 @@ export default {
       this.podcasts = this.$store.getters.podcasts
       this.loading = false
     }
+    this.$store.commit('setBreadcrumbs', [
+      {
+        "title": "Home",
+        "route": null
+      },
+    ])
   },
   methods:{
     openCreateEpisodeDialog(podcast){
@@ -192,6 +198,7 @@ export default {
     .card-add-podcast{
       background-color: inherit;
       border: 1px dashed;
+      box-shadow: none;
       .card-body{
         text-align: center;
         font-size: 40px;

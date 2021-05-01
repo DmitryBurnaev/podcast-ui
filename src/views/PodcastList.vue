@@ -4,11 +4,11 @@
         <div class="row">
           <div class="col-12">
             <div class="card">
-              <div class="card-header" >
+              <div class="card-header card-header-with-controls" >
                 <h4 class="card-title">Podcasts</h4>
                   <router-link
                       tag="div"
-                      class="create-podcast-control"
+                      class="controls"
                       :to="{name: 'podcastCreate'}"
                   >
                     <el-button type="info" plain icon="el-icon-edit">Create new</el-button>
@@ -61,7 +61,17 @@
     }),
     async mounted(){
       await this.$store.dispatch('getPodcasts')
-      this.podcasts = this.$store.getters.podcasts
+      this.podcasts = this.$store.getters.podcasts,
+      this.$store.commit('setBreadcrumbs', [
+        {
+          "title": "Home",
+          "route": {name: "Home"}
+        },
+        {
+          "title": "Podcasts",
+          "route": null
+        },
+      ])
     },
     methods: {
       goToPodcast(podcast){
@@ -99,16 +109,6 @@
   .podcast-description{
     color: #ACABAB !important;
     font-size: 12px;
-  }
-  .card{
-    .card-header{
-      position: relative;
-      .create-podcast-control{
-        position: absolute;
-        top: 23px;
-        right: 14px;
-      }
-    }
   }
 
 </style>
