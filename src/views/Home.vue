@@ -158,8 +158,7 @@ export default {
   },
   methods:{
     openCreateEpisodeDialog(podcast){
-      console.log("Creating episode for ", podcast)
-      this.episodeCreation.title = `Creating episode for podcast "${podcast.name}"`
+      this.episodeCreation.title = `Add episode to "${podcast.name}"`
       this.episodeCreation.inProgress = false
       this.episodeCreation.podcast = podcast
       this.episodeCreation.episode = null

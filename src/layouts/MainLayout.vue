@@ -120,4 +120,7 @@ export default {
     color: #a0a3a8 !important;
     border-color: #ddd !important;
   }
+  .el-dialog{
+    @media (max-width: 576px) {width: 95%;}
+  }
 </style>
