@@ -1,14 +1,15 @@
 <template>
-  <div id="mainLayout">
+  <div id="mainLayout" :class="{'nav-open': sidebarIsOpen}">
+    <div id="bodyClick" v-if="sidebarIsOpen" @click="setNavbarOpen"></div>
     <Sidebar/>
     <div class="preloader text-center" v-if="loading">
       <i class="icon el-icon-loading"></i>
     </div>
     <div class="main-panel" v-else>
-      <Navbar @navClick="sidebarIsOpen = !sidebarIsOpen"/>
+      <Navbar/>
       <router-view/>
     </div>
-    <Footer />
+    <Footer/>
   </div>
 </template>
 
@@ -26,8 +27,16 @@ export default {
     },
     loading () {
       return this.$store.getters.globalLoading
+    },
+    sidebarIsOpen(){
+      return this.$store.getters.sidebarIsOpen
     }
   },
+  methods: {
+    setNavbarOpen(){
+      this.$store.commit('setSidebarOpen', !this.sidebarIsOpen)
+    }
+  }
 }
 </script>
 <style lang="scss">

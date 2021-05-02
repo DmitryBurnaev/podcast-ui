@@ -10,7 +10,8 @@ export default new Vuex.Store({
     state: {
         error: null,
         me: null,
-        globalLoading: true
+        globalLoading: true,
+        sidebarIsOpen: false
     },
     mutations: {
         setError(state, error){
@@ -24,12 +25,16 @@ export default new Vuex.Store({
         },
         setLoading(state, isLoading){
             state.globalLoading = isLoading
+        },
+        setSidebarOpen(state, navbarIsOpen){
+            state.sidebarIsOpen = navbarIsOpen
         }
     },
     getters: {
         error: s => s.error,
         me: s => s.me,
         globalLoading: s => s.globalLoading,
+        sidebarIsOpen: s => s.sidebarIsOpen,
     },
     actions: {
         async getMe({commit, state}) {

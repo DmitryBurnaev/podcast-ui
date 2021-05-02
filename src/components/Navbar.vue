@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-lg navbar-absolute fixed-top navbar-transparent">
     <div class="container-fluid">
       <div class="navbar-wrapper">
-        <div class="navbar-toggle">
+        <div class="navbar-toggle" :class="{'toggled': sidebarIsOpen}" @click="setNavbarOpen">
           <button type="button" class="navbar-toggler">
             <span class="navbar-toggler-bar bar1"></span>
             <span class="navbar-toggler-bar bar2"></span>
@@ -55,13 +55,20 @@ export default {
     async signOut() {
       await this.$store.dispatch('signOut')
       await this.$router.push("/sign-in?message=signed-out")
+    },
+    setNavbarOpen(){
+      this.$store.commit('setSidebarOpen', !this.sidebarIsOpen)
     }
   },
   computed: {
     breadcrumbs() {
       return this.$store.getters.breadcrumbs
+    },
+    sidebarIsOpen(){
+      return this.$store.getters.sidebarIsOpen
     }
   },
+
 }
 </script>
 <style lang="scss">
