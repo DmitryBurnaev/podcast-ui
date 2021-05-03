@@ -1,6 +1,6 @@
 <template>
   <div id="mainLayout" :class="{'nav-open': sidebarIsOpen}">
-    <div id="bodyClick" v-if="sidebarIsOpen" @click="setNavbarOpen"></div>
+    <div id="bodyClick" v-if="sidebarIsOpen" @click="setSidebarOpen"></div>
     <Sidebar/>
     <div class="preloader text-center" v-if="loading">
       <i class="icon el-icon-loading"></i>
@@ -32,9 +32,16 @@ export default {
       return this.$store.getters.sidebarIsOpen
     }
   },
+  watch: {
+    // при изменениях маршрута запрашиваем данные снова
+    $route: 'closeSidebar',
+  },
   methods: {
-    setNavbarOpen(){
+    setSidebarOpen(){
       this.$store.commit('setSidebarOpen', !this.sidebarIsOpen)
+    },
+    closeSidebar(){
+      this.$store.commit('setSidebarOpen', false)
     }
   }
 }
