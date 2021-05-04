@@ -20,17 +20,17 @@
                       v-for="podcast in podcasts"
                       :key="podcast.id">
                     <div class="row row-podcast">
-                      <div class="col-md-1 col-1 podcast-content" @click="goToPodcast(podcast)">
+                      <div class="col-md-1 col-3 podcast-content" @click="goToPodcast(podcast)">
                         <div class="podcast-image">
                           <img v-if="podcast.image_url" :src="podcast.image_url" :alt="podcast.name" class="img-circle img-no-padding img-responsive">
                           <img v-else src="../assets/img/cover-default.jpeg" :alt="podcast.name" class="img-circle img-no-padding img-responsive">
                         </div>
                       </div>
-                      <div class="col-md-9 col-9 podcast-content" @click="goToPodcast(podcast)">
+                      <div class="col-md-9 col-7 podcast-content" @click="goToPodcast(podcast)">
                         <p>{{ podcast.name }}</p>
                         <p class="podcast-description">{{ podcast.description }}</p>
                       </div>
-                      <div class="col-md-2 col-2 text-right podcast-controls">
+                      <div class="col-md-2 col-1 text-right podcast-controls">
                           <div
                               class="btn-outline-gray btn-icon"
                               @click="deletePodcast(podcast)">
