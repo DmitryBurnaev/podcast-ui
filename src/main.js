@@ -4,7 +4,7 @@ import Vuelidate from "vuelidate"
 import router from './router'
 import store from '@/store'
 import interceptorsSetup from '@/utils/interceptors'
-import {dateFilter, sizeFilter, audioLengthFilter, humanStatusFilter} from "@/utils/filters";
+import {dateFilter, sizeFilter, audioLengthFilter, humanStatusFilter, cutString} from "@/utils/filters";
 import { Dialog, Slider, Form, FormItem, Input, Button, Switch, Checkbox, MessageBox, Message, Progress, Breadcrumb, BreadcrumbItem } from 'element-ui';
 
 Vue.component(Dialog.name, Dialog);
@@ -34,6 +34,7 @@ Vue.filter('date', dateFilter)
 Vue.filter('size', sizeFilter)
 Vue.filter('length', audioLengthFilter)
 Vue.filter('status', humanStatusFilter)
+Vue.filter('cut', cutString)
 Vue.use(Vuelidate)
 interceptorsSetup()
 

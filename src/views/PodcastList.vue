@@ -11,7 +11,8 @@
                       class="controls"
                       :to="{name: 'podcastCreate'}"
                   >
-                    <el-button type="info" plain icon="el-icon-edit">Create new</el-button>
+                    <el-button class="d-none d-sm-block" type="info" plain icon="el-icon-edit">Create new</el-button>
+                    <el-button class="d-block d-sm-none" type="info" plain icon="el-icon-edit" title="Create new podcast"></el-button>
                   </router-link>
               </div>
               <div class="card-body">
@@ -26,9 +27,10 @@
                           <img v-else src="../assets/img/cover-default.jpeg" :alt="podcast.name" class="img-circle img-no-padding img-responsive">
                         </div>
                       </div>
-                      <div class="col-md-9 col-7 podcast-content" @click="goToPodcast(podcast)">
-                        <p>{{ podcast.name }}</p>
-                        <p class="podcast-description">{{ podcast.description }}</p>
+                      <div class="col-md-9 col-8 podcast-content" @click="goToPodcast(podcast)">
+                        <p class=" podcast-title">{{ podcast.name }}</p>
+                        <p class="podcast-description d-none d-sm-block">{{ podcast.description }}</p>
+                        <p class="podcast-description d-block d-sm-none">{{ podcast.description | cut(50) }}</p>
                       </div>
                       <div class="col-md-2 col-1 text-right podcast-controls">
                           <div
@@ -36,7 +38,7 @@
                               @click="deletePodcast(podcast)">
                             <i class="nc-icon nc-simple-remove"></i>
                           </div>
-                        </div>
+                      </div>
                     </div>
                     <hr class="hr__row-podcast">
                   </li>
@@ -73,6 +75,15 @@
         },
       ])
     },
+    // filters: {
+    //   cut: function (value, length) {
+    //     let newValue = value.substr(0, length)
+    //     if (newValue.length < value.length){
+    //       newValue += "..."
+    //     }
+    //     return newValue
+    //   }
+    // },
     methods: {
       goToPodcast(podcast){
         router.push({name: 'podcastDetails', params: {'id': podcast.id}})
@@ -90,6 +101,9 @@
   p{
     margin-bottom: 5px;
   }
+  .row-podcast{
+    position: relative;
+  }
   .podcast_list__image{
     height: 50px;
   }
@@ -99,16 +113,26 @@
   .podcast-content{
     cursor: pointer;
   }
+  .podcast-title{
+    margin-top: -4px;
+    margin-bottom: 2px;
+  }
+  .podcast-description{
+    color: #ACABAB !important;
+    font-size: 12px;
+  }
   .podcast-controls{
     margin-top: -7px;
     i{
       font-weight: bold;
       font-size: 14px !important;
     }
+    @media (max-width: 576px) {
+      position: absolute;
+      right: -5px;
+      top: 6px;
+    }
   }
-  .podcast-description{
-    color: #ACABAB !important;
-    font-size: 12px;
-  }
+
 
 </style>

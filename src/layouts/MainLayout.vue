@@ -119,13 +119,19 @@ export default {
       position: relative;
       .controls{
         position: absolute;
-        top: 20px;
+        top: 14px;
         right: 14px;
         img{
           width: 25px;
           margin-right: 10px;
           margin-bottom: 10px;
         }
+      }
+    }
+    .card-title{
+      @media (max-width: 576px) {
+        margin-top: 0 !important;
+        margin-bottom: 20px;
       }
     }
   }
@@ -137,6 +143,8 @@ export default {
     border-color: #ddd !important;
   }
   .el-dialog{
-    @media (max-width: 576px) {width: 95%;}
+    @media (max-width: 576px) {
+      width: 95%;
+    }
   }
 </style>
