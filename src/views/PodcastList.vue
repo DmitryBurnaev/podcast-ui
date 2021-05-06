@@ -1,7 +1,6 @@
 <template>
     <div class="content content-podcast-list">
-      <div class="content">
-        <div class="row">
+      <div class="row">
           <div class="col-12">
             <div class="card">
               <div class="card-header card-header-with-controls" >
@@ -30,7 +29,7 @@
                       <div class="col-md-9 col-8 podcast-content" @click="goToPodcast(podcast)">
                         <p class=" podcast-title">{{ podcast.name }}</p>
                         <p class="podcast-description d-none d-sm-block">{{ podcast.description }}</p>
-                        <p class="podcast-description d-block d-sm-none">{{ podcast.description | cut(50) }}</p>
+                        <p class="podcast-description d-block d-sm-none">{{ podcast.description | cut(60) }}</p>
                       </div>
                       <div class="col-md-2 col-1 text-right podcast-controls">
                           <div
@@ -47,9 +46,7 @@
             </div>
           </div>
         </div>
-      </div>
     </div>
-
 </template>
 
 <script>
@@ -75,15 +72,6 @@
         },
       ])
     },
-    // filters: {
-    //   cut: function (value, length) {
-    //     let newValue = value.substr(0, length)
-    //     if (newValue.length < value.length){
-    //       newValue += "..."
-    //     }
-    //     return newValue
-    //   }
-    // },
     methods: {
       goToPodcast(podcast){
         router.push({name: 'podcastDetails', params: {'id': podcast.id}})

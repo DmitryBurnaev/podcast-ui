@@ -32,14 +32,21 @@
       <div class="col-md-8">
         <div class="card card-podcast card-user">
           <div class="card-header">
-
             <h5 v-if="podcast.id" class="card-title">Edit Podcast</h5>
             <h5 v-else class="card-title">Create Podcast</h5>
-          </div>
-          <div class="card-body">
+            <div class="header-controls d-block d-sm-none">
+              <el-switch
+                v-model="hideEditOnSmall"
+                active-color="rgb(107, 208, 152)"
+                inactive-color="rgb(203, 203, 203)"
+              >
+              </el-switch>
+            </div>
+            </div>
+          <div class="card-body" :class="{'hide-on-small': hideEditOnSmall}">
             <el-form :model="podcastEdit.form" :rules="podcastEdit.rules" ref="podcastEditForm">
               <div class="row">
-                <div class="col-md-8 pr-1">
+                <div class="col-md-8">
                   <div class="form-group  text-left">
                     <label>Name</label>
                     <el-form-item prop="name" :class="{'is-error': podcastEdit.serverErrors.name.length > 0}">
@@ -94,14 +101,18 @@
                 </div>
               </div>
               <div class="row mb-2" v-else>
-                <div class="col-md-4 text-left">
+                <div class="col-4 text-left">
                   <el-button type="info" plain @click="updatePodcast" icon="el-icon-edit">Update</el-button>
                 </div>
-                <div class="col-md-4 text-center">
-                  <el-button type="info" plain @click="generateRSS" icon="el-icon-magic-stick">Regenerate RSS</el-button>
+                <div class="col-4">
+                  <div class="d-none d-sm-block text-center">
+                    <el-button type="info" plain @click="generateRSS" icon="el-icon-magic-stick">
+                      Regenerate RSS
+                    </el-button>
+                  </div>
                 </div>
-                <div class="col-md-4 text-right">
-                  <el-button type="info" plain @click="deletePodcast" icon="el-icon-delete">Delete</el-button>
+                <div class="col-4 text-right">
+                  <el-button type="info" plain @click="deletePodcast" icon="el-icon-delete"></el-button>
                 </div>
               </div>
             </el-form>
@@ -154,12 +165,12 @@
                   v-for="episode in episodes"
                   :key="episode.id">
                 <div class="row row-episode">
-                  <div class="col-md-1 col-1 episode-content" @click="goToEpisode(episode)">
+                  <div class="col-md-1 col-3 episode-content" @click="goToEpisode(episode)">
                     <div class="episode-image">
                       <img :src="episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
                     </div>
                   </div>
-                  <div class="col-md-9 col-9 episode-title episode-content" @click="goToEpisode(episode)">
+                  <div class="col-md-9 col-7 episode-title episode-content" @click="goToEpisode(episode)">
                     {{ episode.title }}
                     <br/>
                     <span
@@ -171,7 +182,7 @@
                       <small>{{humanStatus(episode.status)}}</small>
                     </span>
                   </div>
-                  <div class="col-md-2 col-2 text-right episode-controls">
+                  <div class="col-md-2 col-1 text-right episode-controls">
                       <img class="preload mt-2" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
                       <div
                           v-if="episode.status !== 'downloading'"
@@ -223,6 +234,7 @@ export default {
     episodes: [],
     downloadAuto: false,
     podcastTitle: null,
+    hideEditOnSmall: true,
     podcastEdit:{
       form: {
         name: '',
@@ -393,6 +405,26 @@ export default {
 .card-podcast-summary{
   height: 500px;
 }
+.card-header{
+  position: relative;
+  .header-controls{
+    position: absolute;
+    right: 15px;
+    top: 24px;
+    @media (max-width: 576px) {
+      top: 20px;
+    }
+    .el-switch__label{
+      &.is-active{
+        color: #A1A4A9 !important;
+      }
+    }
+    div{
+      margin-left: 5px;
+    }
+  }
+}
+
 .create-episode-card{
   .form-group{
     margin-top: 10px;

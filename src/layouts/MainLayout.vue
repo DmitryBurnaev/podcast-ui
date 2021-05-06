@@ -147,4 +147,9 @@ export default {
       width: 95%;
     }
   }
+  .hide-on-small{
+    @media (max-width: 576px) {
+      display: none;
+    }
+  }
 </style>

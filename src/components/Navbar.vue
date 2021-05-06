@@ -18,18 +18,12 @@
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
-<!--      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">-->
-<!--        <span class="navbar-toggler-bar navbar-kebab"></span>-->
-<!--        <span class="navbar-toggler-bar navbar-kebab"></span>-->
-<!--        <span class="navbar-toggler-bar navbar-kebab"></span>-->
-<!--      </button>-->
       <div class="sign-out">
         <a class="nav-link btn-sign-out" @click="signOut" title="Sign Out">
           <i class="nc-icon nc-button-power"></i>
         </a>
-
       </div>
-      <div class="collapse navbar-collapse justify-content-end" id="navigation">
+<!--      <div class="collapse navbar-collapse justify-content-end" id="navigation">-->
 <!--        <form>-->
 <!--          <div class="input-group no-border">-->
 <!--            <input type="text" value="" class="form-control" placeholder="Search...">-->
@@ -40,15 +34,7 @@
 <!--            </div>-->
 <!--          </div>-->
 <!--        </form>-->
-<!--        <ul class="navbar-nav">-->
-
-<!--          <li class="nav-item">-->
-<!--            <a class="nav-link btn-sign-out" @click="signOut" title="Sign Out">-->
-<!--              <i class="nc-icon nc-button-power"></i>-->
-<!--            </a>-->
-<!--          </li>-->
-<!--        </ul>-->
-      </div>
+<!--      </div>-->
     </div>
   </nav>
 
@@ -80,10 +66,19 @@ export default {
 <style lang="scss">
   .btn-sign-out{
     cursor: pointer;
+    color: #626468 !important;
+    :hover{
+      color: #6bd098 !important;
+    }
   }
   .sign-out{
     position: absolute;
     right: 20px;
+    top: 12px;
+    font-size: 18px;
     @media (max-width: 576px) {right: 5px;}
+  }
+  .navbar{
+    height: 63px;
   }
 </style>
