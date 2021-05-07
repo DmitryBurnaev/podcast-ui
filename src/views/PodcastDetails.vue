@@ -36,14 +36,14 @@
             <h5 v-else class="card-title">Create Podcast</h5>
             <div class="header-controls d-block d-sm-none">
               <el-switch
-                v-model="hideEditOnSmall"
+                v-model="showEditOnSmall"
                 active-color="rgb(107, 208, 152)"
                 inactive-color="rgb(203, 203, 203)"
               >
               </el-switch>
             </div>
             </div>
-          <div class="card-body" :class="{'hide-on-small': hideEditOnSmall}">
+          <div class="card-body" :class="{'hide-on-small': !showEditOnSmall}">
             <el-form :model="podcastEdit.form" :rules="podcastEdit.rules" ref="podcastEditForm">
               <div class="row">
                 <div class="col-md-8">
@@ -130,8 +130,8 @@
                 v-model="podcastEdit.form.download_automatically"
                 active-color="rgb(107, 208, 152)"
                 inactive-color="rgb(203, 203, 203)"
-                inactive-text="Download Automatically"
-                @change="updatePodcast"
+                inactive-text="Auto Download"
+                @change="updatePodcast('download_automatically')"
               >
               </el-switch>
             </div>
@@ -234,7 +234,7 @@ export default {
     episodes: [],
     downloadAuto: false,
     podcastTitle: null,
-    hideEditOnSmall: true,
+    showEditOnSmall: false,
     podcastEdit:{
       form: {
         name: '',
@@ -329,12 +329,14 @@ export default {
         }
       }
     },
-    async updatePodcast(){
+    async updatePodcast(target){
       const valid = await formIsValid(this, 'podcastEditForm')
       if (valid){
         const response = await axios.patch(`podcasts/${this.podcast.id}/`, this.podcastEdit.form);
         this.podcast = response.data
-        this.$message({type: 'success', message: 'Podcast successful updated.'});
+        if (target !== 'download_automatically'){
+          this.$message({type: 'success', message: 'Podcast successful updated.'});
+        }
       }
     },
     async generateRSS(){
@@ -404,6 +406,15 @@ export default {
 }
 .card-podcast-summary{
   height: 500px;
+  @media (max-width: 576px) {
+    min-height: 400px;
+    height: initial;
+  }
+  .card-body{
+    @media (max-width: 576px) {
+      min-height: initial;
+    }
+  }
 }
 .card-header{
   position: relative;
@@ -415,6 +426,15 @@ export default {
       top: 20px;
     }
     .el-switch__label{
+      @media (max-width: 576px) {
+        margin-right: -40px;
+        margin-top: -42px;
+      }
+      span{
+        @media (max-width: 576px) {
+          font-size: 11px;
+        }
+      }
       &.is-active{
         color: #A1A4A9 !important;
       }
@@ -436,22 +456,8 @@ export default {
     width: 20px;
   }
   .card-header{
-    position: relative;
     .card-title{
       margin-top: 5px;
-    }
-    .header-controls{
-        position: absolute;
-        right: 15px;
-        top: 24px;
-        .el-switch__label{
-          &.is-active{
-            color: #A1A4A9 !important;
-          }
-        }
-        div{
-          margin-left: 5px;
-        }
     }
   }
 }
