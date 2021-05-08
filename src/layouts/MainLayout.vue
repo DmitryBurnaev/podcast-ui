@@ -78,12 +78,18 @@ export default {
     cursor: pointer;
   }
   .row-episode{
+    position: relative;
   }
   .row-episode .episode-content{
     cursor: pointer;
   }
   .row-episode .episode-title{
     margin-top: -3px;
+    @media (max-width: 576px) {
+      margin-top: -5px;
+      padding-left: 0;
+      padding-right: 35px;
+    }
   }
   .btn-outline-gray{
     color: gray;
@@ -96,6 +102,10 @@ export default {
     margin-right: 5px;
     :hover{
       color: black;
+    }
+    @media (max-width: 576px) {
+      float: initial;
+      margin-top: 10px;
     }
   }
   .el-breadcrumb__inner{
@@ -142,7 +152,7 @@ export default {
     color: #a0a3a8 !important;
     border-color: #ddd !important;
   }
-  .el-dialog{
+  .el-dialog, .el-message-box{
     @media (max-width: 576px) {
       width: 95%;
     }
@@ -152,4 +162,5 @@ export default {
       display: none;
     }
   }
+
 </style>

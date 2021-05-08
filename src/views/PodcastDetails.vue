@@ -170,7 +170,7 @@
                       <img :src="episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
                     </div>
                   </div>
-                  <div class="col-md-9 col-7 episode-title episode-content" @click="goToEpisode(episode)">
+                  <div class="col-md-9 col-9 episode-title episode-content" @click="goToEpisode(episode)">
                     {{ episode.title }}
                     <br/>
                     <span
@@ -182,8 +182,11 @@
                       <small>{{humanStatus(episode.status)}}</small>
                     </span>
                   </div>
-                  <div class="col-md-2 col-1 text-right episode-controls">
-                      <img class="preload mt-2" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
+                  <div class="episode-controls">
+                      <div  v-if="episode.status === 'downloading'" class="btn-outline-gray btn-icon">
+                        <i class="el-icon-loading"></i>
+                      </div>
+<!--                      <img class="preload mt-2" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>-->
                       <div
                           v-if="episode.status !== 'downloading'"
                           class="btn-outline-gray btn-icon"
@@ -399,6 +402,11 @@ export default {
   i{
     font-weight: bold;
     font-size: 14px !important;
+  }
+  @media (max-width: 576px) {
+    position: absolute;
+    right: 10px;
+    top: -4px;
   }
   .preload{
     width: 20px;
