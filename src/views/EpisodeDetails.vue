@@ -15,7 +15,9 @@
             <div class="episode-content text-center mt-3">
               <Audio v-if="episode.status === 'published'" :src="episode.remote_url" :length="episode.length" ></Audio>
               <div v-else class="episode-status text-center">
-                <img class="preload" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
+                <div  v-if="episode.status === 'downloading'" class="icon-preload">
+                  <i class="el-icon-loading"></i>
+                </div>
                 <p> {{ humanStatus(episode.status) }}</p>
               </div>
             </div>
@@ -51,9 +53,17 @@
         </div>
         <div class="card card-episode-details">
           <div class="card-header">
-            <h4 class="card-title">Episode details</h4>
+            <h4 class="card-title"  @click="showDetailsOnSmall = !showDetailsOnSmall">Episode details</h4>
+            <div class="header-controls d-block d-sm-none">
+              <el-switch
+                v-model="showDetailsOnSmall"
+                active-color="rgb(107, 208, 152)"
+                inactive-color="rgb(203, 203, 203)"
+              >
+              </el-switch>
+            </div>
           </div>
-          <div class="card-body">
+          <div class="card-body" :class="{'hide-on-small': !showDetailsOnSmall}">
             <ul class="list-unstyled episode-details">
               <li>
                 <div class="row">
@@ -81,21 +91,31 @@
               </li>
               <li>
                 <div class="row">
-                  <div class="col-md-2 col-2">
+                  <div class="col-2">
                     <div class="icon-episode-detail text-center"><i class="nc-icon nc-world-2 text-success"></i></div>
                   </div>
-                  <div class="col-ms-10 col-10">
+                  <div class="col-10">
                     <a :href="episode.watch_url" target="_blank">Source URL</a>
                   </div>
                 </div>
               </li>
               <li v-if="episode.remote_url">
                 <div class="row">
-                  <div class="col-md-2 col-2">
+                  <div class="col-2">
                     <div class="icon-episode-detail text-center"><i class="nc-icon nc-note-03 text-info"></i></div>
                   </div>
-                  <div class="col-ms-10 col-10">
+                  <div class="col-10">
                     <a :href="episode.remote_url" target="_blank">Media URL</a>
+                  </div>
+                </div>
+              </li>
+              <li class="hide-on-large">
+                <div class="row">
+                  <div class="col-2">
+                    <div class="icon-episode-detail text-center"><i class="nc-icon nc-paper text-success"></i></div>
+                  </div>
+                  <div class="col-10 pr-4">
+                    <p>{{episode.description}}</p>
                   </div>
                 </div>
               </li>
@@ -107,12 +127,20 @@
       <div class="col-md-8">
         <div class="card card-podcast card-user">
           <div class="card-header">
-            <h5 class="card-title">Edit Episode</h5>
+            <h5 class="card-title"  @click="showEditOnSmall = !showEditOnSmall">Edit Episode</h5>
+            <div class="header-controls d-block d-sm-none">
+              <el-switch
+                v-model="showEditOnSmall"
+                active-color="rgb(107, 208, 152)"
+                inactive-color="rgb(203, 203, 203)"
+              >
+              </el-switch>
+            </div>
           </div>
-          <div class="card-body">
+          <div class="card-body"  :class="{'hide-on-small': !showEditOnSmall}">
             <el-form ref="form" :model="form">
               <div class="row">
-                <div class="col-md-12 pr-1">
+                <div class="col-12">
                   <div class="form-group text-left">
                     <label>Title</label>
                     <textarea class="form-control textarea" v-model="form.title" rows="2" placeholder="Podcast Title"></textarea>
@@ -120,7 +148,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-12 pr-1">
+                <div class="col-12">
                   <div class="form-group text-left">
                     <label>Author</label>
                     <input type="text" class="form-control textarea" v-model="form.author" placeholder="Podcast Title">
@@ -128,7 +156,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-12">
+                <div class="col-12">
                   <div class="form-group text-left">
                     <label>Description</label>
                     <textarea class="form-control textarea" v-model="form.description" rows="13"></textarea>
@@ -136,14 +164,14 @@
                 </div>
               </div>
               <div class="row mb-2">
-                <div class="col-md-4 text-left">
+                <div class="col-4 text-left">
                   <el-button type="info" plain @click="updateEpisode" icon="el-icon-edit">Update</el-button>
                 </div>
-                <div class="col-md-4 text-center">
-                  <el-button type="info" plain @click="downloadEpisode(episode)" icon="el-icon-thumb">Download</el-button>
+                <div class="col-4 text-center">
+                  <el-button class="hide-on-small" type="info" plain @click="downloadEpisode(episode)" icon="el-icon-download">Download</el-button>
                 </div>
-                <div class="col-md-4 text-right">
-                  <el-button type="info" plain @click="deleteEpisode" icon="el-icon-delete">Delete</el-button>
+                <div class="col-4 text-right">
+                  <el-button type="info" plain @click="deleteEpisode" icon="el-icon-delete"></el-button>
                 </div>
               </div>
             </el-form>
@@ -176,7 +204,9 @@
           title: '',
           author: '',
           description: ''
-        }
+        },
+        showEditOnSmall: false,
+        showDetailsOnSmall: false,
     }),
     async created() {
       await this.fetchData()
@@ -231,6 +261,13 @@
   }
 </script>
 <style lang="scss">
+  .title{
+    font-weight: initial;
+    font-size: 18px;
+  }
+  .icon-preload{
+    font-size: 35px;
+  }
   .podcast-background{
     filter: blur(1.2px);
   }
@@ -241,6 +278,9 @@
   }
   .card-episode-details{
     height: 294px;
+    @media (max-width: 576px) {
+      height: initial;
+    }
   }
   .episode-details{
     li{

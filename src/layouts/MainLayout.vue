@@ -162,5 +162,10 @@ export default {
       display: none;
     }
   }
+  .hide-on-large{
+    @media (min-width: 577px) {
+      display: none;
+    }
+  }
 
 </style>

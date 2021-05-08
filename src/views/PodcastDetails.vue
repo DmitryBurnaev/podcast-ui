@@ -186,7 +186,6 @@
                       <div  v-if="episode.status === 'downloading'" class="btn-outline-gray btn-icon">
                         <i class="el-icon-loading"></i>
                       </div>
-<!--                      <img class="preload mt-2" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>-->
                       <div
                           v-if="episode.status !== 'downloading'"
                           class="btn-outline-gray btn-icon"

@@ -117,8 +117,8 @@
     }
     @media (max-width: 576px) {
       position: absolute;
-      right: -5px;
-      top: 6px;
+      right: 14px;
+      top: -2px;
     }
   }
 
