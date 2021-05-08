@@ -108,6 +108,13 @@ export default {
       margin-top: 10px;
     }
   }
+  .el-breadcrumb__separator{
+    @media (max-width: 576px) {
+      display: block;
+      float: left;
+      margin: 0 2px !important;
+    }
+  }
   .el-breadcrumb__inner{
     font-size: 16px !important;
     a:hover{
@@ -118,6 +125,14 @@ export default {
       :hover{
         color: #6bd098 !important;
       }
+    }
+    @media (max-width: 576px) {
+      max-width: 100px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: block;
+      float: left;
+      overflow: hidden;
     }
   }
   .el-breadcrumb__inner a:hover, .el-breadcrumb__inner.is-link:hover {
