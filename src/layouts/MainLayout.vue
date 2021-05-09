@@ -9,18 +9,17 @@
       <Navbar/>
       <router-view/>
     </div>
-    <Footer/>
   </div>
 </template>
 
 <script>
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import {closeSidebar} from "@/utils/podcast";
 
 export default {
   name: "MainLayout",
-  components: {Sidebar, Navbar, Footer},
+  components: {Sidebar, Navbar},
   computed: {
     error() {
       return this.$store.getters.error
@@ -40,9 +39,7 @@ export default {
     setSidebarOpen(){
       this.$store.commit('setSidebarOpen', !this.sidebarIsOpen)
     },
-    closeSidebar(){
-      this.$store.commit('setSidebarOpen', false)
-    }
+    closeSidebar: closeSidebar
   }
 }
 </script>
@@ -108,37 +105,6 @@ export default {
       margin-top: 10px;
     }
   }
-  .el-breadcrumb__separator{
-    @media (max-width: 576px) {
-      display: block;
-      float: left;
-      margin: 0 2px !important;
-    }
-  }
-  .el-breadcrumb__inner{
-    font-size: 16px !important;
-    a:hover{
-      color: #6bd098 !important;
-    }
-    &.is-link{
-      font-weight: inherit;
-      :hover{
-        color: #6bd098 !important;
-      }
-    }
-    @media (max-width: 576px) {
-      max-width: 100px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      display: block;
-      float: left;
-      overflow: hidden;
-    }
-  }
-  .el-breadcrumb__inner a:hover, .el-breadcrumb__inner.is-link:hover {
-    color: #186a30 !important;
-    cursor: pointer;
-  }
   .card{
     .card-header-with-controls{
       position: relative;
@@ -182,5 +148,20 @@ export default {
       display: none;
     }
   }
-
+  .sidebar-wrapper{
+    overflow-x: hidden !important;
+  }
+  .el-button--primary{
+    background-color: #168a4a !important;
+    border-color: #168a4a !important;
+    &:hover{
+      background-color: #1db764 !important;
+    }
+  }
+  .el-message-box__btns{
+    .is-plain:hover{
+        border-color: #168a4a;
+        color: #168a4a;
+    }
+  }
 </style>

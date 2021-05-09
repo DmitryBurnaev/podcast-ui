@@ -18,11 +18,11 @@
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
-      <div class="sign-out">
-        <a class="nav-link btn-sign-out" @click="signOut" title="Sign Out">
-          <i class="nc-icon nc-button-power"></i>
-        </a>
-      </div>
+<!--      <div class="sign-out hide-on-small">-->
+<!--        <a class="nav-link btn-sign-out" @click="signOut" title="Sign Out">-->
+<!--          <i class="nc-icon nc-button-power"></i>-->
+<!--        </a>-->
+<!--      </div>-->
 <!--      <div class="collapse navbar-collapse justify-content-end" id="navigation">-->
 <!--        <form>-->
 <!--          <div class="input-group no-border">-->
@@ -41,13 +41,12 @@
 </template>
 
 <script>
+import {signOut} from "@/utils/podcast";
+
 export default {
   name: "Navbar",
   methods: {
-    async signOut() {
-      await this.$store.dispatch('signOut')
-      await this.$router.push("/sign-in?message=signed-out")
-    },
+    signOut: signOut,
     setNavbarOpen(){
       this.$store.commit('setSidebarOpen', !this.sidebarIsOpen)
     }
@@ -80,5 +79,36 @@ export default {
   }
   .navbar{
     height: 63px;
+  }
+  .el-breadcrumb__separator{
+    @media (max-width: 576px) {
+      display: block;
+      float: left;
+      margin: 0 2px !important;
+    }
+  }
+  .el-breadcrumb__inner{
+    font-size: 16px !important;
+    a:hover{
+      color: #6bd098 !important;
+    }
+    &.is-link{
+      font-weight: inherit;
+      :hover{
+        color: #6bd098 !important;
+      }
+    }
+    @media (max-width: 576px) {
+      max-width: 120px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: block;
+      float: left;
+      overflow: hidden;
+    }
+  }
+  .el-breadcrumb__inner a:hover, .el-breadcrumb__inner.is-link:hover {
+    color: #186a30 !important;
+    cursor: pointer;
   }
 </style>

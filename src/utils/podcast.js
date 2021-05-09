@@ -7,6 +7,7 @@ function deleteEpisode(episode, callback) {
     app.$confirm(`This will permanently delete episode "${episode.title}". Continue?`, 'Warning', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
+        cancelButtonClass: 'is-plain',
         type: 'warning'
     }).then(() => {
         axios.delete(`episodes/${episode.id}/`).then(() => {
@@ -33,6 +34,7 @@ function downloadEpisode(episode) {
         app.$confirm('This will remove downloaded and reload new episode. Continue?', 'Warning', {
             confirmButtonText: 'OK',
             cancelButtonText: 'Cancel',
+            cancelButtonClass: 'is-plain',
             type: 'warning'
         }).then(() => {
             axios.put(`episodes/${episode.id}/download/`).then(() => {
@@ -90,13 +92,14 @@ async function formIsValid(context, formRef) {
 }
 
 function deletePodcast(podcast, callback){
-  this.$confirm('This will permanently delete the podcast and included episodes. Continue?', 'Warning', {
+  app.$confirm(`This will permanently delete the podcast "${podcast.name}" and included episodes. Continue?`, 'Warning', {
     confirmButtonText: 'OK',
     cancelButtonText: 'Cancel',
-    type: 'warning'
+    cancelButtonClass: 'is-plain',
+    type: 'warning',
   }).then(() => {
     axios.delete(`podcasts/${podcast.id}/`).then(() => {
-      this.$message({type: 'success', message: `Podcast '${podcast.name}' successful deleted.`});
+      app.$message({type: 'success', message: `Podcast '${podcast.name}' successful deleted.`});
       if (callback) {
          callback()
       }
@@ -117,7 +120,24 @@ function copyToClipboard(value){
     app.$message({type: 'success', message: `Copied`});
 }
 
+function signOut(){
+  app.$confirm('You will be logged out and redirected to sign-in page. Continue?', 'Warning', {
+      confirmButtonText: 'OK',
+      cancelButtonText: 'Cancel',
+      cancelButtonClass: 'is-plain',
+      type: 'warning'
+  }).then(() => {
+      app.$store.dispatch('signOut').then(() => {
+        app.$router.push("/sign-in?message=signed-out").then()
+      })
+  });
+}
+
+function closeSidebar(){
+  app.$store.commit('setSidebarOpen', false)
+}
+
 export {
     deleteEpisode, downloadEpisode, deletePodcast, humanStatus, goToEpisode, fillFormErrors, formIsValid,
-    copyToClipboard
+    copyToClipboard, signOut, closeSidebar
 }
