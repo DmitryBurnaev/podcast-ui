@@ -32,14 +32,21 @@
       <div class="col-md-8">
         <div class="card card-podcast card-user">
           <div class="card-header">
-
             <h5 v-if="podcast.id" class="card-title">Edit Podcast</h5>
             <h5 v-else class="card-title">Create Podcast</h5>
-          </div>
-          <div class="card-body">
+            <div class="header-controls d-block d-sm-none">
+              <el-switch
+                v-model="showEditOnSmall"
+                active-color="rgb(107, 208, 152)"
+                inactive-color="rgb(203, 203, 203)"
+              >
+              </el-switch>
+            </div>
+            </div>
+          <div class="card-body" :class="{'hide-on-small': !showEditOnSmall}">
             <el-form :model="podcastEdit.form" :rules="podcastEdit.rules" ref="podcastEditForm">
               <div class="row">
-                <div class="col-md-8 pr-1">
+                <div class="col-md-8">
                   <div class="form-group  text-left">
                     <label>Name</label>
                     <el-form-item prop="name" :class="{'is-error': podcastEdit.serverErrors.name.length > 0}">
@@ -94,14 +101,18 @@
                 </div>
               </div>
               <div class="row mb-2" v-else>
-                <div class="col-md-4 text-left">
+                <div class="col-4 text-left">
                   <el-button type="info" plain @click="updatePodcast" icon="el-icon-edit">Update</el-button>
                 </div>
-                <div class="col-md-4 text-center">
-                  <el-button type="info" plain @click="generateRSS" icon="el-icon-magic-stick">Regenerate RSS</el-button>
+                <div class="col-4">
+                  <div class="d-none d-sm-block text-center">
+                    <el-button type="info" plain @click="generateRSS" icon="el-icon-magic-stick">
+                      Regenerate RSS
+                    </el-button>
+                  </div>
                 </div>
-                <div class="col-md-4 text-right">
-                  <el-button type="info" plain @click="deletePodcast" icon="el-icon-delete">Delete</el-button>
+                <div class="col-4 text-right">
+                  <el-button type="info" plain @click="deletePodcast" icon="el-icon-delete"></el-button>
                 </div>
               </div>
             </el-form>
@@ -119,8 +130,8 @@
                 v-model="podcastEdit.form.download_automatically"
                 active-color="rgb(107, 208, 152)"
                 inactive-color="rgb(203, 203, 203)"
-                inactive-text="Download Automatically"
-                @change="updatePodcast"
+                inactive-text="Auto Download"
+                @change="updatePodcast('download_automatically')"
               >
               </el-switch>
             </div>
@@ -154,7 +165,7 @@
                   v-for="episode in episodes"
                   :key="episode.id">
                 <div class="row row-episode">
-                  <div class="col-md-1 col-1 episode-content" @click="goToEpisode(episode)">
+                  <div class="col-md-1 col-3 episode-content" @click="goToEpisode(episode)">
                     <div class="episode-image">
                       <img :src="episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
                     </div>
@@ -171,8 +182,10 @@
                       <small>{{humanStatus(episode.status)}}</small>
                     </span>
                   </div>
-                  <div class="col-md-2 col-2 text-right episode-controls">
-                      <img class="preload mt-2" v-if="episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
+                  <div class="episode-controls">
+                      <div  v-if="episode.status === 'downloading'" class="btn-outline-gray btn-icon">
+                        <i class="el-icon-loading"></i>
+                      </div>
                       <div
                           v-if="episode.status !== 'downloading'"
                           class="btn-outline-gray btn-icon"
@@ -223,6 +236,7 @@ export default {
     episodes: [],
     downloadAuto: false,
     podcastTitle: null,
+    showEditOnSmall: false,
     podcastEdit:{
       form: {
         name: '',
@@ -317,12 +331,14 @@ export default {
         }
       }
     },
-    async updatePodcast(){
+    async updatePodcast(target){
       const valid = await formIsValid(this, 'podcastEditForm')
       if (valid){
         const response = await axios.patch(`podcasts/${this.podcast.id}/`, this.podcastEdit.form);
         this.podcast = response.data
-        this.$message({type: 'success', message: 'Podcast successful updated.'});
+        if (target !== 'download_automatically'){
+          this.$message({type: 'success', message: 'Podcast successful updated.'});
+        }
       }
     },
     async generateRSS(){
@@ -386,13 +402,56 @@ export default {
     font-weight: bold;
     font-size: 14px !important;
   }
+  @media (max-width: 576px) {
+    position: absolute;
+    right: 10px;
+    top: -4px;
+  }
   .preload{
     width: 20px;
   }
 }
 .card-podcast-summary{
   height: 500px;
+  @media (max-width: 576px) {
+    min-height: 400px;
+    height: initial;
+  }
+  .card-body{
+    @media (max-width: 576px) {
+      min-height: initial;
+    }
+  }
 }
+.card-header{
+  position: relative;
+  .header-controls{
+    position: absolute;
+    right: 15px;
+    top: 24px;
+    @media (max-width: 576px) {
+      top: 20px;
+    }
+    .el-switch__label{
+      @media (max-width: 576px) {
+        margin-right: -40px;
+        margin-top: -42px;
+      }
+      span{
+        @media (max-width: 576px) {
+          font-size: 11px;
+        }
+      }
+      &.is-active{
+        color: #A1A4A9 !important;
+      }
+    }
+    div{
+      margin-left: 5px;
+    }
+  }
+}
+
 .create-episode-card{
   .form-group{
     margin-top: 10px;
@@ -404,22 +463,8 @@ export default {
     width: 20px;
   }
   .card-header{
-    position: relative;
     .card-title{
       margin-top: 5px;
-    }
-    .header-controls{
-        position: absolute;
-        right: 15px;
-        top: 24px;
-        .el-switch__label{
-          &.is-active{
-            color: #A1A4A9 !important;
-          }
-        }
-        div{
-          margin-left: 5px;
-        }
     }
   }
 }

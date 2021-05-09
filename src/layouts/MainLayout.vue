@@ -1,33 +1,46 @@
 <template>
-  <div id="mainLayout">
+  <div id="mainLayout" :class="{'nav-open': sidebarIsOpen}">
+    <div id="bodyClick" v-if="sidebarIsOpen" @click="setSidebarOpen"></div>
     <Sidebar/>
     <div class="preloader text-center" v-if="loading">
       <i class="icon el-icon-loading"></i>
     </div>
     <div class="main-panel" v-else>
-      <Navbar @navClick="sidebarIsOpen = !sidebarIsOpen"/>
+      <Navbar/>
       <router-view/>
     </div>
-    <Footer />
   </div>
 </template>
 
 <script>
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import {closeSidebar} from "@/utils/podcast";
 
 export default {
   name: "MainLayout",
-  components: {Sidebar, Navbar, Footer},
+  components: {Sidebar, Navbar},
   computed: {
     error() {
       return this.$store.getters.error
     },
     loading () {
       return this.$store.getters.globalLoading
+    },
+    sidebarIsOpen(){
+      return this.$store.getters.sidebarIsOpen
     }
   },
+  watch: {
+    // при изменениях маршрута запрашиваем данные снова
+    $route: 'closeSidebar',
+  },
+  methods: {
+    setSidebarOpen(){
+      this.$store.commit('setSidebarOpen', !this.sidebarIsOpen)
+    },
+    closeSidebar: closeSidebar
+  }
 }
 </script>
 <style lang="scss">
@@ -62,12 +75,18 @@ export default {
     cursor: pointer;
   }
   .row-episode{
+    position: relative;
   }
   .row-episode .episode-content{
     cursor: pointer;
   }
   .row-episode .episode-title{
     margin-top: -3px;
+    @media (max-width: 576px) {
+      margin-top: -5px;
+      padding-left: 0;
+      padding-right: 35px;
+    }
   }
   .btn-outline-gray{
     color: gray;
@@ -81,35 +100,29 @@ export default {
     :hover{
       color: black;
     }
-  }
-  .el-breadcrumb__inner{
-    font-size: 16px !important;
-    a:hover{
-      color: #6bd098 !important;
+    @media (max-width: 576px) {
+      float: initial;
+      margin-top: 10px;
     }
-    &.is-link{
-      font-weight: inherit;
-      :hover{
-        color: #6bd098 !important;
-      }
-    }
-  }
-  .el-breadcrumb__inner a:hover, .el-breadcrumb__inner.is-link:hover {
-    color: #186a30 !important;
-    cursor: pointer;
   }
   .card{
     .card-header-with-controls{
       position: relative;
       .controls{
         position: absolute;
-        top: 20px;
+        top: 14px;
         right: 14px;
         img{
           width: 25px;
           margin-right: 10px;
           margin-bottom: 10px;
         }
+      }
+    }
+    .card-title{
+      @media (max-width: 576px) {
+        margin-top: 0 !important;
+        margin-bottom: 20px;
       }
     }
   }
@@ -119,5 +132,36 @@ export default {
     background-color: #f5f7fa !important;
     color: #a0a3a8 !important;
     border-color: #ddd !important;
+  }
+  .el-dialog, .el-message-box{
+    @media (max-width: 576px) {
+      width: 95%;
+    }
+  }
+  .hide-on-small{
+    @media (max-width: 576px) {
+      display: none;
+    }
+  }
+  .hide-on-large{
+    @media (min-width: 577px) {
+      display: none;
+    }
+  }
+  .sidebar-wrapper{
+    overflow-x: hidden !important;
+  }
+  .el-button--primary{
+    background-color: #168a4a !important;
+    border-color: #168a4a !important;
+    &:hover{
+      background-color: #1db764 !important;
+    }
+  }
+  .el-message-box__btns{
+    .is-plain:hover{
+        border-color: #168a4a;
+        color: #168a4a;
+    }
   }
 </style>

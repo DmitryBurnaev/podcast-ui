@@ -36,4 +36,12 @@ function humanStatusFilter(status){
     return statuses[status] || status
 }
 
-export {dateFilter, sizeFilter, audioLengthFilter, humanStatusFilter}
+function cutString (value, length) {
+    let newValue = value.substr(0, length)
+    if (newValue.length < value.length){
+      newValue += "..."
+    }
+    return newValue
+}
+
+export {dateFilter, sizeFilter, audioLengthFilter, humanStatusFilter, cutString}
