@@ -182,7 +182,7 @@
                       <small>{{humanStatus(episode.status)}}</small>
                     </span>
                   </div>
-                  <div class="episode-controls">
+                  <div class="col-md-2 episode-controls">
                       <div  v-if="episode.status === 'downloading'" class="btn-outline-gray btn-icon">
                         <i class="el-icon-loading"></i>
                       </div>
@@ -403,9 +403,11 @@ export default {
     font-size: 14px !important;
   }
   @media (max-width: 576px) {
-    position: absolute;
+    position: absolute !important;
     right: 10px;
     top: -4px;
+    width: initial;
+    padding: initial;
   }
   .preload{
     width: 20px;

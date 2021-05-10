@@ -18,23 +18,6 @@
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
-<!--      <div class="sign-out hide-on-small">-->
-<!--        <a class="nav-link btn-sign-out" @click="signOut" title="Sign Out">-->
-<!--          <i class="nc-icon nc-button-power"></i>-->
-<!--        </a>-->
-<!--      </div>-->
-<!--      <div class="collapse navbar-collapse justify-content-end" id="navigation">-->
-<!--        <form>-->
-<!--          <div class="input-group no-border">-->
-<!--            <input type="text" value="" class="form-control" placeholder="Search...">-->
-<!--            <div class="input-group-append">-->
-<!--              <div class="input-group-text">-->
-<!--                <i class="nc-icon nc-zoom-split"></i>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </form>-->
-<!--      </div>-->
     </div>
   </nav>
 
@@ -42,9 +25,14 @@
 
 <script>
 import {signOut} from "@/utils/podcast";
+import {Breadcrumb, BreadcrumbItem} from 'element-ui';
 
 export default {
   name: "Navbar",
+  components: {
+    'el-breadcrumb': Breadcrumb,
+    'el-breadcrumb-item': BreadcrumbItem,
+  },
   methods: {
     signOut: signOut,
     setNavbarOpen(){
