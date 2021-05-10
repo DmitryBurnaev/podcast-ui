@@ -53,7 +53,7 @@ jobs:
 
       - name: Copy project files
         run: |
-          ls -la ./deploy_dist/
+          ls -lah
           scp -o StrictHostKeyChecking=no ./deploy_dist/podcast-ui ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
 #
 #      - name: Unrar files
