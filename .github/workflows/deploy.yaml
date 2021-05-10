@@ -57,7 +57,7 @@ jobs:
 
       - name: Copy project files1
         run: |
-          ls -lah ./deploy_dist
+          ls -lah ./dist
 
 #          scp -o StrictHostKeyChecking=no ./deploy_dist/podcast-ui ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
 #
