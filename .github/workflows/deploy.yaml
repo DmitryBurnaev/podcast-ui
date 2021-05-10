@@ -10,51 +10,51 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Prepare SSH key
-        run: |
-          mkdir ~/.ssh
-          echo "${{ secrets.SSH_PKEY }}" > ~/.ssh/id_rsa
-          chmod 400 ~/.ssh/id_rsa
-          ls -lah ~/.ssh
-          cat ~/.ssh/id_rsa
-
-      - name: Copy project files
-        run: |
-          touch 1.txt
-          scp -o StrictHostKeyChecking=no ./1.txt ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
-
-#
-#      - name: Checkout
-#        uses: actions/checkout@v2
-#
-#      - name: Install dependencies
-#        uses: borales/actions-yarn@v2.3.0
-#        with:
-#          cmd: install # will run `yarn install` command
-#
-#      - name: Build
-#        uses: borales/actions-yarn@v2.3.0
-#        env:
-#          VUE_APP_API_URL: ${{ secrets.VUE_APP_API_URL }}
-#        with:
-#          cmd: build # will run `yarn build` command
-#
-#      - name: Archive build
-#        if: success()
-#        uses: actions/upload-artifact@v1
-#        with:
-#          name: deploy_dist
-#          path: dist
-#
 #      - name: Prepare SSH key
 #        run: |
 #          mkdir ~/.ssh
 #          echo "${{ secrets.SSH_PKEY }}" > ~/.ssh/id_rsa
 #          chmod 400 ~/.ssh/id_rsa
+#          ls -lah ~/.ssh
+#          cat ~/.ssh/id_rsa
 #
 #      - name: Copy project files
 #        run: |
-#          scp -o StrictHostKeyChecking=no ./deploy_dist/podcast-ui ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
+#          touch 1.txt
+#          scp -o StrictHostKeyChecking=no ./1.txt ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: install # will run `yarn install` command
+
+      - name: Build
+        uses: borales/actions-yarn@v2.3.0
+        env:
+          VUE_APP_API_URL: ${{ secrets.VUE_APP_API_URL }}
+        with:
+          cmd: build # will run `yarn build` command
+
+      - name: Archive build
+        if: success()
+        uses: actions/upload-artifact@v1
+        with:
+          name: deploy_dist
+          path: dist
+
+      - name: Prepare SSH key
+        run: |
+          mkdir ~/.ssh
+          echo "${{ secrets.SSH_PKEY }}" > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
+
+      - name: Copy project files
+        run: |
+          ls -la ./deploy_dist/
+          scp -o StrictHostKeyChecking=no ./deploy_dist/podcast-ui ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
 #
 #      - name: Unrar files
 #        run: |
