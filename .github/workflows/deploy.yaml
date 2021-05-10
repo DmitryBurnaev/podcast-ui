@@ -45,6 +45,11 @@ jobs:
           name: deploy_dist
           path: dist
 
+      - name: Download build
+        uses: actions/download-artifact@v1
+        with:
+          name: deploy_dist
+
 #      - name: Prepare SSH key
 #        run: |
 #          mkdir ~/.ssh
@@ -57,9 +62,7 @@ jobs:
 
       - name: Copy project files1
         run: |
-          ls -lah ./dist
-
-#          scp -o StrictHostKeyChecking=no ./deploy_dist/podcast-ui ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
+          scp -v -o StrictHostKeyChecking=no -i /home/runner/.ssh/id_rsa ./deploy_dist ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
 #
 #      - name: Unrar files
 #        run: |
