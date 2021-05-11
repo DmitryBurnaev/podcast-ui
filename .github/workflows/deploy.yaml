@@ -58,11 +58,11 @@ jobs:
 
       - name: Copy project files
         run: |
-          ls -lah
+          ls -lah deploy_dist/
 
-      - name: Copy project files1
-        run: |
-          scp -v -o StrictHostKeyChecking=no ./deploy_dist ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
+#      - name: Copy project files1
+#        run: |
+#          scp -v -o StrictHostKeyChecking=no ./deploy_dist ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
 #
 #      - name: Unrar files
 #        run: |
