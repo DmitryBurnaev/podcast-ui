@@ -26,14 +26,14 @@ jobs:
         with:
           cmd: build # will run `yarn build` command
 
-      - name: Archive build
+      - name: Archive build (crating artifacts)
         if: success()
         uses: actions/upload-artifact@v1
         with:
           name: deploy_dist
           path: dist
 
-      - name: Download build
+      - name: Download and unzip build
         uses: actions/download-artifact@v1
         with:
           name: deploy_dist
@@ -46,8 +46,4 @@ jobs:
 
       - name: Copy project files
         run: |
-          ls -lah deploy_dist/
-
-      - name: Copy project files1
-        run: |
-          scp -v -o StrictHostKeyChecking=no -r ./deploy_dist ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
+          scp -o StrictHostKeyChecking=no -r ./deploy_dist/ ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
