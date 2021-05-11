@@ -10,18 +10,6 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-#      - name: Prepare SSH key
-#        run: |
-#          mkdir ~/.ssh
-#          echo "${{ secrets.SSH_PKEY }}" > ~/.ssh/id_rsa
-#          chmod 400 ~/.ssh/id_rsa
-#          ls -lah ~/.ssh
-#          cat ~/.ssh/id_rsa
-#
-#      - name: Copy project files
-#        run: |
-#          touch 1.txt
-#          scp -o StrictHostKeyChecking=no ./1.txt ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -60,28 +48,6 @@ jobs:
         run: |
           ls -lah deploy_dist/
 
-#      - name: Copy project files1
-#        run: |
-#          scp -v -o StrictHostKeyChecking=no ./deploy_dist ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
-#
-#      - name: Unrar files
-#        run: |
-#          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}
-#
-#
-#      - name: Deploy
-#        uses: appleboy/ssh-action@master
-#        with:
-#          host: ${{ secrets.PROD_SSH_HOST }}
-#          port: ${{ secrets.PROD_SSH_PORT }}
-#          username: ${{ secrets.SSH_USER }}
-#          key: ${{ secrets.SSH_PKEY }}
-#          script: |
-#            export DEPLOY_MODE=CI
-#            export REGISTRY_URL=${{ secrets.REGISTRY_URL }}
-#            cd ${{ secrets.PROD_PROJECT_ROOT }}
-#            sh deploy.sh
-#      - name: Use Node 15.x
-#        uses: actions/setup-node@v1
-#        with:
-#          node-version: '15.x'
+      - name: Copy project files1
+        run: |
+          scp -v -o StrictHostKeyChecking=no -r ./deploy_dist ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
