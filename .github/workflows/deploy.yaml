@@ -46,4 +46,4 @@ jobs:
 
       - name: Copy project files
         run: |
-          scp -o StrictHostKeyChecking=no -r ./deploy_dist/ ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
+          scp -o StrictHostKeyChecking=no -r ./deploy_dist/* ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
