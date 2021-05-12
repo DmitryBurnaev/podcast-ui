@@ -5,29 +5,17 @@ import router from './router'
 import store from '@/store'
 import interceptorsSetup from '@/utils/interceptors'
 import {dateFilter, sizeFilter, audioLengthFilter, humanStatusFilter, cutString} from "@/utils/filters";
-import { Dialog, Slider, Form, FormItem, Input, Button, Switch, Checkbox, MessageBox, Message, Progress, Breadcrumb, BreadcrumbItem } from 'element-ui';
+import {Dialog, Form, FormItem, Input, Button, Switch, MessageBox, Message} from 'element-ui';
 
 Vue.component(Dialog.name, Dialog);
-Vue.component(Slider.name, Slider);
 Vue.component(Form.name, Form);
 Vue.component(FormItem.name, FormItem);
 Vue.component(Input.name, Input);
 Vue.component(Button.name, Button);
 Vue.component(Switch.name, Switch);
-Vue.component(Progress.name, Progress);
-Vue.component(Breadcrumb.name, Breadcrumb);
-Vue.component(BreadcrumbItem.name, BreadcrumbItem);
-Vue.component(Checkbox.name, Checkbox);
 
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$message = Message
-
-// todo: is it necessary?!
-// import '@/assets/js/core/jquery.min'
-// import '@/assets/js/core/popper.min'
-// import '@/assets/js/core/bootstrap.min'
-// import '@/assets/js/plugins/perfect-scrollbar.jquery.min'
-// import '@/assets/js/paper-dashboard'
 
 Vue.config.productionTip = false
 Vue.filter('date', dateFilter)

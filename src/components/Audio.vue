@@ -31,6 +31,7 @@
 
 <script>
 import {audioLengthFilter} from "@/utils/filters";
+import {Slider} from 'element-ui';
 
 export default {
   name: "Audio",
@@ -40,6 +41,9 @@ export default {
     isPlaying: false,
     audioCurrentTime: 0
   }),
+  components: {
+    'el-slider': Slider,
+  },
   mounted() {
     this.audio = document.getElementById("audioPlayer");
     this.audio.addEventListener("timeupdate", () => { this.audioCurrentTime = this.audio.currentTime})

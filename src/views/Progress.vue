@@ -61,6 +61,7 @@
 <script>
   import axios from "axios";
   import router from "@/router";
+  import {Progress} from 'element-ui';
 
   export default {
     name: 'Progress',
@@ -68,6 +69,9 @@
         progressItems: [],
         timeInterval: null,
     }),
+    components: {
+      'el-progress': Progress
+    },
     async mounted() {
       this.$store.commit('setBreadcrumbs', [
         {

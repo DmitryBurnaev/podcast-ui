@@ -1,4 +1,7 @@
-# podcast-ui
+# Podcasts UI
+Vue-based UI Application which provide access to podcast's creation.<br/>
+This project based and uses a backend API [podcast-service](https://github.com/DmitryBurnaev/podcast-service).
+
 
 ## Project setup
 ```
@@ -15,10 +18,16 @@ yarn serve
 yarn build
 ```
 
-### Lints and fixes files
-```
-yarn lint
-```
+## Environment Variables
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### REQUIRED Variables
+
+| argument                  | description                                       | example                   |
+|:------------------------- |:-------------------------------------------------:| -------------------------:|
+| VUE_APP_API_URL           | Full url (with base API path) to backend's API    | https://my.service.ru/api |
+
+* * *
+
+### License
+
+This product is released under the MIT license. See LICENSE for details.
