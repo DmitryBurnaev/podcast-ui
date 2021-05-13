@@ -43,6 +43,16 @@ function downloadEpisode(episode) {
             })
         });
     }
+    let timeInterval = setInterval(() => {
+        axios.get(`episodes/${episode.id}`).then((response) => {
+            episode.status = response.data.status
+            if (episode.status !== 'downloading'){
+                clearInterval(timeInterval)
+            }
+        })
+        },
+       5000
+    )
 }
 
 function goToEpisode(episode, podcastID) {

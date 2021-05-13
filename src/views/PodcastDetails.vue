@@ -193,7 +193,7 @@
                         <i class="nc-icon nc-simple-remove"></i>
                       </div>
                       <div
-                          v-if="episode.status === 'new'"
+                          v-if="episode.status === 'new' || episode.status === 'error'"
                           class="btn-outline-gray btn-icon"
                           @click="downloadEpisode(episode)">
                         <i class="nc-icon nc-cloud-download-93"></i>

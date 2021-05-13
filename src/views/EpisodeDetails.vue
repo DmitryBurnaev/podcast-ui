@@ -35,6 +35,7 @@
                             class="nc-icon text-success"
                             :title="humanStatus(episode.status)"
                             :class="{
+                              'nc-tap-01 cursor text-danger': episode.status === 'error',
                               'nc-tap-01 cursor': episode.status === 'new',
                               'nc-cloud-download-93': episode.status === 'downloading',
                               'nc-headphones': episode.status === 'published',
