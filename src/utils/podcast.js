@@ -62,11 +62,17 @@ function goToEpisode(episode, podcastID) {
 
 function humanStatus(status) {
     const statuses = {
-        "new": "New",
+        "new": "New Episode",
         "downloading": "Downloading",
-        "published": "Published",
+        "published": "Episode published",
         "archived": "Archived",
-        "error": "Error"
+        "error": "Downloading error",
+        "pending": "Pending",
+        "episode_downloading": "Downloading",
+        "episode_postprocessing": "Post processing",
+        "episode_uploading": "Uploading to the cloud",
+        "cover_downloading": "Cover is downloading",
+        "cover_uploading": "Cover is uploading",
     }
     return statuses[status] || status
 }
