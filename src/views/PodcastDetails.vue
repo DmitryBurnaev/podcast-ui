@@ -296,6 +296,7 @@ export default {
       this.podcastEdit.form.download_automatically = this.podcast.download_automatically;
       this.podcastTitle = this.podcast.name;
     } else {
+      this.showEditOnSmall = true;
       this.podcastTitle = "New podcast"
     }
     this.$store.commit('setBreadcrumbs', [

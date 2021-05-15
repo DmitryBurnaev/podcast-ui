@@ -112,10 +112,13 @@
   .progress-item-title{
     margin-bottom: 0;
   }
+  .el-progress__text{
+    margin-left: 0;
+  }
   .progress-line-block{
     margin-top: 10px;
     .el-progress-bar{
-      padding-right: 40px;
+      padding-right: 45px;
       margin-right: -40px;
     }
   }
