@@ -27,7 +27,7 @@
                         'text-muted': (['new', 'downloading'].includes(progress.episode.status)),
                       }"
                     >
-                      {{progress.status_display }}
+                      {{ humanStatus(progress.status) }}
                     </small>
                     <el-progress v-if="progress.status === 'error'" :percentage="progress.completed" status="exception"></el-progress>
                     <el-progress v-else :percentage="parseInt(progress.completed)" ></el-progress>
@@ -42,7 +42,7 @@
                     'text-muted': (['new', 'downloading'].includes(progress.episode.status)),
                   }"
                 >
-                  {{progress.status_display }}
+                  {{ humanStatus(progress.status) }}
                 </small>
                 <el-progress v-if="progress.status === 'error'" :percentage="progress.completed" status="exception"></el-progress>
                 <el-progress v-else :percentage="parseInt(progress.completed)" ></el-progress>
@@ -62,6 +62,7 @@
   import axios from "axios";
   import router from "@/router";
   import {Progress} from 'element-ui';
+  import {humanStatus} from "@/utils/podcast";
 
   export default {
     name: 'Progress',
@@ -96,6 +97,7 @@
       goToEpisode(progress){
         router.push({name: 'episodeDetails', params: {'episodeID': progress.episode.id, 'podcastID': progress.podcast.id}})
       },
+      humanStatus: humanStatus,
     }
   }
 
@@ -110,10 +112,13 @@
   .progress-item-title{
     margin-bottom: 0;
   }
+  .el-progress__text{
+    margin-left: 0;
+  }
   .progress-line-block{
     margin-top: 10px;
     .el-progress-bar{
-      padding-right: 40px;
+      padding-right: 45px;
       margin-right: -40px;
     }
   }
