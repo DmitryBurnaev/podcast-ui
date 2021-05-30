@@ -27,16 +27,16 @@ export default function setup() {
             console.log(`interceptor | ${error}`)
             const status = error.response ? error.response.status : null
             if (status === 401) {
-                const errorDetails = error.response.data.details;
-                if (errorDetails.includes("Email or password is invalid.")){
-                    app.$message({type: 'error', message: errorDetails, showClose: true});
-                    return null
+                const errorStatus = error.response.data.status;
+                const errorMsg = error.response.data.payload.error;
+                if (errorStatus === 'INVALID_PARAMS'){
+                    app.$message({type: 'error', message: errorMsg, showClose: true});
                 }
-                if (errorDetails.includes("Signature has expired")) {
-                    console.log("interceptor | refresh", store.getters.refreshToken)
+                else if (errorStatus === 'SIGNATURE_EXPIRED') {
+                    console.log('SIGNATURE_EXPIRED: interceptor | refresh', store.getters.refreshToken)
                     let requestCanceled = false;
                     return axios
-                        .post("auth/refresh-token/", {'refresh_token': store.getters.refreshToken})
+                        .post('auth/refresh-token/', {'refresh_token': store.getters.refreshToken})
                         .then((response) => {
                             console.log('interceptor | token refreshed. response:', response)
                             store.commit('setTokens', response.data)
@@ -64,12 +64,11 @@ export default function setup() {
             } else {
                 let errorMessage;
                 if (error.response){
-                    errorMessage = error.response.data.details || error.response.data
+                    errorMessage = error.response.data.payload.error
                 } else {
                     errorMessage = error.toString()
                 }
                 store.commit('setError', error.response.data)
-                console.log('interc', errorMessage)
                 if (typeof errorMessage === 'object'){
                     console.error('Couldn\'t request', errorMessage )
                     app.$message({type: 'error', message: 'Sorry... Request could not be processed', showClose: true});

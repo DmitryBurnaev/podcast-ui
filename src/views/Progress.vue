@@ -86,7 +86,7 @@
       ])
       this.timeInterval = setInterval(() => {
         axios.get(`progress/`).then((response) => {
-          this.progressItems = response.data
+          this.progressItems = response.data.payload
         })
       }, 1000)
     },

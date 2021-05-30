@@ -328,7 +328,7 @@ export default {
         const response = await axios.post(`podcasts/`, this.podcastEdit.form);
         if (response){
           this.$message({type: 'success', message: 'Podcast successful created.'});
-          setTimeout(() => {router.push(`/podcasts/${response.data.id}`).then(() => {})}, 500)
+          setTimeout(() => {router.push(`/podcasts/${response.data.payload.id}`).then(() => {})}, 500)
         }
       }
     },
@@ -336,7 +336,7 @@ export default {
       const valid = await formIsValid(this, 'podcastEditForm')
       if (valid){
         const response = await axios.patch(`podcasts/${this.podcast.id}/`, this.podcastEdit.form);
-        this.podcast = response.data
+        this.podcast = response.data.payload
         if (target !== 'download_automatically'){
           this.$message({type: 'success', message: 'Podcast successful updated.'});
         }
@@ -357,7 +357,7 @@ export default {
           this.episodeCreation.inProgress = true;
           const response = await axios.post(`podcasts/${this.podcast.id}/episodes/`, this.episodeCreation.form);
           if (response){
-            const newEpisode = response.data
+            const newEpisode = response.data.payload
             this.$message({type: 'success', message: `New episode #${newEpisode.id} was created`});
             if (!this.episodes.find((el) => el.id === newEpisode.id)){
               this.episodes.unshift(newEpisode)

@@ -172,7 +172,7 @@ export default {
         this.episodeCreation.inProgress = true
         const response = await axios.post(`podcasts/${this.episodeCreation.podcast.id}/episodes/`, this.episodeCreation.form)
         if (response){
-          this.episodeCreation.episode = response.data
+          this.episodeCreation.episode = response.data.payload
         }
         this.episodeCreation.inProgress = false
       }

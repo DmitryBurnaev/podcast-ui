@@ -29,7 +29,7 @@ export default {
             let response
             response = await axios.post("auth/sign-in/", {'email': email, 'password': password})
             if (!response){ throw Error }
-            commit('setTokens', response.data)
+            commit('setTokens', response.data.payload)
         },
         async signUp({commit}, {email, password_1, password_2, token}){
             let response
@@ -40,7 +40,7 @@ export default {
                 'invite_token': token
             })
             if (!response){ throw Error }
-            commit('setTokens', response.data)
+            commit('setTokens', response.data.payload)
         },
         async signOut({commit}){
             await axios.delete("auth/sign-out/")
@@ -50,7 +50,7 @@ export default {
             let response
             response = await axios.post("auth/refresh-token/", {'refresh_token': this.refreshToken})
             if (response){
-                commit('setTokens', response.data)
+                commit('setTokens', response.data.payload)
                 return true
             }
         },
