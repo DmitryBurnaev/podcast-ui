@@ -44,10 +44,10 @@ export default new Vuex.Store({
             console.log("Going to get 'me' from server...")
             commit('setLoading', true)
             const response = await axios.get('auth/me/', )
-            if (response){
-                commit('setMe', response.data)
+            if (response && response.data.status === 'OK'){
+                commit('setMe', response.data.payload)
                 commit('setLoading', false)
-                return response.data
+                return response.data.payload
             }
         },
 

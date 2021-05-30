@@ -24,29 +24,29 @@ export default {
         async getPodcasts({commit}) {
             const response = await axios.get(`podcasts/`, )
             if (response){
-                commit('setPodcasts', response.data)
-                return response.data
+                commit('setPodcasts', response.data.payload)
+                return response.data.payload
             }
         },
         async getPodcastDetails({commit}, podcastID) {
             console.log(commit)
             const response = await axios.get(`podcasts/${podcastID}/`, )
             if (response){
-                return response.data
+                return response.data.payload
             }
         },
         async getEpisodes({commit}, podcastID) {
             console.log(commit)
             const response = await axios.get(`podcasts/${podcastID}/episodes/`, )
             if (response){
-                return response.data
+                return response.data.payload
             }
         },
         async getEpisodeDetails({commit}, episodeID) {
             console.log(commit, episodeID)
             const response = await axios.get(`episodes/${episodeID}/`, )
             if (response){
-                return response.data
+                return response.data.payload
             }
         },
     }

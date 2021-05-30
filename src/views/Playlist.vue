@@ -179,9 +179,9 @@ export default {
       if (this.playlistSrc.formValid && this.playlistSrc.form.url.length !== 0){
         this.playlistItems = []
         const response = await axios.get(`playlist/?url=${this.playlistSrc.form.url}`);
-        if (response.data){
-          this.playlistTitle = response.data.title
-          let playlistItems = response.data.entries
+        if (response.data.payload){
+          this.playlistTitle = response.data.payload.title
+          let playlistItems = response.data.payload.entries
           playlistItems.forEach((item) => {
             item.checked = false
             item.downloaded = false

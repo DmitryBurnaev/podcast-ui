@@ -248,7 +248,7 @@
       },
       async updateEpisode(){
         const response = await axios.patch(`episodes/${this.episode.id}/`, this.form);
-        this.episode = response.data
+        this.episode = response.data.payload
         this.$message({type: 'success', message: 'Episode successful updated.'});
       },
       deleteEpisode(){
