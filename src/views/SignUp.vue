@@ -6,7 +6,7 @@
       <div class="card-body text-center">
         <el-form :model="signUpForm" :rules="rules" ref="signUpForm" class="demo-signUpForm">
           <el-form-item prop="email" :class="{'is-error': serverErrors.email.length > 0}">
-            <el-input v-model="signUpForm.email" placeholder="Email"></el-input>
+            <el-input v-model="signUpForm.email" placeholder="Email" disabled></el-input>
             <div class="el-form-item__error" v-for="error in serverErrors.email" v-bind:key="error">
               {{error}}
             </div>
@@ -65,7 +65,18 @@ export default {
     }
   }),
   mounted() {
-    this.signUpForm.token = this.$route.query.token || "[UNKNOWN token]"
+    let inviteData = {}
+    let token = this.$route.query.i
+
+    try {
+      inviteData = JSON.parse(atob(token))
+    } catch (e){
+      console.error(`Couldn't parse invite data. i=${token}`)
+    }
+    if (inviteData){
+      this.signUpForm.token = inviteData.token
+      this.signUpForm.email = inviteData.email
+    }
   },
   computed: {
     error() {
