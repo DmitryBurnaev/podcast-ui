@@ -40,7 +40,7 @@ export default {
         { type: 'email', required: true, trigger: 'blur' },
       ],
       password: [
-        {required: true, message: 'Please repeat your password', trigger: 'change'},
+        {required: true, message: 'This field is required', trigger: 'change'},
         {min: 6, max: 32, message: 'Password should be 6 to 32', trigger: 'blur'}
       ],
     },
