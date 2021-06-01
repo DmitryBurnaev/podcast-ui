@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div class="card"  v-if="signUpForm.email">
       <div class="card-header">
         <h4 class="card-title">Sign UP</h4>
       </div>
@@ -66,12 +66,17 @@ export default {
   }),
   mounted() {
     let inviteData = {}
-    let token = this.$route.query.i
+    let token = this.$route.query.i || 'unknown-token'
 
     try {
       inviteData = JSON.parse(atob(token))
     } catch (e){
       console.error(`Couldn't parse invite data. i=${token}`)
+      this.$message({
+          message: 'Sorry... Your invitation link seems incorrect.',
+          type: 'error',
+          duration: 0
+      })
     }
     if (inviteData){
       this.signUpForm.token = inviteData.token
