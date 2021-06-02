@@ -195,7 +195,7 @@ export default {
     }
     .card-add-podcast{
       @media (max-width: 576px) {height: 162px;}
-      height: 145px;
+      height: 143px;
       background-color: inherit;
       border: 1px dashed;
       box-shadow: none;
