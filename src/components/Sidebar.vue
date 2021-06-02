@@ -27,7 +27,7 @@
         <ul class="nav bottom-nav">
           <hr />
           <li>
-            <a @click="signOut" href="#">
+            <a @click="signOut">
               <i class="nc-icon nc-button-power"></i>
               <p>Sign Out</p>
             </a>
@@ -39,7 +39,8 @@
 </template>
 
 <script>
-import {closeSidebar, signOut} from "@/utils/podcast";
+import {closeSidebar} from "@/utils/podcast";
+import app from "@/main";
 
 export default {
   name: "Sidebar",
@@ -53,7 +54,16 @@ export default {
   methods: {
     signOut() {
       closeSidebar()
-      signOut()
+      app.$confirm('You will be logged out and redirected to sign-in page. Continue?', 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          cancelButtonClass: 'is-plain',
+          type: 'warning'
+      }).then(() => {
+          app.$store.dispatch('signOut').then(() => {
+            app.$router.push("/sign-in?message=signed-out").then()
+          })
+      });
     },
   }
 }

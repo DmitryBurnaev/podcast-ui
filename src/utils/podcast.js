@@ -136,24 +136,11 @@ function copyToClipboard(value){
     app.$message({type: 'success', message: `Copied`});
 }
 
-function signOut(){
-  app.$confirm('You will be logged out and redirected to sign-in page. Continue?', 'Warning', {
-      confirmButtonText: 'OK',
-      cancelButtonText: 'Cancel',
-      cancelButtonClass: 'is-plain',
-      type: 'warning'
-  }).then(() => {
-      app.$store.dispatch('signOut').then(() => {
-        app.$router.push("/sign-in?message=signed-out").then()
-      })
-  });
-}
-
 function closeSidebar(){
   app.$store.commit('setSidebarOpen', false)
 }
 
 export {
     deleteEpisode, downloadEpisode, deletePodcast, humanStatus, goToEpisode, fillFormErrors, formIsValid,
-    copyToClipboard, signOut, closeSidebar
+    copyToClipboard, closeSidebar
 }
