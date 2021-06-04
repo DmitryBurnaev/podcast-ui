@@ -85,7 +85,7 @@ export default {
       }
     }
     @media (max-width: 576px) {
-      max-width: 120px;
+      max-width: 25vw;
       text-overflow: ellipsis;
       white-space: nowrap;
       display: block;
