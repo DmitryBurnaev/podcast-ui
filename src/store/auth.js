@@ -10,12 +10,12 @@ export default {
         refreshToken: s => s.refreshToken,
     },
     mutations: {
-        setTokens(state, response){
-            console.log("setTokens", response)
-            localStorage.setItem('accessToken', response.access_token)
-            localStorage.setItem('refreshToken', response.refresh_token)
-            state.accessToken = response.access_token
-            state.refreshToken = response.refresh_token
+        setTokens(state, payload){
+            console.log("setTokens", payload)
+            localStorage.setItem('accessToken', payload.access_token)
+            localStorage.setItem('refreshToken', payload.refresh_token)
+            state.accessToken = payload.access_token
+            state.refreshToken = payload.refresh_token
         },
         clearToken(state){
             localStorage.removeItem('accessToken')

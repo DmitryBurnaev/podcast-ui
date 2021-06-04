@@ -39,7 +39,7 @@ export default function setup() {
                         .post('auth/refresh-token/', {'refresh_token': store.getters.refreshToken})
                         .then((response) => {
                             console.log('interceptor | token refreshed. response:', response)
-                            store.commit('setTokens', response.data)
+                            store.commit('setTokens', response.data.payload)
                             if (error.config.method === 'get') {
                                 return axios.request(error.config)
                             } else {
@@ -70,7 +70,7 @@ export default function setup() {
                 } else {
                     errorMessage = error.toString()
                 }
-                store.commit('setError', error.response.data)
+                store.commit('setError', error.response.data.payload)
                 if (typeof errorMessage === 'object'){
                     console.error('Couldn\'t request', errorMessage )
                     app.$message({type: 'error', message: 'Sorry... Request could not be processed', showClose: true});
