@@ -1,5 +1,5 @@
 <template>
-    <div class="sidebar" data-color="black" data-active-color="warning">
+    <div class="sidebar" data-color="black" data-active-color="warning" v-if="!loading">
       <div class="logo">
         <a href="https://www.creative-tim.com" class="simple-text logo-mini">
           <div class="logo-image-small">
@@ -51,6 +51,11 @@ export default {
       {"title": "Progress", "url": "/progress/", "icon": "nc-user-run"},
     ],
   }),
+  computed: {
+    loading () {
+      return this.$store.getters.globalLoading
+    },
+  },
   methods: {
     signOut() {
       closeSidebar()

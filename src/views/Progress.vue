@@ -3,9 +3,10 @@
     <div class="row">
       <div class="col-12">
       <div class="card">
-        <div class="card-header">
+        <div class="card-header card-header-progress">
           <h4 class="card-title">Episodes in progress</h4>
         </div>
+        <hr class="progress-separator"/>
         <div class="card-body">
           <ul class="list-unstyled team-members">
             <li
@@ -51,6 +52,7 @@
             </li>
 
           </ul>
+          <div class="progress-preloader text-center" style="font-size: 24px;"><i class="icon el-icon-loading"></i></div>
         </div>
       </div>
       </div>
@@ -103,6 +105,21 @@
 
 </script>
 <style lang="scss">
+  .card-header-progress{
+    padding-top: 0 !important;
+    .card-title {
+        margin-top: 12px !important;
+        margin-bottom: 12px;
+        @media (max-width: 576px) {
+            margin-top: 15px !important;
+            margin-bottom: 15px !important;
+        }
+    }
+  }
+  hr.progress-separator{
+    margin-top: 0;
+    margin-bottom: 0;
+  }
   .podcast-cover{
     width: 70px;
   }
@@ -124,5 +141,11 @@
   }
   .el-progress-bar__inner{
     background-color: #6bd098;
+  }
+  .list-unstyled{
+    margin-bottom: 0 !important;
+  }
+  .progress-preloader{
+    font-size: 24px;
   }
 </style>
