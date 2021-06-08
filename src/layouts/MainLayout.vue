@@ -66,7 +66,7 @@ export default {
     color: #cc0808;
   }
   .preloader{
-    padding-top: 75px;
+    padding-top: 100px;
     .icon{
       font-size: 50px;
     }
@@ -119,10 +119,40 @@ export default {
         }
       }
     }
-    .card-title{
-      @media (max-width: 576px) {
-        margin-top: 0 !important;
-        margin-bottom: 20px;
+    .card-header-squash{
+      .card-title{
+        @media (max-width: 576px) {
+          margin-top: 0 !important;
+          margin-bottom: 20px;
+        }
+      }
+    }
+    .card-header{
+      position: relative;
+      .header-controls{
+        position: absolute;
+        right: 15px;
+        top: 24px;
+        @media (max-width: 576px) {
+          top: 20px;
+        }
+        .el-switch__label{
+          @media (max-width: 576px) {
+            margin-right: -40px;
+            margin-top: -42px;
+          }
+          span{
+            @media (max-width: 576px) {
+              font-size: 11px;
+            }
+          }
+          &.is-active{
+            color: #A1A4A9 !important;
+          }
+        }
+        div{
+          margin-left: 5px;
+        }
       }
     }
   }

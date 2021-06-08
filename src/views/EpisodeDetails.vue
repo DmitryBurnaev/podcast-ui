@@ -53,7 +53,7 @@
           </div>
         </div>
         <div class="card card-episode-details">
-          <div class="card-header">
+          <div class="card-header card-header-squash">
             <h4 class="card-title"  @click="showDetailsOnSmall = !showDetailsOnSmall">Episode details</h4>
             <div class="header-controls d-block d-sm-none">
               <el-switch
@@ -127,7 +127,7 @@
       </div>
       <div class="col-md-8">
         <div class="card card-podcast card-user">
-          <div class="card-header">
+          <div class="card-header card-header-squash">
             <h5 class="card-title"  @click="showEditOnSmall = !showEditOnSmall">Edit Episode</h5>
             <div class="header-controls d-block d-sm-none">
               <el-switch

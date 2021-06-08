@@ -66,7 +66,12 @@ export default function setup() {
             } else {
                 let errorMessage;
                 if (error.response){
-                    errorMessage = error.response.data.payload.error
+                    try {
+                        errorMessage = error.response.data.payload.error
+                    } catch (e) {
+                        errorMessage = 'Unexpected error happened'
+                        console.error(`Unexpected response format`)
+                    }
                 } else {
                     errorMessage = error.toString()
                 }
@@ -77,6 +82,7 @@ export default function setup() {
                 } else {
                     app.$message({type: 'error', message: errorMessage, showClose: true});
                 }
+                throw error
             }
             return null
         }

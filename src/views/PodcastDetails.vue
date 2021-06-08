@@ -31,7 +31,7 @@
       </div>
       <div class="col-md-8">
         <div class="card card-podcast card-user">
-          <div class="card-header">
+          <div class="card-header card-header-squash">
             <h5 v-if="podcast.id" class="card-title">Edit Podcast</h5>
             <h5 v-else class="card-title">Create Podcast</h5>
             <div class="header-controls d-block d-sm-none">
@@ -123,7 +123,7 @@
     <div class="row" v-if="podcast.id">
       <div class="col-12">
         <div class="card create-episode-card">
-          <div class="card-header">
+          <div class="card-header card-header-squash">
             <h5 class="card-title">Create new episode</h5>
             <div class="header-controls">
               <el-switch
@@ -156,7 +156,7 @@
     <div class="row" v-if="episodes.length > 0">
       <div class="col-12">
         <div class="card">
-          <div class="card-header">
+          <div class="card-header card-header-episodes">
             <h4 class="card-title">Episodes</h4>
           </div>
           <div class="card-body">
@@ -426,35 +426,11 @@ export default {
     }
   }
 }
-.card-header{
-  position: relative;
-  .header-controls{
-    position: absolute;
-    right: 15px;
-    top: 24px;
-    @media (max-width: 576px) {
-      top: 20px;
-    }
-    .el-switch__label{
-      @media (max-width: 576px) {
-        margin-right: -40px;
-        margin-top: -42px;
-      }
-      span{
-        @media (max-width: 576px) {
-          font-size: 11px;
-        }
-      }
-      &.is-active{
-        color: #A1A4A9 !important;
-      }
-    }
-    div{
-      margin-left: 5px;
-    }
+.card-header-episodes{
+  @media (max-width: 576px) {
+    padding-top: 5px;
   }
 }
-
 .create-episode-card{
   .form-group{
     margin-top: 10px;
