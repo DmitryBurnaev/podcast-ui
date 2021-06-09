@@ -160,7 +160,7 @@
                 <div class="col-12">
                   <div class="form-group text-left">
                     <label>Description</label>
-                    <textarea class="form-control textarea" v-model="form.description" rows="13"></textarea>
+                    <textarea class="form-control textarea" v-model="form.description" rows="15"></textarea>
                   </div>
                 </div>
               </div>
