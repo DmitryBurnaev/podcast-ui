@@ -62,6 +62,18 @@ const routes = [
     meta: {layout: 'main', auth: true},
     component: () => import('./views/Playlist.vue')
   },
+  {
+    path: '/404',
+    name: 'notFound',
+    meta: {layout: 'auth', auth: false},
+    component: () => import('./views/PageNotFound.vue')
+  },
+  {
+    path: '*',
+    name: 'notFound',
+    meta: {layout: 'auth', auth: false},
+    component: () => import('./views/PageNotFound.vue')
+  },
 ]
 
 const router = new VueRouter({
