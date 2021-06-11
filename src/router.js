@@ -70,7 +70,7 @@ const routes = [
   },
   {
     path: '*',
-    name: 'notFound',
+    name: 'other',
     meta: {layout: 'auth', auth: false},
     component: () => import('./views/PageNotFound.vue')
   },
@@ -86,6 +86,14 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const signInRequired = to.matched.some(record => record.meta.auth)
   const accessToken = store.getters.accessToken;
+  const idsFields = ['id', 'podcastID', 'episodeID']
+  if (to.params){
+    for (let field in to.params){
+      if (idsFields.includes(field) && isNaN(to.params[field])){
+        next({name: 'notFound'})
+      }
+    }
+  }
 
   if (signInRequired) {
     console.log("=> signInRequired ->")
