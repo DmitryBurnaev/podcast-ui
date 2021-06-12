@@ -68,6 +68,7 @@ export default function setup() {
                 if (error.response){
                     try {
                         errorMessage = error.response.data.payload.error
+                        store.commit('setError', error.response.data.payload)
                     } catch (e) {
                         errorMessage = 'Unexpected error happened'
                         console.error(`Unexpected response format`)
@@ -75,7 +76,6 @@ export default function setup() {
                 } else {
                     errorMessage = error.toString()
                 }
-                store.commit('setError', error.response.data.payload)
                 if (typeof errorMessage === 'object'){
                     console.error('Couldn\'t request', errorMessage )
                     app.$message({type: 'error', message: 'Sorry... Request could not be processed', showClose: true});
