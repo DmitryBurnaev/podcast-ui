@@ -70,7 +70,7 @@ const routes = [
   },
   {
     path: '*',
-    name: 'notFound',
+    name: 'other',
     meta: {layout: 'auth', auth: false},
     component: () => import('./views/PageNotFound.vue')
   },
@@ -84,18 +84,24 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log("router:", `${from.path} -> ${to.path}`)
   const signInRequired = to.matched.some(record => record.meta.auth)
-  const accessToken = store.getters.accessToken;
+  // const accessToken = store.getters.accessToken;
+  const idsFields = ['id', 'podcastID', 'episodeID']
+  if (to.params){
+    for (let field in to.params){
+      if (idsFields.includes(field) && isNaN(to.params[field])){
+        next({name: 'notFound'})
+        return
+      }
+    }
+  }
 
   if (signInRequired) {
-    console.log("=> signInRequired ->")
     store.dispatch('getMe').then(() => {
       console.log('ME was given | all-right! go to the next page: ', `${from.path} -> ${to.path}`)
       next()
     })
-  } else if (accessToken){
-    console.log('router.beforeEach | no sign-in required -> go to Home', `${from.path} -> /`)
-    next({name: 'Home'})
   }
   else {
     console.log('router.beforeEach | no signInRequired go to the next page: ', `${from.path} -> ${to.path}`)
