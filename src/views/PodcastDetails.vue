@@ -205,6 +205,10 @@
 
             </ul>
           </div>
+          <div class="card-footer text-center" v-if="hasNextEpisodes">
+            <el-button v-if="loadingMoreEpisodes" icon="el-icon-loading" disabled> More Episodes </el-button>
+            <el-button v-else icon="el-icon-magic-stick" type="success" @click="loadMoreEpisodes"> More Episodes </el-button>
+          </div>
         </div>
       </div>
     </div>
@@ -232,6 +236,8 @@ export default {
   components: {InputErrors},
   data: () => ({
     loading: true,
+    loadingMoreEpisodes: false,
+    hasNextEpisodes: false,
     podcast: null,
     episodes: [],
     downloadAuto: false,
@@ -316,11 +322,23 @@ export default {
       const podcastID = this.$route.params.id
       if (podcastID && podcastID !== 'create'){
         this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
-        this.episodes = await this.$store.dispatch('getEpisodes', podcastID)
+        let episodesResponse = await this.$store.dispatch('getEpisodes', {podcastID})
+        this.episodes = episodesResponse.items;
+        this.hasNextEpisodes = episodesResponse.hasNext
       } else {
         this.podcast = {}
       }
       this.loading = false
+    },
+    async loadMoreEpisodes(){
+      this.loadingMoreEpisodes = true
+      let episodesResponse = await this.$store.dispatch(
+          'getEpisodes',
+          {podcastID: this.podcast.id, offset: this.episodes.length}
+      )
+      this.episodes = this.episodes.concat(episodesResponse.items)
+      this.hasNextEpisodes = episodesResponse.hasNext
+      this.loadingMoreEpisodes = false
     },
     async createPodcast(){
       const valid = await formIsValid(this, 'podcastEditForm')

@@ -35,11 +35,14 @@ export default {
                 return response.data.payload
             }
         },
-        async getEpisodes({commit}, podcastID) {
+        async getEpisodes({commit}, {podcastID, offset}) {
             console.log(commit)
-            const response = await axios.get(`podcasts/${podcastID}/episodes/`, {params: {"limit": 200}} )
+            const response = await axios.get(`podcasts/${podcastID}/episodes/`, {params: {"limit": 20, "offset": offset}} )
             if (response){
-                return response.data.payload.items || response.data.payload
+                return {
+                    items: response.data.payload.items,
+                    hasNext: response.data.payload.has_next,
+                }
             }
         },
         async getEpisodeDetails({commit}, episodeID) {
