@@ -37,9 +37,9 @@ export default {
         },
         async getEpisodes({commit}, podcastID) {
             console.log(commit)
-            const response = await axios.get(`podcasts/${podcastID}/episodes/`, )
+            const response = await axios.get(`podcasts/${podcastID}/episodes/`, {params: {"limit": 200}} )
             if (response){
-                return response.data.payload
+                return response.data.payload.items || response.data.payload
             }
         },
         async getEpisodeDetails({commit}, episodeID) {
