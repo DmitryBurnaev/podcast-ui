@@ -202,23 +202,21 @@
                 </div>
                 <hr class="hr__row-episode">
               </li>
-
             </ul>
           </div>
-          <div class="card-footer text-center" v-if="hasNextEpisodes">
-            <el-button v-if="loadingMoreEpisodes" icon="el-icon-loading" disabled> More Episodes </el-button>
-            <el-button v-else icon="el-icon-magic-stick" type="success" @click="loadMoreEpisodes"> More Episodes </el-button>
-          </div>
+          <infinite-loading @infinite="loadMoreEpisodes">
+            <span slot="no-more"></span>
+          </infinite-loading>
         </div>
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
 import axios from "axios";
 import router from "@/router";
+import InfiniteLoading from 'vue-infinite-loading';
 import {
   deleteEpisode,
   downloadEpisode,
@@ -233,10 +231,9 @@ import InputErrors from "@/components/InputErrors";
 
 export default {
   name: 'PodcastDetails',
-  components: {InputErrors},
+  components: {InputErrors, InfiniteLoading},
   data: () => ({
     loading: true,
-    loadingMoreEpisodes: false,
     hasNextEpisodes: false,
     podcast: null,
     episodes: [],
@@ -330,15 +327,17 @@ export default {
       }
       this.loading = false
     },
-    async loadMoreEpisodes(){
-      this.loadingMoreEpisodes = true
+    async loadMoreEpisodes($state){
       let episodesResponse = await this.$store.dispatch(
           'getEpisodes',
           {podcastID: this.podcast.id, offset: this.episodes.length}
       )
-      this.episodes = this.episodes.concat(episodesResponse.items)
-      this.hasNextEpisodes = episodesResponse.hasNext
-      this.loadingMoreEpisodes = false
+      this.episodes.push(...episodesResponse.items)
+      if (episodesResponse.hasNext){
+        $state.loaded();
+      } else {
+        $state.complete()
+      }
     },
     async createPodcast(){
       const valid = await formIsValid(this, 'podcastEditForm')
