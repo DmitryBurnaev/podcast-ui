@@ -202,19 +202,21 @@
                 </div>
                 <hr class="hr__row-episode">
               </li>
-
             </ul>
           </div>
+          <infinite-loading @infinite="loadMoreEpisodes">
+            <span slot="no-more"></span>
+          </infinite-loading>
         </div>
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
 import axios from "axios";
 import router from "@/router";
+import InfiniteLoading from 'vue-infinite-loading';
 import {
   deleteEpisode,
   downloadEpisode,
@@ -229,9 +231,10 @@ import InputErrors from "@/components/InputErrors";
 
 export default {
   name: 'PodcastDetails',
-  components: {InputErrors},
+  components: {InputErrors, InfiniteLoading},
   data: () => ({
     loading: true,
+    hasNextEpisodes: false,
     podcast: null,
     episodes: [],
     downloadAuto: false,
@@ -316,11 +319,25 @@ export default {
       const podcastID = this.$route.params.id
       if (podcastID && podcastID !== 'create'){
         this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
-        this.episodes = await this.$store.dispatch('getEpisodes', podcastID)
+        let episodesResponse = await this.$store.dispatch('getEpisodes', {podcastID})
+        this.episodes = episodesResponse.items;
+        this.hasNextEpisodes = episodesResponse.hasNext
       } else {
         this.podcast = {}
       }
       this.loading = false
+    },
+    async loadMoreEpisodes($state){
+      let episodesResponse = await this.$store.dispatch(
+          'getEpisodes',
+          {podcastID: this.podcast.id, offset: this.episodes.length}
+      )
+      this.episodes.push(...episodesResponse.items)
+      if (episodesResponse.hasNext){
+        $state.loaded();
+      } else {
+        $state.complete()
+      }
     },
     async createPodcast(){
       const valid = await formIsValid(this, 'podcastEditForm')
