@@ -240,6 +240,7 @@ export default {
     downloadAuto: false,
     podcastTitle: null,
     showEditOnSmall: false,
+    timeInterval: null,
     podcastEdit:{
       form: {
         name: '',
@@ -312,6 +313,9 @@ export default {
         "route": null
       },
     ])
+  },
+  destroyed() {
+    if (this.timeInterval){ clearInterval(this.timeInterval) }
   },
   methods: {
     async fetchData() {
@@ -388,7 +392,9 @@ export default {
     deletePodcast(){
       deletePodcast(this.podcast, () => {router.push(`/podcasts`).then(() => {})})
     },
-    downloadEpisode: downloadEpisode,
+    downloadEpisode(episode){
+      this.timeInterval = downloadEpisode(episode)
+    },
     humanStatus: humanStatus,
     deleteEpisode(episode){
       deleteEpisode(episode, () => {

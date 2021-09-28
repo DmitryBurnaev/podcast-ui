@@ -44,7 +44,7 @@ function downloadEpisode(episode) {
         });
     }
     let timeInterval = setInterval(() => {
-        axios.get(`episodes/${episode.id}`).then((response) => {
+        axios.get(`episodes/${episode.id}/`).then((response) => {
             episode.status = response.data.payload.status
             if (episode.status !== 'downloading'){
                 clearInterval(timeInterval)
@@ -53,6 +53,7 @@ function downloadEpisode(episode) {
         },
        5000
     )
+    return timeInterval
 }
 
 function goToEpisode(episode, podcastID) {

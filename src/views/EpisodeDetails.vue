@@ -208,6 +208,7 @@
         },
         showEditOnSmall: false,
         showDetailsOnSmall: false,
+        timeInterval: null,
     }),
     async created() {
       await this.fetchData()
@@ -235,6 +236,9 @@
         },
       ])
     },
+    destroyed() {
+      if (this.timeInterval){ clearInterval(this.timeInterval) }
+    },
     watch: {
       // при изменениях маршрута запрашиваем данные снова
       $route: 'fetchData'
@@ -256,7 +260,9 @@
             router.push({name: 'podcastDetails', params: {'id': this.podcast.id}}).then(() => {})
         })
       },
-      downloadEpisode: downloadEpisode,
+      downloadEpisode(episode){
+        this.timeInterval = downloadEpisode(episode)
+      },
       humanStatus: humanStatus,
     }
   }
