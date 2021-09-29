@@ -10,6 +10,22 @@
             <div class="author">
               <img v-if="podcast.image_url" class="avatar border-gray" :src="podcast.image_url" :alt="podcast.name">
               <img v-else class="avatar border-gray" src="../assets/img/cover-default.jpeg" :alt="podcast.name">
+<!--              TODO: continue this with docs: https://www.npmjs.com/package/vue-image-crop-upload -->
+              <my-upload field="img"
+                @crop-success="cropSuccess"
+                @crop-upload-success="cropUploadSuccess"
+                @crop-upload-fail="cropUploadFail"
+                v-model="show"
+                :width="300"
+                :height="300"
+                url="/upload"
+                :params="params"
+                :headers="headers"
+                img-format="png">
+              </my-upload>
+              <img :src="imgDataUrl">
+
+
               <h5 class="podcast-title">{{ podcast.name }}</h5>
             </div>
             <p class="description text-center"> {{ podcast.description }} </p>
