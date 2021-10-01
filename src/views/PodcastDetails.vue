@@ -12,15 +12,17 @@
               <img v-else class="avatar border-gray" src="../assets/img/cover-default.jpeg" :alt="podcast.name">
 <!--              TODO: continue this with docs: https://www.npmjs.com/package/vue-image-crop-upload -->
               <a class="btn" @click="toggleShow">set avatar</a>
-              <my-upload field="img"
+              <my-upload
                 @crop-success="cropSuccess"
                 @crop-upload-success="cropUploadSuccess"
                 @crop-upload-fail="cropUploadFail"
+                field="image"
                 v-model="show"
                 :width="500"
                 :height="500"
                 url="http://dev.podcast-service/api/podcasts/7/upload_image/"
                 :params="params"
+                :headers="headers"
                 :lang-ext="langExt"
                 img-format="png">
               </my-upload>
@@ -230,6 +232,7 @@
 
 <script>
 import axios from "axios";
+import store from '@/store'
 import router from "@/router";
 import InfiniteLoading from 'vue-infinite-loading';
 import {
@@ -255,7 +258,7 @@ export default {
 				name: 'avatar'
 			},
 			headers: {
-				smail: '*_~'
+        Authorization: `Bearer ${store.getters.accessToken}`
 			},
 			imgDataUrl: '', // the datebase64 url of created image
       langExt: {
