@@ -10,24 +10,8 @@
             <div class="author">
               <img v-if="podcast.image_url" class="avatar border-gray" :src="podcast.image_url" :alt="podcast.name">
               <img v-else class="avatar border-gray" src="../assets/img/cover-default.jpeg" :alt="podcast.name">
-<!--              TODO: continue this with docs: https://www.npmjs.com/package/vue-image-crop-upload -->
-              <a class="btn" @click="toggleShow">set avatar</a>
-              <my-upload
-                @crop-success="cropSuccess"
-                @crop-upload-success="cropUploadSuccess"
-                @crop-upload-fail="cropUploadFail"
-                field="image"
-                v-model="show"
-                :width="500"
-                :height="500"
-                url="http://dev.podcast-service/api/podcasts/7/upload_image/"
-                :params="params"
-                :headers="headers"
-                :lang-ext="langExt"
-                img-format="png">
-              </my-upload>
-              <img :src="imgDataUrl">
               <h5 class="podcast-title">{{ podcast.name }}</h5>
+              <upload-image :podcast="podcast"></upload-image>
             </div>
             <p class="description text-center"> {{ podcast.description }} </p>
           </div>
@@ -232,7 +216,6 @@
 
 <script>
 import axios from "axios";
-import store from '@/store'
 import router from "@/router";
 import InfiniteLoading from 'vue-infinite-loading';
 import {
@@ -246,41 +229,13 @@ import {
   copyToClipboard
 } from "@/utils/podcast";
 import InputErrors from "@/components/InputErrors";
-import myUpload from 'vue-image-crop-upload/upload-2.vue';
+import UploadImage from "@/components/UploadImage";
+
 
 export default {
   name: 'PodcastDetails',
-  components: {InputErrors, InfiniteLoading, 'my-upload': myUpload},
+  components: {InputErrors, InfiniteLoading, UploadImage},
   data: () => ({
-      show: false,
-			params: {
-				token: '123456798',
-				name: 'avatar'
-			},
-			headers: {
-        Authorization: `Bearer ${store.getters.accessToken}`
-			},
-			imgDataUrl: '', // the datebase64 url of created image
-      langExt: {
-          hint: 'Click or drag the file here to upload',
-          loading: 'Uploading…',
-          noSupported: 'Browser is not supported, please use IE10+ or other browsers',
-          success: 'Upload success',
-          fail: 'Upload failed',
-          preview: 'Preview',
-          btn: {
-            off: 'Cancel',
-            close: 'Close',
-            back: 'Back',
-            save: 'Save'
-          },
-          error: {
-            onlyImg: 'Image only',
-            outOfSize: 'Image exceeds size limit: ',
-            lowestPx: 'Image\'s size is too low. Expected at least: '
-          }
-      },
-
     loading: true,
     hasNextEpisodes: false,
     podcast: null,
@@ -366,42 +321,6 @@ export default {
     if (this.timeInterval){ clearInterval(this.timeInterval) }
   },
   methods: {
-      toggleShow() {
-				this.show = !this.show;
-			},
-            /**
-			 * crop success
-			 *
-			 * [param] imgDataUrl
-			 * [param] field
-			 */
-			cropSuccess(imgDataUrl, field){
-				console.log('-------- crop success -------- ' + field);
-				this.imgDataUrl = imgDataUrl;
-			},
-			/**
-			 * upload success
-			 *
-			 * [param] jsonData  server api return data, already json encode
-			 * [param] field
-			 */
-			cropUploadSuccess(jsonData, field){
-				console.log('-------- upload success --------');
-				console.log(jsonData);
-				console.log('field: ' + field);
-			},
-			/**
-			 * upload fail
-			 *
-			 * [param] status    server api return error status, like 500
-			 * [param] field
-			 */
-			cropUploadFail(status, field){
-				console.log('-------- upload fail --------');
-				console.log(status);
-				console.log('field: ' + field);
-			},
-
     async fetchData() {
       this.loading = true
       const podcastID = this.$route.params.id
@@ -448,7 +367,7 @@ export default {
       }
     },
     async generateRSS(){
-      await axios.put(`podcasts/${this.podcast.id}/generate_rss/`);
+      await axios.put(`podcasts/${this.podcast.id}/generate-rss/`);
       this.$message({type: 'success', message: 'RSS will be regenerated soon.'});
     },
     async createEpisode(){
