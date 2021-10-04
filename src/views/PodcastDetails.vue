@@ -8,8 +8,7 @@
           </div>
           <div class="card-body">
             <div class="author">
-              <img v-if="podcast.image_url" class="avatar border-gray" :src="podcast.image_url" :alt="podcast.name">
-              <img v-else class="avatar border-gray" src="../assets/img/cover-default.jpeg" :alt="podcast.name">
+              <upload-image :podcast="podcast"></upload-image>
               <h5 class="podcast-title">{{ podcast.name }}</h5>
             </div>
             <p class="description text-center"> {{ podcast.description }} </p>
@@ -228,10 +227,12 @@ import {
   copyToClipboard
 } from "@/utils/podcast";
 import InputErrors from "@/components/InputErrors";
+import UploadImage from "@/components/UploadImage";
+
 
 export default {
   name: 'PodcastDetails',
-  components: {InputErrors, InfiniteLoading},
+  components: {InputErrors, InfiniteLoading, UploadImage},
   data: () => ({
     loading: true,
     hasNextEpisodes: false,
@@ -364,7 +365,7 @@ export default {
       }
     },
     async generateRSS(){
-      await axios.put(`podcasts/${this.podcast.id}/generate_rss/`);
+      await axios.put(`podcasts/${this.podcast.id}/generate-rss/`);
       this.$message({type: 'success', message: 'RSS will be regenerated soon.'});
     },
     async createEpisode(){
