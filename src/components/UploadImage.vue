@@ -1,7 +1,8 @@
 <template>
   <div>
-    <!-- TODO: continue this with docs: https://www.npmjs.com/package/vue-image-crop-upload -->
-    <a class="btn" @click="toggleShow">set avatar</a>
+    <img v-if="podcast.image_url" class="avatar border-gray" :src="podcast.image_url" :alt="podcast.name" @click="toggleShow">
+    <img v-else class="avatar border-gray" src="../assets/img/cover-default.jpeg" :alt="podcast.name" @click="toggleShow">
+    <!-- TODO: increase result image size: https://www.npmjs.com/package/vue-image-crop-upload -->
     <my-upload
       @crop-success="cropSuccess"
       @crop-upload-success="cropUploadSuccess"
@@ -12,9 +13,9 @@
       :lang-ext="langExt"
       img-format="png"
       :url="params.url"
+      :field="params.name"
     >
     </my-upload>
-    <img :src="imgDataUrl" alt="Image">
   </div>
 </template>
 
@@ -75,7 +76,7 @@ export default {
      */
     cropSuccess(imgDataUrl, field){
       console.log('-------- crop success -------- ' + field);
-      this.imgDataUrl = imgDataUrl;
+      this.podcast.image_url = imgDataUrl
     },
     /**
      * upload success

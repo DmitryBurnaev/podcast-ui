@@ -8,10 +8,8 @@
           </div>
           <div class="card-body">
             <div class="author">
-              <img v-if="podcast.image_url" class="avatar border-gray" :src="podcast.image_url" :alt="podcast.name">
-              <img v-else class="avatar border-gray" src="../assets/img/cover-default.jpeg" :alt="podcast.name">
-              <h5 class="podcast-title">{{ podcast.name }}</h5>
               <upload-image :podcast="podcast"></upload-image>
+              <h5 class="podcast-title">{{ podcast.name }}</h5>
             </div>
             <p class="description text-center"> {{ podcast.description }} </p>
           </div>
