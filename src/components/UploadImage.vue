@@ -2,18 +2,16 @@
   <div>
     <img v-if="podcast.image_url" class="avatar border-gray" :src="podcast.image_url" :alt="podcast.name" @click="toggleShow">
     <img v-else class="avatar border-gray" src="../assets/img/cover-default.jpeg" :alt="podcast.name" @click="toggleShow">
-    <!-- TODO: increase result image size: https://www.npmjs.com/package/vue-image-crop-upload -->
     <my-upload
       @crop-success="cropSuccess"
-      @crop-upload-success="cropUploadSuccess"
-      @crop-upload-fail="cropUploadFail"
       v-model="show"
-      :params="params"
       :headers="headers"
       :lang-ext="langExt"
       img-format="png"
       :url="params.url"
       :field="params.name"
+      :width="500"
+      :height="500"
     >
     </my-upload>
   </div>
@@ -39,7 +37,6 @@ export default {
       headers: {
         Authorization: `Bearer ${store.getters.accessToken}`
       },
-      imgDataUrl: '', // the datebase64 url of created image
       langExt: {
           hint: 'Click or drag the file here to upload',
           loading: 'Uploading…',
@@ -68,42 +65,24 @@ export default {
     toggleShow() {
       this.show = !this.show;
     },
-          /**
-     * crop success
-     *
-     * [param] imgDataUrl
-     * [param] field
-     */
+    /** crop success
+    *
+    * [param] imgDataUrl
+    * [param] field
+    */
     cropSuccess(imgDataUrl, field){
       console.log('-------- crop success -------- ' + field);
       this.podcast.image_url = imgDataUrl
-    },
-    /**
-     * upload success
-     *
-     * [param] jsonData  server api return data, already json encode
-     * [param] field
-     */
-    cropUploadSuccess(jsonData, field){
-      console.log('-------- upload success --------');
-      console.log(jsonData);
-      console.log('field: ' + field);
-    },
-    /**
-     * upload fail
-     *
-     * [param] status    server api return error status, like 500
-     * [param] field
-     */
-    cropUploadFail(status, field){
-      console.log('-------- upload fail --------');
-      console.log(status);
-      console.log('field: ' + field);
     },
   }
 }
 </script>
 
 <style lang="scss">
-
+img.avatar{
+  cursor: pointer;
+}
+img.vicp-img{
+  max-width: none;
+}
 </style>
