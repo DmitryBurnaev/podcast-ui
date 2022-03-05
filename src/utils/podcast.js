@@ -97,6 +97,16 @@ function fillFormErrors(serverErrors, formErrorsList) {
     }
 }
 
+function isPlaylistURL(url) {
+    const markers = ["playlist", "album"]
+    for (let marker in markers){
+        if (url.indexOf(marker) !== -1){
+            return true
+        }
+    }
+    return false
+}
+
 async function formIsValid(context, formRef) {
     try {
         await context.$refs[formRef].validate()
@@ -142,6 +152,6 @@ function closeSidebar(){
 }
 
 export {
-    deleteEpisode, downloadEpisode, deletePodcast, humanStatus, goToEpisode, fillFormErrors, formIsValid,
-    copyToClipboard, closeSidebar
+    deleteEpisode, downloadEpisode, deletePodcast, humanStatus, goToEpisode, fillFormErrors,
+    formIsValid, copyToClipboard, closeSidebar, isPlaylistURL
 }
