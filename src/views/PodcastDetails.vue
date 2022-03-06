@@ -224,7 +224,8 @@ import {
   formIsValid,
   goToEpisode,
   deletePodcast,
-  copyToClipboard
+  copyToClipboard,
+  isPlaylistURL,
 } from "@/utils/podcast";
 import InputErrors from "@/components/InputErrors";
 import UploadImage from "@/components/UploadImage";
@@ -372,7 +373,7 @@ export default {
       const valid = await formIsValid(this, 'createEpisodeForm')
       const sourceURL = this.episodeCreation.form.source_url
       if (valid && sourceURL.length !== 0){
-        if (sourceURL.indexOf("playlist") !== -1){
+        if (this.isPlaylistURL(sourceURL)){
           await this.$router.push({name: 'playlist', params: {podcastID: this.podcast.id}, query: {playlist: sourceURL}})
         }
         else {
@@ -409,7 +410,8 @@ export default {
     goToLink(link){
        window.open(link, "_blank");
     },
-    copyToClipboard: copyToClipboard
+    copyToClipboard: copyToClipboard,
+    isPlaylistURL: isPlaylistURL,
   }
 }
 </script>
