@@ -103,7 +103,13 @@
 </template>
 
 <script>
-import {goToEpisode, humanStatus, fillFormErrors, formIsValid} from "@/utils/podcast";
+import {
+  goToEpisode,
+  humanStatus,
+  fillFormErrors,
+  formIsValid,
+  isPlaylistURL
+} from "@/utils/podcast";
 import InputErrors from "@/components/InputErrors";
 import axios from "axios";
 
@@ -168,17 +174,24 @@ export default {
     async createEpisode(){
       this.episodeCreation.serverErrors.source_url = []
       const valid = await formIsValid(this, 'createEpisodeForm')
-      if (valid){
-        this.episodeCreation.inProgress = true
-        const response = await axios.post(`podcasts/${this.episodeCreation.podcast.id}/episodes/`, this.episodeCreation.form)
-        if (response){
-          this.episodeCreation.episode = response.data.payload
+      const sourceURL = this.episodeCreation.form.source_url
+      if (valid && sourceURL.length !== 0){
+        if (this.isPlaylistURL(sourceURL)){
+          await this.$router.push({name: 'playlist', params: {podcastID: this.episodeCreation.podcast.id}, query: {playlist: sourceURL}})
         }
-        this.episodeCreation.inProgress = false
+        else {
+          this.episodeCreation.inProgress = true
+          const response = await axios.post(`podcasts/${this.episodeCreation.podcast.id}/episodes/`, this.episodeCreation.form)
+          if (response){
+            this.episodeCreation.episode = response.data.payload
+          }
+          this.episodeCreation.inProgress = false
+        }
       }
     },
     goToEpisode: goToEpisode,
     humanStatus: humanStatus,
+    isPlaylistURL: isPlaylistURL,
   }
 }
 </script>
