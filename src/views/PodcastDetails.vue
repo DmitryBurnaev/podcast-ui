@@ -73,10 +73,10 @@
                     <el-input
                         class="rss-link-input"
                         placeholder="Podcast RSS link"
-                        v-model="podcast.rss_link"
+                        v-model="podcast.rss_url"
                         disabled
                     >
-                      <el-button slot="append" icon="el-icon-copy-document" type="success" @click="copyToClipboard(podcast.rss_link)"></el-button>
+                      <el-button slot="append" icon="el-icon-copy-document" type="success" @click="copyToClipboard(podcast.rss_url)"></el-button>
                     </el-input>
                   </div>
                 </div>
