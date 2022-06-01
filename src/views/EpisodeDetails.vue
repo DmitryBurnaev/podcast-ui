@@ -13,7 +13,7 @@
                 <p class="title">{{ episode.title }}</p>
             </div>
             <div class="episode-content text-center mt-3">
-              <Audio v-if="episode.status === 'published'" :src="episode.remote_url" :length="episode.length" ></Audio>
+              <Audio v-if="episode.status === 'published'" :src="episode.audio_url" :length="episode.length" ></Audio>
               <div v-else class="episode-status text-center">
                 <div  v-if="episode.status === 'downloading'" class="icon-preload">
                   <i class="el-icon-loading"></i>
@@ -46,7 +46,7 @@
                       </span>
                     </div>
                     <div class="col-lg-5 col-md-5 col-5 ml-auto mr-auto text-center">
-                      <h5>{{ episode.file_size | size }} MB<br><small>Size</small></h5>
+                      <h5>{{ episode.audio_size | size }} MB<br><small>Size</small></h5>
                     </div>
                   </div>
             </div>
@@ -100,13 +100,13 @@
                   </div>
                 </div>
               </li>
-              <li v-if="episode.remote_url">
+              <li v-if="episode.audio_url">
                 <div class="row">
                   <div class="col-2">
                     <div class="icon-episode-detail text-center"><i class="nc-icon nc-note-03 text-info"></i></div>
                   </div>
                   <div class="col-10">
-                    <a :href="episode.remote_url" target="_blank">Media URL</a>
+                    <a :href="episode.audio_url" target="_blank">Media URL</a>
                   </div>
                 </div>
               </li>
