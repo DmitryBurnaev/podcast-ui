@@ -63,6 +63,12 @@ const routes = [
     component: () => import('./views/Playlist.vue')
   },
   {
+    path: '/podcasts/:podcastID/uploads',
+    name: 'uploads',
+    meta: {layout: 'main', auth: true},
+    component: () => import('./views/Uploads.vue')
+  },
+  {
     path: '/404',
     name: 'notFound',
     meta: {layout: 'auth', auth: false},

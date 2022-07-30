@@ -141,7 +141,7 @@
               </el-switch>
             </div>
           </div>
-          <div class="card-body">
+          <div class="card-body create-episode-inputs-container">
               <el-form :model="episodeCreation.form" :rules="episodeCreation.rules" ref="createEpisodeForm" @submit.native.prevent="createEpisode">
                 <el-form-item prop="source_url" :class="{'is-error': episodeCreation.serverErrors.source_url.length > 0}">
                   <el-input
@@ -150,6 +150,7 @@
                       :disabled="episodeCreation.inProgress"
                   >
                     <el-button slot="append" icon="el-icon-edit" type="success" @click="createEpisode"></el-button>
+                    <el-button slot="append" class="upload-episodes-button" icon="el-icon-paperclip" type="success" @click="goToUploads"></el-button>
                   </el-input>
                   <input-errors :errors="episodeCreation.serverErrors.source_url"></input-errors>
                 </el-form-item>
@@ -290,7 +291,7 @@ export default {
     }
   },
   watch: {
-    // при изменениях маршрута запрашиваем данные снова
+    // request data for routes changing
     $route: 'fetchData',
     error(serverErrors){
       this.episodeCreation.inProgress = false
@@ -413,11 +414,11 @@ export default {
     goToEpisode(episode){
       goToEpisode(episode, this.podcast.id)
     },
-    goToLink(link){
-       window.open(link, "_blank");
-    },
     copyToClipboard: copyToClipboard,
     isPlaylistURL: isPlaylistURL,
+    goToUploads(){
+       router.push({name: 'uploads', params: {'podcastID': this.podcast.id}})
+    },
   }
 }
 </script>
@@ -486,6 +487,13 @@ export default {
 .rss-link-input{
   input{
     cursor: alias !important;
+  }
+}
+.create-episode-inputs-container{
+  .upload-episodes-button{
+    border-left: 1px solid #dcdfe6 !important;
+    border-radius: 0;
+    margin-left: 20px;
   }
 }
 </style>
