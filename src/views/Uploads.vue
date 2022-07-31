@@ -11,12 +11,12 @@
             <el-form :model="podcastEdit.form" :rules="podcastEdit.rules" ref="podcastEditForm">
               <div class="row">
                 <div class="col-md-8">
-                  <div class="form-group  text-left">
+                  <div class="form-group text-left">
                     <el-switch
                       v-model="podcastEdit.form.download_automatically"
                       active-color="rgb(107, 208, 152)"
                       inactive-color="rgb(203, 203, 203)"
-                      inactive-text="Auto Download"
+                      inactive-text="Start Downloading process automatically"
                       @change="updatePodcast('download_automatically')"
                     >
                     </el-switch>
@@ -24,11 +24,20 @@
                 </div>
               </div>
             </el-form>
-
+            <div class="row">
+              <div class="col-md-12">
+                  <div class="d-none d-sm-block">
+                    <el-button type="info" plain @click="uploadFiles" icon="el-icon-magic-stick">
+                      Upload Files
+                    </el-button>
+                  </div>
+                  or
+              </div>
+            </div>
             <div class="row">
               <div class="col-md-12">
                 <div class="uploader">
-                  Upload Here
+                  Drag and Drop Here
                 </div>
               </div>
             </div>
@@ -108,7 +117,6 @@
 
 <script>
 import {fillFormErrors, formIsValid} from "@/utils/podcast";
-// import InputErrors from "@/components/InputErrors";
 import axios from "axios";
 import app from "@/main";
 
@@ -218,6 +226,7 @@ export default {
       this.playlistSrc.inProgress = false
       this.playlistSrc.formValid = null
     },
+
     async createEpisodes() {
       this.episodesCreating = true
       let createdEpisodesCount = 0
@@ -244,7 +253,10 @@ export default {
         const msg = `Successful added ${createdEpisodesCount} episode to podcast '${this.podcast.name}'`
         app.$message({type: 'success', message: msg, showClose: true});
       }
+    },
 
+    async uploadFiles(){
+      console.log("Uploading files here")
     }
   }
 }
