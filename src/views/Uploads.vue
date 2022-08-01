@@ -30,8 +30,9 @@
 
                     <el-upload
                       class="upload-demo"
-                       ref="upload"
-                      action="https://jsonplaceholder.typicode.com/posts/"
+                      ref="upload"
+                      :action="uploadParams.url"
+                      :headers="uploadParams.headers"
                       multiple
                       :on-preview="handlePreview"
                       :on-remove="handleRemove"
@@ -40,6 +41,8 @@
                       :on-exceed="handleExceed"
                       :file-list="fileList"
                       :auto-upload="false"
+                      drag
+
                     >
                       <el-button slot="trigger" size="small" type="primary">select file</el-button>
                       <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">upload to server</el-button>
@@ -141,6 +144,8 @@
 // import {fillFormErrors} from "@/utils/podcast";
 // import {fillFormErrors, formIsValid} from "@/utils/podcast";
 import axios from "axios";
+import config from "@/config";
+import store from "@/store";
 // import app from "@/main";
 
 export default {
@@ -156,8 +161,14 @@ export default {
       },
       inProgress: false,
     },
-    fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
-
+    fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
+    uploadParams: {
+      name: 'file',
+      url: `${config.apiURL}media/upload/audio/`,
+      headers: {
+        Authorization: `Bearer ${store.getters.accessToken}`
+      },
+    },
   }),
   computed: {
     error() {
