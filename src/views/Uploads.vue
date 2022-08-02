@@ -33,20 +33,23 @@
                       ref="upload"
                       :action="uploadParams.url"
                       :headers="uploadParams.headers"
+                      drag
                       multiple
                       :on-preview="handlePreview"
                       :on-remove="handleRemove"
                       :before-remove="beforeRemove"
-                      :limit="3"
                       :on-exceed="handleExceed"
                       :file-list="fileList"
                       :auto-upload="false"
-                      drag
-
                     >
-                      <el-button slot="trigger" size="small" type="primary">select file</el-button>
-                      <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">upload to server</el-button>
-                      <div class="el-upload__tip" slot="tip">jpg/png files with a size less than 500kb</div>
+                      <i class="el-icon-upload"></i>
+                      <div class="el-upload__text">Drop file here or <em>click to upload</em></div>
+                      <div class="el-upload__tip" slot="tip">mp3/mpeg files with a size less than 100Mb</div>
+<!--                      <div class="el-upload__text">Drop file here or <em>click to upload</em></div>-->
+<!--                      -->
+<!--                      <el-button slot="trigger" size="small" type="primary">select file</el-button>-->
+<!--                      <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">upload to server</el-button>-->
+<!--                      <div class="el-upload__tip" slot="tip">jpg/png files with a size less than 500kb</div>-->
 
 <!--                      <el-button size="small" type="primary">Click to upload</el-button>-->
 <!--                      <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 500kb</div>-->
