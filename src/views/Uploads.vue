@@ -11,7 +11,7 @@
                 v-model="podcastEdit.form.download_automatically"
                 active-color="rgb(107, 208, 152)"
                 inactive-color="rgb(203, 203, 203)"
-                inactive-text="Auto Download"
+                inactive-text="Auto Publish"
                 @change="setDownloadAuto()"
               >
               </el-switch>
@@ -21,13 +21,6 @@
             <div class="row">
               <div class="col-md-12">
                   <div class="d-none d-sm-block">
-<!--                    <el-button type="info" plain @click="uploadFiles" icon="el-icon-magic-stick">-->
-<!--                      Upload Files-->
-<!--                    </el-button>-->
-<!--                    <label>Files-->
-<!--                      <input type="file" id="files" ref="files" multiple v-on:change="uploadFiles()"/>-->
-<!--                    </label>-->
-
                     <el-upload
                       class="upload-demo"
                       ref="upload"
@@ -40,36 +33,15 @@
                       :before-remove="beforeRemove"
                       :on-exceed="handleExceed"
                       :file-list="fileList"
-                      :auto-upload="false"
+                      :auto-upload="true"
                     >
                       <i class="el-icon-upload"></i>
                       <div class="el-upload__text">Drop file here or <em>click to upload</em></div>
-                      <div class="el-upload__tip" slot="tip">mp3/mpeg files with a size less than 100Mb</div>
-<!--                      <div class="el-upload__text">Drop file here or <em>click to upload</em></div>-->
-<!--                      -->
-<!--                      <el-button slot="trigger" size="small" type="primary">select file</el-button>-->
-<!--                      <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">upload to server</el-button>-->
-<!--                      <div class="el-upload__tip" slot="tip">jpg/png files with a size less than 500kb</div>-->
-
-<!--                      <el-button size="small" type="primary">Click to upload</el-button>-->
-<!--                      <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 500kb</div>-->
+                      <div class="el-upload__tip" slot="tip">audio/mpeg files with a size less than 100Mb</div>
                     </el-upload>
-
-
-
-
                   </div>
-<!--                  or-->
               </div>
             </div>
-<!--            <div class="row">-->
-<!--              <div class="col-md-12">-->
-<!--                <div class="uploader">-->
-<!--                  Drag and Drop Here-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-
           </div>
         </div>
       </div>
@@ -144,12 +116,9 @@
 </template>
 
 <script>
-// import {fillFormErrors} from "@/utils/podcast";
-// import {fillFormErrors, formIsValid} from "@/utils/podcast";
 import axios from "axios";
 import config from "@/config";
 import store from "@/store";
-// import app from "@/main";
 
 export default {
   name: 'PodcastDetails',
@@ -164,9 +133,11 @@ export default {
       },
       inProgress: false,
     },
-    fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
+    fileList: [],
     uploadParams: {
       name: 'file',
+      // todo: use method http-request for manual handling upload requests
+      //       (see https://element.eleme.io/#/en-US/component/upload)
       url: `${config.apiURL}media/upload/audio/`,
       headers: {
         Authorization: `Bearer ${store.getters.accessToken}`
