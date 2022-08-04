@@ -32,6 +32,7 @@
                       :on-remove="handleRemove"
                       :before-remove="beforeRemove"
                       :on-exceed="handleExceed"
+                      :on-success="handleSuccess"
                       :file-list="fileList"
                       :auto-upload="true"
                     >
@@ -126,7 +127,7 @@ export default {
   data: () => ({
     loading: true,
     podcast: null,
-    uploadedEpisodes: [],
+    uploadedFiles: [],
     podcastEdit:{
       form: {
         download_automatically: false,
@@ -207,9 +208,13 @@ export default {
           {confirmButtonText: 'Yes', cancelButtonText: 'No'}
       );
     },
-      submitUpload() {
-        this.$refs.upload.submit();
-      }
+    // eslint-disable-next-line no-unused-vars
+    handleSuccess(response){
+      // TODO: add with sorting by name
+      this.uploadedFiles.add(response.payload)
+      // eslint-disable-next-line no-debugger
+      debugger;
+    }
   }
 }
 </script>
