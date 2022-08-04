@@ -198,10 +198,14 @@ export default {
     handleExceed(files, fileList) {
       this.$message.warning(`The limit is 3, you selected ${files.length} files this time, add up to ${files.length + fileList.length} totally`);
     },
+    // eslint-disable-next-line no-unused-vars
     beforeRemove(file, fileList) {
       // eslint-disable-next-line no-debugger
       debugger;
-      return this.$confirm(`Cancel the transfert of ${ file.name } ? ( ${fileList})`);
+      return this.$confirm(
+          `Cancel the upload of ${ file.name }?`,
+          {confirmButtonText: 'Yes', cancelButtonText: 'No'}
+      );
     },
       submitUpload() {
         this.$refs.upload.submit();
