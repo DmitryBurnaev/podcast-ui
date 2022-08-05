@@ -49,69 +49,70 @@
     </div>
 
 
-<!--    <div class="row" v-if="uploadedEpisodes.length > 0">-->
-<!--      <div class="col-12">-->
-<!--        <div class="card">-->
-<!--          <div class="card-header card-header-with-controls">-->
+    <div class="row" v-if="uploadedFiles.length > 0">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header card-header-with-controls">
 <!--            <h4 class="card-title">-->
 <!--              <span v-if="!playlistSrc.inProgress && playlistTitle">{{playlistTitle}}</span>-->
 <!--              <i class="el-icon-caret-right"></i> &lt;!&ndash; " > " &ndash;&gt;-->
 <!--              {{podcast.name}}-->
 <!--            </h4>-->
-<!--            <div class="controls">-->
-<!--              <div class="icon-container">-->
-<!--                <i v-if="episodesCreating" class="el-icon-loading"></i>-->
-<!--              </div>-->
-<!--              <button-->
-<!--                  type="button"-->
-<!--                  class="el-button el-button&#45;&#45;info is-plain"-->
-<!--                  @click="createEpisodes"-->
-<!--                  :disabled="episodesCreating || playlistSrc.inProgress"-->
-<!--              >-->
-<!--                <i class="el-icon-edit"></i><span>Add chosen</span>-->
-<!--              </button>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <div class="card-body">-->
-<!--            <ul class="list-unstyled team-members" v-if="!playlistSrc.inProgress">-->
-<!--              <li-->
-<!--                  v-for="item in uploadedEpisodes"-->
-<!--                  :key="item.id">-->
-<!--                <div class="row row-episode">-->
+            <div class="controls">
+              <div class="icon-container">
+                <i v-if="episodesCreating" class="el-icon-loading"></i>
+              </div>
+              <button
+                  type="button"
+                  class="el-button el-button--info is-plain"
+                  @click="createEpisodes"
+                  :disabled="episodesCreating"
+              >
+                <i class="el-icon-edit"></i><span>Add chosen</span>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <ul class="list-unstyled team-members">
+              <li
+                  v-for="item in uploadedFiles"
+                  :key="item.id">
+                <div class="row row-episode">
 
-<!--                  <div class="col-md-1 col-1 text-center pt-2">-->
-<!--                    <el-switch-->
-<!--                      v-model="item.checked"-->
-<!--                      active-color="rgb(107, 208, 152)"-->
-<!--                      inactive-color="rgb(203, 203, 203)"-->
-<!--                      :disabled="episodesCreating || item.downloaded"-->
-<!--                    >-->
-<!--                    </el-switch>-->
-<!--                    <div class="item-status">-->
-<!--                      <i v-if="item.downloading" class="el-icon-loading" title="episode is creating now"></i>-->
-<!--                      <i v-else-if="item.downloaded" class="el-icon-finished" title="episode successfully created"></i>-->
-<!--                      <i v-else-if="item.failed" class="el-icon-document-delete invalid" title="episode creation failed"></i>-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                  <div class="col-md-2 col-2 image-container">-->
-<!--                    <img :src="item.thumbnail_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">-->
-<!--                  </div>-->
-<!--                  <div class="col-md-9 col-9 item-details">-->
-<!--                    <a :href="item.url" target="_blank" :title="item.title"> {{ item.title }}</a>-->
-<!--                    <br/>-->
-<!--                    <span class="text-muted">-->
-<!--                      <small>{{item.description}}</small>-->
-<!--                    </span>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--                <hr class="hr__row-episode">-->
-<!--              </li>-->
+                  <div class="col-md-1 col-1 text-center pt-2">
+                    <el-switch
+                      v-model="item.checked"
+                      active-color="rgb(107, 208, 152)"
+                      inactive-color="rgb(203, 203, 203)"
+                      :disabled="episodesCreating || item.downloaded"
+                    >
+                    </el-switch>
+                    <div class="item-status">
+<!--                      TODO: show link to created episode -->
+                      <i v-if="item.downloading" class="el-icon-loading" title="episode is creating now"></i>
+                      <i v-else-if="item.downloaded" class="el-icon-finished" title="episode successfully created"></i>
+                      <i v-else-if="item.failed" class="el-icon-document-delete invalid" title="episode creation failed"></i>
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-2 image-container">
+                    <img :src="item.thumbnail_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                  </div>
+                  <div class="col-md-9 col-9 item-details">
+                    <a :href="item.url" target="_blank" :title="item.title"> {{ item.title }}</a>
+                    <br/>
+                    <span class="text-muted">
+                      <small>{{item.description}}</small>
+                    </span>
+                  </div>
+                </div>
+                <hr class="hr__row-episode">
+              </li>
 
-<!--            </ul>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 </template>
@@ -128,6 +129,8 @@ export default {
     loading: true,
     podcast: null,
     uploadedFiles: [],
+    episodesCreating: false,
+
     podcastEdit:{
       form: {
         download_automatically: false,
@@ -187,6 +190,9 @@ export default {
       this.podcast = response.data.payload;
       this.$message({type: 'success', message: 'Podcast successful updated.'});
     },
+    async createEpisodes(){
+      console.log("Sending files: " + this.uploadedFiles)
+    },
     uploadFiles(){
       console.log("Uploading files here")
     },
@@ -211,7 +217,7 @@ export default {
     // eslint-disable-next-line no-unused-vars
     handleSuccess(response){
       // TODO: add with sorting by name
-      this.uploadedFiles.add(response.payload)
+      this.uploadedFiles.push(response.payload)
       // eslint-disable-next-line no-debugger
       debugger;
     }
