@@ -28,6 +28,7 @@
                       :headers="uploadParams.headers"
                       drag
                       multiple
+                      :limit="uploadParams.maxFiles"
                       :on-preview="handlePreview"
                       :on-remove="handleRemove"
                       :before-remove="beforeRemove"
@@ -84,25 +85,31 @@
                       v-model="item.checked"
                       active-color="rgb(107, 208, 152)"
                       inactive-color="rgb(203, 203, 203)"
-                      :disabled="episodesCreating || item.downloaded"
+                      :disabled="item.downloading || item.episode"
                     >
                     </el-switch>
                     <div class="item-status">
-<!--                      TODO: show link to created episode -->
                       <i v-if="item.downloading" class="el-icon-loading" title="episode is creating now"></i>
                       <i v-else-if="item.downloaded" class="el-icon-finished" title="episode successfully created"></i>
                       <i v-else-if="item.failed" class="el-icon-document-delete invalid" title="episode creation failed"></i>
                     </div>
                   </div>
-                  <div class="col-md-2 col-2 image-container">
-                    <img :src="item.thumbnail_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                  <div v-if="item.status !== uploadFileStatus.EPISODE_CREATED" class="col-md-9 col-9 item-details">
+<!--                    TODO: show file's details -->
+
+
                   </div>
-                  <div class="col-md-9 col-9 item-details">
-                    <a :href="item.url" target="_blank" :title="item.title"> {{ item.title }}</a>
-                    <br/>
-                    <span class="text-muted">
-                      <small>{{item.description}}</small>
-                    </span>
+                  <div v-else>
+                    <div class="col-md-2 col-2 image-container">
+                      <img :src="item.episode.image_url" v-if="item.downloaded" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                    </div>
+                    <div class="col-md-9 col-9 item-details">
+                      <a :href="item.episode.url" target="_blank" :title="item.episode.title"> {{ item.episode.title }}</a>
+                      <br/>
+                      <span class="text-muted">
+                        <small>{{item.episode.description}}</small>
+                      </span>
+                    </div>
                   </div>
                 </div>
                 <hr class="hr__row-episode">
@@ -140,6 +147,7 @@ export default {
     fileList: [],
     uploadParams: {
       name: 'file',
+      maxFiles: 100,
       // todo: use method http-request for manual handling upload requests
       //       (see https://element.eleme.io/#/en-US/component/upload)
       url: `${config.apiURL}media/upload/audio/`,
@@ -147,6 +155,13 @@ export default {
         Authorization: `Bearer ${store.getters.accessToken}`
       },
     },
+    uploadFileStatus: {
+      NEW: 'NEW',
+      UPLOADED: 'UPLOADED',
+      EPISODE_CREATING: 'EPISODE_CREATING',
+      EPISODE_CREATED: 'EPISODE_CREATED',
+      ERROR: 'ERROR',
+    }
   }),
   computed: {
     error() {
@@ -192,6 +207,27 @@ export default {
     },
     async createEpisodes(){
       console.log("Sending files: " + this.uploadedFiles)
+      this.uploadedFiles.forEach((uploadedFile) => {
+        this.createEpisode(uploadedFile)
+      })
+    },
+    async createEpisode(uploadedFile){
+      console.log(`Creating episode for file ${uploadedFile.file.name}`)
+      uploadedFile.status = this.uploadFileStatus.EPISODE_CREATING
+      const response = await axios.post(
+          `podcasts/${this.podcast.id}/episodes/uploaded/`,
+          uploadedFile.file
+      );
+      if (response.data.status === 'OK'){
+        let episode = response.data.payload
+        uploadedFile.status = this.uploadFileStatus.EPISODE_CREATED
+        uploadedFile.episode = episode
+        uploadedFile.episode.url = `/podcasts/${this.podcast.id}/episodes/${episode.id}`
+        console.log(`Created episode #${episode.id} '${episode.title}'`)
+      } else {
+        uploadedFile.status = this.uploadFileStatus.ERROR
+        console.log(`Got ERROR for ${uploadedFile.file.name}: ${response.data.details}`)
+      }
     },
     uploadFiles(){
       console.log("Uploading files here")
@@ -213,14 +249,21 @@ export default {
           `Cancel the upload of ${ file.name }?`,
           {confirmButtonText: 'Yes', cancelButtonText: 'No'}
       );
+    //  TODO: remove item from uploadedFiles too. remove episode??
     },
     // eslint-disable-next-line no-unused-vars
     handleSuccess(response){
       // TODO: add with sorting by name
-      this.uploadedFiles.push(response.payload)
+      this.uploadedFiles.push({
+        status: this.uploadFileStatus.UPLOADED,
+        checked: false,
+        episode: null,
+        file: response,
+      })
       // eslint-disable-next-line no-debugger
       debugger;
     }
+
   }
 }
 </script>
