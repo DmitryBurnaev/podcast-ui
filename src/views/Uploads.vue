@@ -252,13 +252,21 @@ export default {
     //  TODO: remove item from uploadedFiles too. remove episode??
     },
     // eslint-disable-next-line no-unused-vars
-    handleSuccess(response){
+    async handleSuccess(response){
       // TODO: add with sorting by name
+      const existsEpisodeResponse = await axios.get(
+          `podcasts/${this.podcast.id}/episodes/uploaded/${response.data.payload.hash}`,
+      );
+      let episode = null;
+      if (response.data.status === 'OK') {
+        episode = existsEpisodeResponse.data.payload
+      }
+
       this.uploadedFiles.push({
-        status: this.uploadFileStatus.UPLOADED,
-        checked: false,
-        episode: null,
-        file: response,
+        status: episode ? this.uploadFileStatus.EPISODE_CREATED : this.uploadFileStatus.UPLOADED,
+        checked: episode !== null,
+        episode: episode,
+        file: response.data,
       })
       // eslint-disable-next-line no-debugger
       debugger;
