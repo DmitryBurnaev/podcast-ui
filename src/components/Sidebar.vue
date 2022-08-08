@@ -1,7 +1,7 @@
 <template>
     <div class="sidebar" data-color="black" data-active-color="warning" v-if="!loading">
       <div class="logo">
-        <a href="https://www.creative-tim.com" class="simple-text logo-mini">
+        <a href="/" class="simple-text logo-mini">
           <div class="logo-image-small">
             <img src="../assets/img/podcast-logo.jpeg" alt="...">
           </div>

@@ -94,11 +94,18 @@
                       <i v-else-if="item.failed" class="el-icon-document-delete invalid" title="episode creation failed"></i>
                     </div>
                   </div>
+                  <!-- Episode was not created yet -->
                   <div v-if="item.status !== uploadFileStatus.EPISODE_CREATED" class="col-md-9 col-9 item-details">
-<!--                    TODO: show file's details -->
-
-
+                    <div class="col-md-2 col-2 image-container">
+                      <img src="../assets/img/podcast-logo.jpeg" alt="Uploading File as a new episode" class="img-circle img-no-padding img-responsive">
+                    </div>
+                    <div class="col-md-9 col-9 item-details">
+                      <a :href="item.episode.url" target="_blank" :title="item.episode.title"> {{ item.episode.title }}</a>
+                      <br/>
+                      <pre>{{ JSON.stringify(item.file, null, 2) }}</pre>
+                    </div>
                   </div>
+                  <!-- Episode already created yet -->
                   <div v-else>
                     <div class="col-md-2 col-2 image-container">
                       <img :src="item.episode.image_url" v-if="item.downloaded" alt="Circle Image" class="img-circle img-no-padding img-responsive">
