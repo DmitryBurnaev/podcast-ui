@@ -236,27 +236,15 @@ export default {
         console.log(`Got ERROR for ${uploadedFile.file.name}: ${response.data.details}`)
       }
     },
-    uploadFiles(){
-      console.log("Uploading files here")
-    },
-    handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-    handlePreview(file) {
-      console.log(file);
+    removeUploadedFile(file, fileList) {
+      console.log(file, fileList);
     },
     handleExceed(files, fileList) {
-      this.$message.warning(`The limit is 3, you selected ${files.length} files this time, add up to ${files.length + fileList.length} totally`);
-    },
-    // eslint-disable-next-line no-unused-vars
-    beforeRemove(file, fileList) {
-      // eslint-disable-next-line no-debugger
-      debugger;
-      return this.$confirm(
-          `Cancel the upload of ${ file.name }?`,
-          {confirmButtonText: 'Yes', cancelButtonText: 'No'}
+      this.$message.warning(
+          `The limit is ${this.uploadParams.maxFiles},
+                you selected ${files.length} files this time,
+                add up to ${files.length + fileList.length} totally`
       );
-    //  TODO: remove item from uploadedFiles too. remove episode??
     },
     // eslint-disable-next-line no-unused-vars
     async handleSuccess(response){
@@ -267,8 +255,8 @@ export default {
       let episode = null;
       if (response.data.status === 'OK') {
         episode = existsEpisodeResponse.data.payload
-      }
 
+      }
       this.uploadedFiles.push({
         status: episode ? this.uploadFileStatus.EPISODE_CREATED : this.uploadFileStatus.UPLOADED,
         checked: episode !== null,
