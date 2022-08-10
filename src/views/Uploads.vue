@@ -29,9 +29,6 @@
                       drag
                       multiple
                       :limit="uploadParams.maxFiles"
-                      :on-preview="handlePreview"
-                      :on-remove="handleRemove"
-                      :before-remove="beforeRemove"
                       :on-exceed="handleExceed"
                       :on-success="handleSuccess"
                       :file-list="fileList"
@@ -250,12 +247,11 @@ export default {
     async handleSuccess(response){
       // TODO: add with sorting by name
       const existsEpisodeResponse = await axios.get(
-          `podcasts/${this.podcast.id}/episodes/uploaded/${response.data.payload.hash}`,
+          `podcasts/${this.podcast.id}/episodes/uploaded/${response.payload.hash}`,
       );
       let episode = null;
       if (response.data.status === 'OK') {
         episode = existsEpisodeResponse.data.payload
-
       }
       this.uploadedFiles.push({
         status: episode ? this.uploadFileStatus.EPISODE_CREATED : this.uploadFileStatus.UPLOADED,
