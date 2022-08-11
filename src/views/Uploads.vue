@@ -244,20 +244,20 @@ export default {
       );
     },
     // eslint-disable-next-line no-unused-vars
-    async handleSuccess(response){
+    async handleSuccess(fileResponse){
       // TODO: add with sorting by name
       const existsEpisodeResponse = await axios.get(
-          `podcasts/${this.podcast.id}/episodes/uploaded/${response.payload.hash}`,
+          `podcasts/${this.podcast.id}/episodes/uploaded/${fileResponse.payload.hash}/`,
       );
       let episode = null;
-      if (response.data.status === 'OK') {
+      if (existsEpisodeResponse.data.status === 'OK') {
         episode = existsEpisodeResponse.data.payload
       }
       this.uploadedFiles.push({
         status: episode ? this.uploadFileStatus.EPISODE_CREATED : this.uploadFileStatus.UPLOADED,
         checked: episode !== null,
         episode: episode,
-        file: response.data,
+        file: fileResponse.data,
       })
       // eslint-disable-next-line no-debugger
       debugger;

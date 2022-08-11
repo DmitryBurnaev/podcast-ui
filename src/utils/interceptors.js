@@ -26,13 +26,18 @@ export default function setup() {
         (error) => {
             console.log(`interceptor | ${error}`)
             const status = error.response ? error.response.status : null
+            const errorStatus = error.response.data.status;
+            if (status === 404 && errorStatus.startsWith('EXPECTED_')){
+                console.log(`Detected ${errorStatus} for request. SKIP error`)
+                return error.response
+            }
             if (status === 401) {
-                const errorStatus = error.response.data.status;
                 const errorMsg = error.response.data.payload.error;
                 if (errorStatus === 'INVALID_PARAMS'){
                     app.$message({type: 'error', message: errorMsg, showClose: true});
+                    return null
                 }
-                else if (errorStatus === 'SIGNATURE_EXPIRED') {
+                if (errorStatus === 'SIGNATURE_EXPIRED') {
                     console.log('SIGNATURE_EXPIRED: interceptor | refresh', store.getters.refreshToken)
                     let requestCanceled = false;
                     return axios
