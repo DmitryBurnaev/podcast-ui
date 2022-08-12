@@ -76,34 +76,34 @@
                   v-for="item in uploadedFiles"
                   :key="item.id">
                 <div class="row row-episode">
-
+<!--                  TODO: show different items for already created episode and uploaded file -->
                   <div class="col-md-1 col-1 text-center pt-2">
                     <el-switch
                       v-model="item.checked"
                       active-color="rgb(107, 208, 152)"
                       inactive-color="rgb(203, 203, 203)"
-                      :disabled="item.downloading || item.episode"
+                      :disabled="item.status !== uploadFileStatus.EPISODE_CREATING"
                     >
                     </el-switch>
                     <div class="item-status">
-                      <i v-if="item.downloading" class="el-icon-loading" title="episode is creating now"></i>
-                      <i v-else-if="item.downloaded" class="el-icon-finished" title="episode successfully created"></i>
-                      <i v-else-if="item.failed" class="el-icon-document-delete invalid" title="episode creation failed"></i>
+                      <i v-if="item.status !== uploadFileStatus.EPISODE_CREATING" class="el-icon-loading" title="episode is creating now"></i>
+                      <i v-else-if="item.status !== uploadFileStatus.EPISODE_CREATED" class="el-icon-finished" title="episode successfully created"></i>
+                      <i v-else-if="item.status !== uploadFileStatus.ERROR" class="el-icon-document-delete invalid" title="episode creation failed"></i>
                     </div>
                   </div>
                   <!-- Episode was not created yet -->
                   <div v-if="item.status !== uploadFileStatus.EPISODE_CREATED" class="col-md-9 col-9 item-details">
                     <div class="col-md-2 col-2 image-container">
-                      <img src="../assets/img/podcast-logo.jpeg" alt="Uploading File as a new episode" class="img-circle img-no-padding img-responsive">
+                      <img src="../assets/img/upload-cover.png" alt="Uploading File as a new episode" class="img-circle img-no-padding img-responsive">
                     </div>
                     <div class="col-md-9 col-9 item-details">
-                      <a :href="item.episode.url" target="_blank" :title="item.episode.title"> {{ item.episode.title }}</a>
+                      <h4>{{item.file.name}}</h4>
                       <br/>
                       <pre>{{ JSON.stringify(item.file, null, 2) }}</pre>
                     </div>
                   </div>
                   <!-- Episode already created yet -->
-                  <div v-else>
+                  <div v-else-if="item.episode !== null">
                     <div class="col-md-2 col-2 image-container">
                       <img :src="item.episode.image_url" v-if="item.downloaded" alt="Circle Image" class="img-circle img-no-padding img-responsive">
                     </div>
@@ -254,13 +254,13 @@ export default {
         episode = existsEpisodeResponse.data.payload
       }
       this.uploadedFiles.push({
-        status: episode ? this.uploadFileStatus.EPISODE_CREATED : this.uploadFileStatus.UPLOADED,
+        status: episode !== null ? this.uploadFileStatus.EPISODE_CREATED : this.uploadFileStatus.UPLOADED,
         checked: episode !== null,
         episode: episode,
-        file: fileResponse.data,
+        file: fileResponse.payload,
       })
       // eslint-disable-next-line no-debugger
-      debugger;
+      // debugger;
     }
 
   }
