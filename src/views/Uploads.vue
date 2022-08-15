@@ -74,51 +74,58 @@
             <ul class="list-unstyled team-members">
               <li
                   v-for="item in uploadedFiles"
-                  :key="item.id">
+                  :key="item.id"
+              >
                 <div class="row row-episode">
-<!--                  TODO: show different items for already created episode and uploaded file -->
-                  <div class="col-md-1 col-1 text-center pt-2">
+                  <div class="col-1 text-center pt-2">
                     <el-switch
                       v-model="item.checked"
                       active-color="rgb(107, 208, 152)"
                       inactive-color="rgb(203, 203, 203)"
-                      :disabled="item.status !== uploadFileStatus.EPISODE_CREATING"
+                      :disabled="item.status === uploadFileStatus.EPISODE_CREATING || item.status === uploadFileStatus.EPISODE_CREATED"
                     >
                     </el-switch>
                     <div class="item-status">
-                      <i v-if="item.status !== uploadFileStatus.EPISODE_CREATING" class="el-icon-loading" title="episode is creating now"></i>
-                      <i v-else-if="item.status !== uploadFileStatus.EPISODE_CREATED" class="el-icon-finished" title="episode successfully created"></i>
-                      <i v-else-if="item.status !== uploadFileStatus.ERROR" class="el-icon-document-delete invalid" title="episode creation failed"></i>
+                      <i v-if="item.status === uploadFileStatus.EPISODE_CREATING" class="el-icon-loading" title="episode is creating now"></i>
+                      <i v-else-if="item.status === uploadFileStatus.EPISODE_CREATED" class="el-icon-finished" title="episode successfully created"></i>
+                      <i v-else-if="item.status === uploadFileStatus.ERROR" class="el-icon-document-delete invalid" title="episode creation failed"></i>
                     </div>
                   </div>
-                  <!-- Episode was not created yet -->
-                  <div v-if="item.status !== uploadFileStatus.EPISODE_CREATED" class="col-md-9 col-9 item-details">
-                    <div class="col-md-2 col-2 image-container">
-                      <img src="../assets/img/upload-cover.png" alt="Uploading File as a new episode" class="img-circle img-no-padding img-responsive">
-                    </div>
-                    <div class="col-md-9 col-9 item-details">
-                      <h4>{{item.file.name}}</h4>
-                      <br/>
-                      <pre>{{ JSON.stringify(item.file, null, 2) }}</pre>
-                    </div>
-                  </div>
-                  <!-- Episode already created yet -->
-                  <div v-else-if="item.episode !== null">
-                    <div class="col-md-2 col-2 image-container">
-                      <img :src="item.episode.image_url" v-if="item.downloaded" alt="Circle Image" class="img-circle img-no-padding img-responsive">
-                    </div>
-                    <div class="col-md-9 col-9 item-details">
-                      <a :href="item.episode.url" target="_blank" :title="item.episode.title"> {{ item.episode.title }}</a>
-                      <br/>
-                      <span class="text-muted">
-                        <small>{{item.episode.description}}</small>
-                      </span>
+                  <div class="col-9">
+                    <div class="row row-uploaded-file">
+                      <div class="col-1 image-container">
+                        <img v-if="item.downloaded" :src="item.episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                        <img v-else src="../assets/img/upload-cover.png" @click="showUploadedFileDetails(item)" alt="Uploading File as a new episode" class="img-circle img-no-padding img-responsive">
+                      </div>
+                      <div class="col-11 item-details">
+                        <!-- Episode already created -->
+                        <div v-if="item.downloaded" class="created-episode-description">
+                          <a :href="item.episode.url" target="_blank" :title="item.episode.title"> {{ item.episode.title }}</a>
+                          <br/>
+                          <span class="text-muted">
+                            <small>{{item.episode.description}}</small>
+                          </span>
+                        </div>
+                        <!-- Episode was not created yet -->
+                        <div v-else class="uploaded-file-description">
+                          <span>{{item.file.name}}</span>
+                          <hr>
+                          <ul>
+                            <li>Title: "{{item.file.meta.title}}"</li>
+                            <li>Size: {{(item.file.size / 1024 / 1024).toFixed(2)}} MB</li>
+                            <li>Duration: ~{{(item.file.meta.duration / 60).toFixed(0) }} min</li>
+                          </ul>
+
+<!--                          <br/>-->
+<!--                          <pre>{{ JSON.stringify(item.file.meta, null, 2) }}</pre>-->
+
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
                 <hr class="hr__row-episode">
               </li>
-
             </ul>
           </div>
         </div>
@@ -132,6 +139,7 @@
 import axios from "axios";
 import config from "@/config";
 import store from "@/store";
+import app from "@/main";
 
 export default {
   name: 'PodcastDetails',
@@ -139,7 +147,26 @@ export default {
   data: () => ({
     loading: true,
     podcast: null,
-    uploadedFiles: [],
+    uploadedFiles: [
+      {
+        status: "UPLOADED",
+        checked: false,
+        episode: null,
+        file: {
+          "name": "01. Пролог.mp3",
+          "hash": "881acf707e9008175f320169b943efed",
+          "meta": {
+            "title": "Пролог",
+            "duration": 1211,
+            "author": "Джеймс Кори",
+            "track": "01",
+            "album": "Падение Левиафана"
+          },
+          "path": "tmp/audio/uploaded_audio_881acf707e9008175f320169b943efed.mp3",
+          "size": 29680824
+        },
+      }
+    ],
     episodesCreating: false,
 
     podcastEdit:{
@@ -207,7 +234,7 @@ export default {
     async setDownloadAuto(){
       const response = await axios.patch(`podcasts/${this.podcast.id}/`, this.podcastEdit.form);
       this.podcast = response.data.payload;
-      this.$message({type: 'success', message: 'Podcast successful updated.'});
+        this.$message({type: 'success', message: 'Podcast successful updated.'});
     },
     async createEpisodes(){
       console.log("Sending files: " + this.uploadedFiles)
@@ -261,8 +288,18 @@ export default {
       })
       // eslint-disable-next-line no-debugger
       // debugger;
+    },
+    showUploadedFileDetails(uploadedFile) {
+      let msg = JSON.stringify(uploadedFile, null, 2);
+      //TODO: make "pre" output
+      app.$confirm(`<pre>${msg}</pre>`, 'Info', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          cancelButtonClass: 'is-plain',
+          type: 'info'
+      }).then(() => {
+      });
     }
-
   }
 }
 </script>
@@ -275,5 +312,10 @@ export default {
     display: flex;
     justify-content: center;
     line-height: 200px;
+  }
+  .row-uploaded-file{
+    .image-container img{
+      width: 60px;
+    }
   }
 </style>
