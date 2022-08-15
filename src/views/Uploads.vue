@@ -290,15 +290,18 @@ export default {
       // debugger;
     },
     showUploadedFileDetails(uploadedFile) {
-      let msg = JSON.stringify(uploadedFile, null, 2);
-      //TODO: make "pre" output
-      app.$confirm(`<pre>${msg}</pre>`, 'Info', {
+      // noinspection JSCheckFunctionSignatures
+      let msg = JSON.stringify(uploadedFile, null, 2)
+      app.$confirm(
+        // this.$createElement('pre', JSON.stringify(uploadedFile, null, 2)),
+        `<pre>${msg}</pre>`,
+        uploadedFile.file.name, {
           confirmButtonText: 'OK',
           cancelButtonText: 'Cancel',
           cancelButtonClass: 'is-plain',
-          type: 'info'
-      }).then(() => {
-      });
+          dangerouslyUseHTMLString: true
+        }
+      ).then(() => {});
     }
   }
 }
