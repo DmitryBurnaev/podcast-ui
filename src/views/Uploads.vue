@@ -76,8 +76,8 @@
                   v-for="item in uploadedFiles"
                   :key="item.id"
               >
-                <div class="row row-episode">
-                  <div class="col-1 text-center pt-2">
+                <div class="row">
+                  <div class="col-1 text-center uploaded-file-cover">
                     <el-switch
                       v-model="item.checked"
                       active-color="rgb(107, 208, 152)"
@@ -108,17 +108,14 @@
                         </div>
                         <!-- Episode was not created yet -->
                         <div v-else class="uploaded-file-description">
+
                           <span>{{item.file.name}}</span>
-                          <hr>
-                          <ul>
+                          <hr class="file-info-hr">
+                          <ul class="file-info-list">
                             <li>Title: "{{item.file.meta.title}}"</li>
                             <li>Size: {{(item.file.size / 1024 / 1024).toFixed(2)}} MB</li>
                             <li>Duration: ~{{(item.file.meta.duration / 60).toFixed(0) }} min</li>
                           </ul>
-
-<!--                          <br/>-->
-<!--                          <pre>{{ JSON.stringify(item.file.meta, null, 2) }}</pre>-->
-
                         </div>
                       </div>
                     </div>
@@ -148,6 +145,24 @@ export default {
     loading: true,
     podcast: null,
     uploadedFiles: [
+      {
+        status: "UPLOADED",
+        checked: false,
+        episode: null,
+        file: {
+          "name": "01. Пролог.mp3",
+          "hash": "881acf707e9008175f320169b943efed",
+          "meta": {
+            "title": "Пролог",
+            "duration": 1211,
+            "author": "Джеймс Кори",
+            "track": "01",
+            "album": "Падение Левиафана"
+          },
+          "path": "tmp/audio/uploaded_audio_881acf707e9008175f320169b943efed.mp3",
+          "size": 29680824
+        },
+      },
       {
         status: "UPLOADED",
         checked: false,
@@ -293,7 +308,6 @@ export default {
       // noinspection JSCheckFunctionSignatures
       let msg = JSON.stringify(uploadedFile, null, 2)
       app.$confirm(
-        // this.$createElement('pre', JSON.stringify(uploadedFile, null, 2)),
         `<pre>${msg}</pre>`,
         uploadedFile.file.name, {
           confirmButtonText: 'OK',
@@ -317,8 +331,30 @@ export default {
     line-height: 200px;
   }
   .row-uploaded-file{
-    .image-container img{
-      width: 60px;
+    .image-container{
+      padding-top: 5px;
+      img{
+        width: 60px;
+      }
+    }
+  }
+  .uploaded-file-cover{
+    padding-top: 13px;
+  }
+  .el-message-box{
+    width: 680px;
+  }
+  .file-info-hr{
+    margin-top: 5px;
+    margin-bottom: 8px;
+  }
+  .file-info-list{
+    display: inline;
+    li{
+      display: inline;
+      list-style-type: none;
+      padding-right: 20px;
+      float: left;
     }
   }
 </style>
