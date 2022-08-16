@@ -31,6 +31,7 @@
                       :limit="uploadParams.maxFiles"
                       :on-exceed="handleExceed"
                       :on-success="handleSuccess"
+                      :before-remove="beforeRemove"
                       :file-list="fileList"
                       :auto-upload="true"
                     >
@@ -168,13 +169,13 @@ export default {
         checked: false,
         episode: null,
         file: {
-          "name": "01. Пролог.mp3",
+          "name": "02. Глава 1.mp3",
           "hash": "881acf707e9008175f320169b943efed",
           "meta": {
-            "title": "Пролог",
-            "duration": 1211,
+            "title": "Глава 1",
+            "duration": 1411,
             "author": "Джеймс Кори",
-            "track": "01",
+            "track": "02",
             "album": "Падение Левиафана"
           },
           "path": "tmp/audio/uploaded_audio_881acf707e9008175f320169b943efed.mp3",
@@ -278,6 +279,10 @@ export default {
     removeUploadedFile(file, fileList) {
       console.log(file, fileList);
     },
+    beforeRemove(file, fileList) {
+      console.log(file, fileList);
+
+    },
     handleExceed(files, fileList) {
       this.$message.warning(
           `The limit is ${this.uploadParams.maxFiles},
@@ -288,6 +293,9 @@ export default {
     // eslint-disable-next-line no-unused-vars
     async handleSuccess(fileResponse){
       // TODO: add with sorting by name
+      // TODO: deduplication
+      // eslint-disable-next-line no-debugger
+      // debugger;
       const existsEpisodeResponse = await axios.get(
           `podcasts/${this.podcast.id}/episodes/uploaded/${fileResponse.payload.hash}/`,
       );
@@ -301,6 +309,7 @@ export default {
         episode: episode,
         file: fileResponse.payload,
       })
+      console.log(this.fileList)
       // eslint-disable-next-line no-debugger
       // debugger;
     },
