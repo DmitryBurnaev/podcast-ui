@@ -292,10 +292,6 @@ export default {
     },
     // eslint-disable-next-line no-unused-vars
     async handleSuccess(fileResponse){
-      // TODO: add with sorting by name
-      // TODO: deduplication
-      // eslint-disable-next-line no-debugger
-      // debugger;
       const existsEpisodeResponse = await axios.get(
           `podcasts/${this.podcast.id}/episodes/uploaded/${fileResponse.payload.hash}/`,
       );
@@ -303,15 +299,42 @@ export default {
       if (existsEpisodeResponse.data.status === 'OK') {
         episode = existsEpisodeResponse.data.payload
       }
-      this.uploadedFiles.push({
-        status: episode !== null ? this.uploadFileStatus.EPISODE_CREATED : this.uploadFileStatus.UPLOADED,
-        checked: episode !== null,
-        episode: episode,
-        file: fileResponse.payload,
-      })
-      console.log(this.fileList)
-      // eslint-disable-next-line no-debugger
-      // debugger;
+      this.insertUploadedFile(
+          {
+            status: episode !== null ? this.uploadFileStatus.EPISODE_CREATED : this.uploadFileStatus.UPLOADED,
+            checked: episode !== null,
+            episode: episode,
+            file: fileResponse.payload,
+          },
+      )
+      this.sortUploadedFiles()
+    },
+    removeFileFromFileList(fileName){
+      const indexOfObject = this.$refs.upload.uploadFiles.findIndex(file => {
+        return file.name === fileName;
+      });
+      this.$refs.upload.uploadFiles.splice(indexOfObject, 1);
+    },
+    insertUploadedFile(insertItem){
+      const indexOfObject = this.uploadedFiles.findIndex(uploadedFile => {
+        return uploadedFile.file.name === insertItem.file.name;
+      });
+      if (indexOfObject === -1){
+        this.uploadedFiles.push(insertItem)
+      }
+    },
+    sortUploadedFiles(){
+        let compare;
+        compare = function( a, b ) {
+          if ( a.file.name < b.file.name ){
+            return -1;
+          }
+          if ( a.file.name > b.file.name ){
+            return 1;
+          }
+          return 0;
+        }
+        this.uploadedFiles.sort(compare)
     },
     showUploadedFileDetails(uploadedFile) {
       // noinspection JSCheckFunctionSignatures
