@@ -94,9 +94,10 @@
                   </div>
                   <div class="col-9">
                     <div class="row row-uploaded-file">
-                      <div class="col-1 image-container">
+                      <div class="col-1 image-container" @click="showUploadedFileDetails(item)" >
                         <img v-if="item.downloaded" :src="item.episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
-                        <img v-else src="../assets/img/upload-cover.png" @click="showUploadedFileDetails(item)" alt="Uploading File as a new episode" class="img-circle img-no-padding img-responsive">
+                        <img v-else-if="item.file.cover" :src="item.file.cover.preview_url" alt="Uploading File as a new episode" class="img-circle img-no-padding img-responsive">
+                        <img v-else src="../assets/img/upload-cover.png" alt="Uploading File as a new episode" class="img-circle img-no-padding img-responsive">
                       </div>
                       <div class="col-11 item-details">
                         <!-- Episode already created -->
@@ -177,6 +178,10 @@ export default {
             "author": "Джеймс Кори",
             "track": "02",
             "album": "Падение Левиафана"
+          },
+          "cover": {
+            "path": "tmp/audio/uploaded_audio_881acf707e9008175f320169b943efed.mp3",
+            "preview_url": "https://www.python.org/static/img/python-logo-large.c36dccadd999.png?1576869008"
           },
           "path": "tmp/audio/uploaded_audio_881acf707e9008175f320169b943efed.mp3",
           "size": 29680824
@@ -302,12 +307,13 @@ export default {
       this.insertUploadedFile(
           {
             status: episode !== null ? this.uploadFileStatus.EPISODE_CREATED : this.uploadFileStatus.UPLOADED,
-            checked: episode !== null,
+            checked: true,
             episode: episode,
             file: fileResponse.payload,
           },
       )
       this.sortUploadedFiles()
+      this.removeFileFromFileList(fileResponse.payload.name)
     },
     removeFileFromFileList(fileName){
       const indexOfObject = this.$refs.upload.uploadFiles.findIndex(file => {
@@ -365,6 +371,7 @@ export default {
   .row-uploaded-file{
     .image-container{
       padding-top: 5px;
+      cursor: pointer;
       img{
         width: 60px;
       }
