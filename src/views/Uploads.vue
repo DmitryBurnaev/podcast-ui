@@ -29,9 +29,8 @@
                       drag
                       multiple
                       :limit="uploadParams.maxFiles"
-                      :on-exceed="handleExceed"
-                      :on-success="handleSuccess"
-                      :before-remove="beforeRemove"
+                      :on-exceed="handleUploadLimitExceed"
+                      :on-success="handleUploadSuccess"
                       :file-list="fileList"
                       :auto-upload="true"
                     >
@@ -52,11 +51,6 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header card-header-with-controls">
-<!--            <h4 class="card-title">-->
-<!--              <span v-if="!playlistSrc.inProgress && playlistTitle">{{playlistTitle}}</span>-->
-<!--              <i class="el-icon-caret-right"></i> &lt;!&ndash; " > " &ndash;&gt;-->
-<!--              {{podcast.name}}-->
-<!--            </h4>-->
             <div class="controls">
               <div class="icon-container">
                 <i v-if="episodesCreating" class="el-icon-loading"></i>
@@ -94,23 +88,24 @@
                   </div>
                   <div class="col-9">
                     <div class="row row-uploaded-file">
-                      <div class="col-1 image-container" @click="showUploadedFileDetails(item)" >
-                        <img v-if="item.downloaded" :src="item.episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                      <div class="col-1 image-container" @click="showDetails(item)" >
+                        <img v-if="item.episode !== null" :src="item.episode.image_url" alt="Episode's image" class="img-circle img-no-padding img-responsive">
                         <img v-else-if="item.file.cover" :src="item.file.cover.preview_url" alt="Uploading File as a new episode" class="img-circle img-no-padding img-responsive">
                         <img v-else src="../assets/img/upload-cover.png" alt="Uploading File as a new episode" class="img-circle img-no-padding img-responsive">
                       </div>
                       <div class="col-11 item-details">
                         <!-- Episode already created -->
-                        <div v-if="item.downloaded" class="created-episode-description">
-                          <a :href="item.episode.url" target="_blank" :title="item.episode.title"> {{ item.episode.title }}</a>
-                          <br/>
-                          <span class="text-muted">
-                            <small>{{item.episode.description}}</small>
-                          </span>
+                        <div v-if="item.episode !== null" class="created-episode-description">
+                          <router-link
+                              tag="a"
+                              :to="{name: 'episodeDetails', params: {'episodeID': item.episode.id, 'podcastID': podcast.id}}"
+                              target="_blank">
+                            {{ item.episode.title }}
+                          </router-link>
+                          <pre class="text-muted small">{{item.episode.description}}</pre>
                         </div>
                         <!-- Episode was not created yet -->
                         <div v-else class="uploaded-file-description">
-
                           <span>{{item.file.name}}</span>
                           <hr class="file-info-hr">
                           <ul class="file-info-list">
@@ -281,22 +276,14 @@ export default {
         console.log(`Got ERROR for ${uploadedFile.file.name}: ${response.data.details}`)
       }
     },
-    removeUploadedFile(file, fileList) {
-      console.log(file, fileList);
-    },
-    beforeRemove(file, fileList) {
-      console.log(file, fileList);
-
-    },
-    handleExceed(files, fileList) {
+    handleUploadLimitExceed(files, fileList) {
       this.$message.warning(
           `The limit is ${this.uploadParams.maxFiles},
                 you selected ${files.length} files this time,
                 add up to ${files.length + fileList.length} totally`
       );
     },
-    // eslint-disable-next-line no-unused-vars
-    async handleSuccess(fileResponse){
+    async handleUploadSuccess(fileResponse){
       const existsEpisodeResponse = await axios.get(
           `podcasts/${this.podcast.id}/episodes/uploaded/${fileResponse.payload.hash}/`,
       );
@@ -342,7 +329,7 @@ export default {
         }
         this.uploadedFiles.sort(compare)
     },
-    showUploadedFileDetails(uploadedFile) {
+    showDetails(uploadedFile) {
       // noinspection JSCheckFunctionSignatures
       let msg = JSON.stringify(uploadedFile, null, 2)
       app.$confirm(
@@ -395,5 +382,8 @@ export default {
       padding-right: 20px;
       float: left;
     }
+  }
+  .el-message-box__wrapper{
+    overflow-y: scroll;
   }
 </style>
