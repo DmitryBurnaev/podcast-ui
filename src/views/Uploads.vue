@@ -9,7 +9,7 @@
             <div class="header-controls">
               <el-switch
                 v-model="podcastEdit.form.download_automatically"
-                active-color="rgb(107, 208, 152)"
+                active-color="rgb(85, 168, 122)"
                 inactive-color="rgb(203, 203, 203)"
                 inactive-text="Auto Publish"
                 @change="setDownloadAuto()"
@@ -75,7 +75,7 @@
                   <div class="col-1 text-center uploaded-file-cover">
                     <el-switch
                       v-model="item.checked"
-                      active-color="rgb(107, 208, 152)"
+                      active-color="rgb(85, 168, 122)"
                       inactive-color="rgb(203, 203, 203)"
                       :disabled="item.status === uploadFileStatus.EPISODE_CREATING || item.status === uploadFileStatus.EPISODE_CREATED"
                     >
@@ -102,7 +102,7 @@
                               target="_blank">
                             {{ item.episode.title }}
                           </router-link>
-                          <pre class="text-muted small">{{item.episode.description}}</pre>
+                          <pre class="text-muted small mb-0 mt-1">{{item.episode.description}}</pre>
                         </div>
                         <!-- Episode was not created yet -->
                         <div v-else class="uploaded-file-description">
@@ -141,48 +141,7 @@ export default {
   data: () => ({
     loading: true,
     podcast: null,
-    uploadedFiles: [
-      {
-        status: "UPLOADED",
-        checked: false,
-        episode: null,
-        file: {
-          "name": "01. Пролог.mp3",
-          "hash": "881acf707e9008175f320169b943efed",
-          "meta": {
-            "title": "Пролог",
-            "duration": 1211,
-            "author": "Джеймс Кори",
-            "track": "01",
-            "album": "Падение Левиафана"
-          },
-          "path": "tmp/audio/uploaded_audio_881acf707e9008175f320169b943efed.mp3",
-          "size": 29680824
-        },
-      },
-      {
-        status: "UPLOADED",
-        checked: false,
-        episode: null,
-        file: {
-          "name": "02. Глава 1.mp3",
-          "hash": "881acf707e9008175f320169b943efed",
-          "meta": {
-            "title": "Глава 1",
-            "duration": 1411,
-            "author": "Джеймс Кори",
-            "track": "02",
-            "album": "Падение Левиафана"
-          },
-          "cover": {
-            "path": "tmp/audio/uploaded_audio_881acf707e9008175f320169b943efed.mp3",
-            "preview_url": "https://www.python.org/static/img/python-logo-large.c36dccadd999.png?1576869008"
-          },
-          "path": "tmp/audio/uploaded_audio_881acf707e9008175f320169b943efed.mp3",
-          "size": 29680824
-        },
-      }
-    ],
+    uploadedFiles: [],
     episodesCreating: false,
 
     podcastEdit:{
@@ -255,7 +214,9 @@ export default {
     async createEpisodes(){
       console.log("Sending files: " + this.uploadedFiles)
       this.uploadedFiles.forEach((uploadedFile) => {
-        this.createEpisode(uploadedFile)
+        if (uploadedFile.checked && uploadedFile.status === this.uploadFileStatus.UPLOADED){
+          this.createEpisode(uploadedFile)
+        }
       })
     },
     async createEpisode(uploadedFile){
@@ -346,7 +307,7 @@ export default {
 }
 </script>
 <style lang="scss">
-
+  pre {font-family: inherit}
   .uploader{
     height: 200px;
     width: 100%;
@@ -385,5 +346,11 @@ export default {
   }
   .el-message-box__wrapper{
     overflow-y: scroll;
+  }
+  .item-details{
+    a{
+      color: #55a87a;
+      text-decoration: none;
+    }
   }
 </style>
