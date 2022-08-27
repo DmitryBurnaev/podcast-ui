@@ -36,22 +36,33 @@
           </div>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-6 ">
-          <router-link
-              tag="div"
-              class="card card-add-podcast"
-              :to="{name: 'podcastCreate'}"
-          >
-            <div class="card-body">
-              <span>+</span>
-            </div>
-            <div class="card-footer">
+            <div class="card card-stats card-add-podcast">
+            <router-link
+                tag="div"
+                class="card-body"
+                :to="{name: 'podcastCreate'}"
+            >
+              <div class="row">
+                <div class="col-4 col-md-4 podcast-cover-container">
+                    <img src="../assets/img/cover-default.jpeg" alt="Add Podcast" style="opacity: 0">
+                </div>
+                <div class="col-8 col-md-8">
+                  <div class="numbers">
+                    <p class="card-category">Add New</p>
+                    <p class="card-title">-</p>
+                  </div>
+                </div>
+              </div>
+            <div class="card-footer ">
               <hr>
               <div class="stats cursor-pointer">
                 <i class="nc-icon nc-tap-01"></i>
                 Add new podcast
               </div>
             </div>
-          </router-link>
+            </router-link>
+
+          </div>
         </div>
       </div>
 
@@ -205,19 +216,17 @@ export default {
       .card-body{
         cursor: pointer;
       }
+      .card-footer{
+        overflow-x: hidden;
+        .stats{
+          min-width: 173px;
+        }
+      }
     }
     .card-add-podcast{
-      @media (max-width: 576px) {height: 162px;}
-      height: 143px;
       background-color: inherit;
       border: 1px dashed;
       box-shadow: none;
-      .card-body{
-        text-align: center;
-        font-size: 40px;
-        @media (max-width: 576px) {padding-top: 25px;}
-      }
-      cursor: pointer;
     }
   }
 </style>

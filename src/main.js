@@ -5,7 +5,7 @@ import router from './router'
 import store from '@/store'
 import interceptorsSetup from '@/utils/interceptors'
 import {dateFilter, sizeFilter, audioLengthFilter, humanStatusFilter, cutString} from "@/utils/filters";
-import {Dialog, Form, FormItem, Input, Button, Switch, MessageBox, Message} from 'element-ui';
+import {Dialog, Form, FormItem, Input, Button, Switch, MessageBox, Message, Upload} from 'element-ui';
 
 Vue.component(Dialog.name, Dialog);
 Vue.component(Form.name, Form);
@@ -13,6 +13,7 @@ Vue.component(FormItem.name, FormItem);
 Vue.component(Input.name, Input);
 Vue.component(Button.name, Button);
 Vue.component(Switch.name, Switch);
+Vue.component(Upload.name, Upload);
 
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$message = Message
