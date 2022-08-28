@@ -211,31 +211,31 @@ export default {
       this.podcast = response.data.payload;
         this.$message({type: 'success', message: 'Podcast successful updated.'});
     },
-    async createEpisodes(){
-      console.log("Sending files: " + this.uploadedFiles)
-      this.uploadedFiles.forEach((uploadedFile) => {
-        if (uploadedFile.checked && uploadedFile.status === this.uploadFileStatus.UPLOADED){
-          this.createEpisode(uploadedFile)
-        }
-      })
+    createEpisodes(){
+      this.uploadedFiles.forEach((uploadedFile, i) => {
+        setTimeout(() => {
+          this.createEpisode(uploadedFile);
+        }, i*1000);
+      });
     },
-    async createEpisode(uploadedFile){
+    createEpisode(uploadedFile){
       console.log(`Creating episode for file ${uploadedFile.file.name}`)
       uploadedFile.status = this.uploadFileStatus.EPISODE_CREATING
-      const response = await axios.post(
+      axios.post(
           `podcasts/${this.podcast.id}/episodes/uploaded/`,
           uploadedFile.file
-      );
-      if (response.data.status === 'OK'){
-        let episode = response.data.payload
-        uploadedFile.status = this.uploadFileStatus.EPISODE_CREATED
-        uploadedFile.episode = episode
-        uploadedFile.episode.url = `/podcasts/${this.podcast.id}/episodes/${episode.id}`
-        console.log(`Created episode #${episode.id} '${episode.title}'`)
-      } else {
-        uploadedFile.status = this.uploadFileStatus.ERROR
-        console.log(`Got ERROR for ${uploadedFile.file.name}: ${response.data.details}`)
-      }
+      ).then((response) => {
+        if (response.data.status === 'OK'){
+          let episode = response.data.payload
+          uploadedFile.status = this.uploadFileStatus.EPISODE_CREATED
+          uploadedFile.episode = episode
+          uploadedFile.episode.url = `/podcasts/${this.podcast.id}/episodes/${episode.id}`
+          console.log(`Created episode #${episode.id} '${episode.title}'`)
+        } else {
+          uploadedFile.status = this.uploadFileStatus.ERROR
+          console.log(`Got ERROR for ${uploadedFile.file.name}: ${response.data.details}`)
+        }
+      })
     },
     handleUploadLimitExceed(files, fileList) {
       this.$message.warning(
