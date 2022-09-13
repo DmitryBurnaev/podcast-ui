@@ -98,13 +98,14 @@ function fillFormErrors(serverErrors, formErrorsList) {
 }
 
 function isPlaylistURL(url) {
-    const markers = ["playlist", "album"]
-    for (let marker in markers){
-        if (url.indexOf(marker) !== -1){
-            return true
-        }
-    }
-    return false
+    const playlistMarkers = ["playlist", "album"]
+    let index = -1;
+    playlistMarkers.forEach((marker) => {
+        let foundIndex;
+        foundIndex = url.indexOf(marker)
+        if (foundIndex !== -1){ index = foundIndex }
+    })
+    return index !== -1
 }
 
 async function formIsValid(context, formRef) {
