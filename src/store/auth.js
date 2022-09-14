@@ -18,6 +18,7 @@ export default {
             state.refreshToken = payload.refresh_token
         },
         clearToken(state){
+            console.log("clearTokens: accessToken, refreshToken")
             localStorage.removeItem('accessToken')
             localStorage.removeItem('refreshToken')
             state.accessToken = null
