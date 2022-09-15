@@ -54,9 +54,8 @@ export default function setup() {
                             }
                         })
                         .catch((error) => {
+                            console.log('interceptor | refresh-token | catch err:', error)
                             store.commit('clearToken')
-                            console.log('interceptor | catch err:', error)
-                            router.push({name: 'signIn', query: {'message': 'session-expired'}}).then(() => {})
                         }).finally( () => {
                             if (requestCanceled){
                                 throw error
@@ -64,7 +63,6 @@ export default function setup() {
                         })
                 }
                 else {
-                    // todo: recheck logic of clearing tokens here
                     store.commit('clearToken')
                     router.push({name: 'signIn', query: {'message': 'need-sign-in'}}).then(() => {})
                 }
@@ -89,7 +87,7 @@ export default function setup() {
                 }
                 throw error
             }
-            return null
+            throw error
         }
     );
 }
