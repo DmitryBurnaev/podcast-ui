@@ -125,7 +125,7 @@ import InputErrors from "@/components/InputErrors";
 import axios from "axios";
 
 export default {
-  name: "Home",
+  name: "HomePage",
   components: {InputErrors},
   data: () => ({
     loading: true,

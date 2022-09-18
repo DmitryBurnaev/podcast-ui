@@ -13,7 +13,7 @@
                 <p class="title">{{ episode.title }}</p>
             </div>
             <div class="episode-content text-center mt-3">
-              <Audio v-if="episode.status === 'published'" :src="episode.audio_url" :length="episode.length" ></Audio>
+              <AudioPlayer v-if="episode.status === 'published'" :src="episode.audio_url" :length="episode.length" ></AudioPlayer>
               <div v-else class="episode-status text-center">
                 <div  v-if="episode.status === 'downloading'" class="icon-preload">
                   <i class="el-icon-loading"></i>
@@ -189,14 +189,14 @@
 </template>
 
 <script>
-  import Audio from "@/components/Audio";
+  import AudioPlayer from "@/components/AudioPlayer";
   import axios from "axios";
   import router from "@/router";
   import {deleteEpisode, downloadEpisode, humanStatus} from "@/utils/podcast";
 
   export default {
-    name: 'EpisodeDetails',
-    components: {Audio},
+    name: 'EpisodeDetailsView',
+    components: {AudioPlayer},
     data: () => ({
         loading: true,
         episode: null,
@@ -240,7 +240,7 @@
       if (this.timeInterval){ clearInterval(this.timeInterval) }
     },
     watch: {
-      // при изменениях маршрута запрашиваем данные снова
+      // changing route calls fetching data
       $route: 'fetchData'
     },
     methods: {

@@ -67,7 +67,7 @@
   import {humanStatus} from "@/utils/podcast";
 
   export default {
-    name: 'Progress',
+    name: 'ProgressPage',
     data: () => ({
         progressItems: [],
         timeInterval: null,

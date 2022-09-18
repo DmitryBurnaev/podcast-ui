@@ -27,7 +27,7 @@
 import {Breadcrumb, BreadcrumbItem} from 'element-ui';
 
 export default {
-  name: "Navbar",
+  name: "NavbarComponent",
   components: {
     'el-breadcrumb': Breadcrumb,
     'el-breadcrumb-item': BreadcrumbItem,

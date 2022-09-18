@@ -10,75 +10,75 @@ const routes = [
     path: '/',
     name: 'Home',
     meta: {layout: 'main', auth: true},
-    component: () => import('./views/Home.vue')
+    component: () => import('./views/Home')
   },
   {
     path: '/sign-in',
     name: 'signIn',
     meta: {layout: 'auth'},
-    component: () => import('./views/SignIn.vue')
+    component: () => import('./views/SignIn')
   },
   {
     path: '/sign-up',
     name: 'signUp',
     meta: {layout: 'auth'},
-    component: () => import('./views/SignUp.vue')
+    component: () => import('./views/SignUp')
   },
   {
     path: '/progress',
     name: 'progress',
     meta: {layout: 'main', auth: true},
-    component: () => import('./views/Progress.vue')
+    component: () => import('./views/ProgressPage')
   },
   {
     path: '/podcasts',
     name: 'podcastList',
     meta: {layout: 'main', auth: true},
-    component: () => import('./views/PodcastList.vue')
+    component: () => import('./views/PodcastList')
   },
   {
     path: '/podcasts/:id',
     name: 'podcastDetails',
     meta: {layout: 'main', auth: true},
     props: true,
-    component: () => import('./views/PodcastDetails.vue')
+    component: () => import('./views/PodcastDetails')
   },
   {
     path: '/podcasts/create',
     name: 'podcastCreate',
     meta: {layout: 'main', auth: true},
     props: true,
-    component: () => import('./views/PodcastDetails.vue')
+    component: () => import('./views/PodcastDetails')
   },
   {
     path: '/podcasts/:podcastID/episodes/:episodeID',
     name: 'episodeDetails',
     meta: {layout: 'main', auth: true},
-    component: () => import('./views/EpisodeDetails.vue')
+    component: () => import('./views/EpisodeDetails')
   },
   {
     path: '/podcasts/:podcastID/playlist',
     name: 'playlist',
     meta: {layout: 'main', auth: true},
-    component: () => import('./views/Playlist.vue')
+    component: () => import('./views/Playlist')
   },
   {
     path: '/podcasts/:podcastID/uploads',
     name: 'uploads',
     meta: {layout: 'main', auth: true},
-    component: () => import('./views/Uploads.vue')
+    component: () => import('./views/Upload')
   },
   {
     path: '/404',
     name: 'notFound',
     meta: {layout: 'auth', auth: false},
-    component: () => import('./views/PageNotFound.vue')
+    component: () => import('./views/PageNotFound')
   },
   {
     path: '*',
     name: 'other',
     meta: {layout: 'auth', auth: false},
-    component: () => import('./views/PageNotFound.vue')
+    component: () => import('./views/PageNotFound')
   },
 ]
 

@@ -1,25 +1,25 @@
 <template>
   <div id="mainLayout" :class="{'nav-open': sidebarIsOpen}">
     <div id="bodyClick" v-if="sidebarIsOpen" @click="setSidebarOpen"></div>
-    <Sidebar/>
+    <SidebarComponent/>
     <div class="preloader text-center" v-if="loading">
       <i class="icon el-icon-loading"></i>
     </div>
     <div class="main-panel" v-else>
-      <Navbar/>
+      <NavbarComponent/>
       <router-view/>
     </div>
   </div>
 </template>
 
 <script>
-import Sidebar from "@/components/Sidebar";
-import Navbar from "@/components/Navbar";
+import SidebarComponent from "@/components/Sidebar";
+import NavbarComponent from "@/components/Navbar";
 import {closeSidebar} from "@/utils/podcast";
 
 export default {
   name: "MainLayout",
-  components: {Sidebar, Navbar},
+  components: {SidebarComponent, NavbarComponent},
   computed: {
     error() {
       return this.$store.getters.error
@@ -32,7 +32,7 @@ export default {
     }
   },
   watch: {
-    // при изменениях маршрута запрашиваем данные снова
+    // changing route calls fetching data
     $route: 'closeSidebar',
   },
   methods: {
