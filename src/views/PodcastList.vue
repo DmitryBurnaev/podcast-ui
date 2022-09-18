@@ -54,13 +54,13 @@
   import {deletePodcast} from "@/utils/podcast";
 
   export default {
-    name: 'PodcastList',
+    name: 'PodcastListView',
     data: () => ({
       podcasts: []
     }),
     async mounted(){
       await this.$store.dispatch('getPodcasts')
-      this.podcasts = this.$store.getters.podcasts,
+      this.podcasts = this.$store.getters.podcasts
       this.$store.commit('setBreadcrumbs', [
         {
           "title": "Home",

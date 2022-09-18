@@ -13,7 +13,7 @@
 import router from "@/router";
 
 export default {
-  name: "PageNotFound",
+  name: "PageNotFoundView",
   methods: {
     async goHome() {
       router.push(`/`).then(() => {})

@@ -34,7 +34,7 @@ import {audioLengthFilter} from "@/utils/filters";
 import {Slider} from 'element-ui';
 
 export default {
-  name: "Audio",
+  name: "AudioPlayer",
   props: ['src', 'length'],
   data: () => ({
     audio: null,

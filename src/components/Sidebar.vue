@@ -43,7 +43,7 @@ import {closeSidebar} from "@/utils/podcast";
 import app from "@/main";
 
 export default {
-  name: "Sidebar",
+  name: "SidebarComponent",
   data: () => ({
     links: [
       {"title": "Home", "url": "/", "icon": "nc-badge", "exact": true},

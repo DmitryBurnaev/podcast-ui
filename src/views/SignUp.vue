@@ -37,7 +37,7 @@
 import {fillFormErrors, formIsValid} from "@/utils/podcast";
 
 export default {
-  name: "SignUp",
+  name: "SignUpView",
   data: () => ({
     signUpForm: {
       email: '',

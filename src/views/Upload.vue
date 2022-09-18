@@ -136,7 +136,7 @@ import store from "@/store";
 import app from "@/main";
 
 export default {
-  name: 'PodcastDetails',
+  name: 'UploadView',
   components: {},
   data: () => ({
     loading: true,

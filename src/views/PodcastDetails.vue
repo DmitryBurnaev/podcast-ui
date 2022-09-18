@@ -239,7 +239,7 @@ import UploadImage from "@/components/UploadImage";
 
 
 export default {
-  name: 'PodcastDetails',
+  name: 'PodcastDetailsView',
   components: {InputErrors, InfiniteLoading, UploadImage},
   data: () => ({
     loading: true,

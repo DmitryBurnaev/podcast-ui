@@ -98,7 +98,7 @@ import axios from "axios";
 import app from "@/main";
 
 export default {
-  name: 'PodcastDetails',
+  name: 'PlaylistView',
   components: {InputErrors},
   data: () => ({
     loading: true,

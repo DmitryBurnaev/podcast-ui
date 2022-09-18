@@ -72,6 +72,7 @@ export default {
     */
     cropSuccess(imgDataUrl, field){
       console.log('-------- crop success -------- ' + field);
+      // eslint-disable-next-line
       this.podcast.image_url = imgDataUrl
     },
   }

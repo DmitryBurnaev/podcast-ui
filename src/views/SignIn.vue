@@ -29,7 +29,7 @@ import messages from "@/utils/messages";
 import {fillFormErrors, formIsValid} from "@/utils/podcast";
 
 export default {
-  name: "SignIn",
+  name: "SignInView",
   data: () => ({
     signInForm: {
       email: '',
