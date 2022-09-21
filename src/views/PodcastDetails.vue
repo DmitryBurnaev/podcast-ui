@@ -83,6 +83,13 @@
                           :disabled="!podcast.rss_url"
                           @click="copyToClipboard(podcast.rss_url)">
                       </el-button>
+                      <el-button
+                          slot="append"
+                          icon="el-icon-full-screen"
+                          type="success"
+                          :disabled="!podcast.rss_url"
+                          @click="showRSS(podcast.rss_url)">
+                      </el-button>
                     </el-input>
                   </div>
                 </div>
@@ -419,6 +426,9 @@ export default {
     goToUploads(){
        router.push({name: 'uploads', params: {'podcastID': this.podcast.id}})
     },
+    showRSS(){
+      window.open(this.podcast.rss_url)
+    }
   }
 }
 </script>
