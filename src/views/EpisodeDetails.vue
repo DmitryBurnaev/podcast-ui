@@ -15,18 +15,10 @@
             <div class="episode-content text-center mt-3">
               <AudioPlayer v-if="episode.status === 'published'" :src="episode.audio_url" :length="episode.length" ></AudioPlayer>
 <!--              TODO: move to component-->
-                <div class="progress-line-block d-none d-sm-block">
-                    <small
-                      :class="{
-                        'text-danger': (progress.status === 'error'),
-                        'text-muted': (['new', 'downloading'].includes(progress.episode.status)),
-                      }"
-                    >
-                      {{ humanStatus(progress.status) }}
-                    </small>
+                <div v-if="progress !== null" class="progress-line-block d-none d-sm-block">
                     <el-progress v-if="progress.status === 'error'" :percentage="progress.completed" status="exception"></el-progress>
                     <el-progress v-else :percentage="parseInt(progress.completed)" ></el-progress>
-                  </div>
+                </div>
 <!--              -->
               <div v-else class="episode-status text-center">
                 <div  v-if="episode.status === 'downloading'" class="icon-preload">
@@ -215,6 +207,7 @@
         loading: true,
         episode: null,
         podcast: null,
+        progress: null,
         form: {
           title: '',
           author: '',
@@ -223,6 +216,7 @@
         showEditOnSmall: false,
         showDetailsOnSmall: false,
         timeInterval: null,
+        progressTimeInterval: null,
     }),
     async created() {
       await this.fetchData()
@@ -252,6 +246,7 @@
     },
     destroyed() {
       if (this.timeInterval){ clearInterval(this.timeInterval) }
+      if (this.progressTimeInterval){ clearInterval(this.progressTimeInterval) }
     },
     watch: {
       // changing route calls fetching data
@@ -263,6 +258,7 @@
         const podcastID = this.$route.params.podcastID
         this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
         this.episode = await this.$store.dispatch('getEpisodeDetails', episodeID)
+        this.updateProgress()
       },
       async updateEpisode(){
         const response = await axios.patch(`episodes/${this.episode.id}/`, this.form);
@@ -276,8 +272,21 @@
       },
       downloadEpisode(episode){
         this.timeInterval = downloadEpisode(episode)
+
       },
       humanStatus: humanStatus,
+      updateProgress(){
+        this.progressTimeInterval = setInterval(() => {
+          if (this.episode.status === 'downloading'){
+            axios.get(`episodes/${this.episode.id}/progress/`).then((response) => {
+              this.progress = response.data.payload
+            })
+          } else {
+            this.progress = null;
+            if (this.progressTimeInterval){ clearInterval(this.progressTimeInterval) }
+          }
+        }, 1000)
+      }
     }
   }
 </script>
