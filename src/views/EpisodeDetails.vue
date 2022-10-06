@@ -14,12 +14,10 @@
             </div>
             <div class="episode-content text-center mt-3">
               <AudioPlayer v-if="episode.status === 'published'" :src="episode.audio_url" :length="episode.length" ></AudioPlayer>
-<!--              TODO: move to component-->
                 <div v-if="progress !== null" class="progress-line-block d-none d-sm-block">
                     <el-progress v-if="progress.status === 'error'" :percentage="progress.completed" status="exception"></el-progress>
                     <el-progress v-else :percentage="parseInt(progress.completed)" ></el-progress>
                 </div>
-<!--              -->
               <div v-else class="episode-status text-center">
                 <div  v-if="episode.status === 'downloading'" class="icon-preload">
                   <i class="el-icon-loading"></i>
@@ -278,6 +276,7 @@
       updateProgress(){
         this.progressTimeInterval = setInterval(() => {
           if (this.episode.status === 'downloading'){
+            //TODO: fetch episode data too (may be synchronize logic with updateEpisode func
             axios.get(`episodes/${this.episode.id}/progress/`).then((response) => {
               this.progress = response.data.payload
             })
