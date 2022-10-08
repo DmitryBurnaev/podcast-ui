@@ -14,15 +14,10 @@
             </div>
             <div class="episode-content text-center mt-3">
               <AudioPlayer v-if="episode.status === 'published'" :src="episode.audio_url" :length="episode.length" ></AudioPlayer>
-                <div v-if="progress !== null" class="progress-line-block d-none d-sm-block">
-                    <el-progress v-if="progress.status === 'error'" :percentage="progress.completed" status="exception"></el-progress>
-                    <el-progress v-else :percentage="parseInt(progress.completed)" ></el-progress>
-                </div>
-              <div v-else class="episode-status text-center">
-                <div  v-if="episode.status === 'downloading'" class="icon-preload">
-                  <i class="el-icon-loading"></i>
-                </div>
-                <p> {{ humanStatus(episode.status) }}</p>
+              <div v-if="progress !== null" class="progress-line-block d-none d-sm-block">
+                  <p class="text-muted">{{ humanStatus(progress.status) }}</p>
+                  <el-progress v-if="progress.status === 'error'" :percentage="progress.completed" status="exception"></el-progress>
+                  <el-progress v-else :percentage="parseInt(progress.completed)" ></el-progress>
               </div>
             </div>
           </div>
@@ -196,11 +191,15 @@
   import AudioPlayer from "@/components/AudioPlayer";
   import axios from "axios";
   import router from "@/router";
+  import {Progress} from 'element-ui';
   import {deleteEpisode, downloadEpisode, humanStatus} from "@/utils/podcast";
 
   export default {
     name: 'EpisodeDetailsView',
-    components: {AudioPlayer},
+    components: {
+      AudioPlayer,
+      'el-progress': Progress,
+    },
     data: () => ({
         loading: true,
         episode: null,
@@ -269,8 +268,8 @@
         })
       },
       downloadEpisode(episode){
-        this.timeInterval = downloadEpisode(episode)
-
+        downloadEpisode(episode, false)
+        this.updateProgress()
       },
       humanStatus: humanStatus,
       updateProgress(){
@@ -279,12 +278,15 @@
             //TODO: fetch episode data too (may be synchronize logic with updateEpisode func
             axios.get(`episodes/${this.episode.id}/progress/`).then((response) => {
               this.progress = response.data.payload
+              // eslint-disable-next-line no-debugger
+              // debugger
+              this.episode.status = response.data.payload.episode.status
             })
           } else {
             this.progress = null;
             if (this.progressTimeInterval){ clearInterval(this.progressTimeInterval) }
           }
-        }, 1000)
+        }, 2000)
       }
     }
   }
@@ -340,5 +342,8 @@
   }
   .episode-status-icon{
     font-size: 30px;
+  }
+  .el-progress-bar__inner{
+    background-color: #6bd098;
   }
 </style>

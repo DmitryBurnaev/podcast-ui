@@ -19,7 +19,7 @@ function deleteEpisode(episode, callback) {
     });
 }
 
-function downloadEpisode(episode) {
+function downloadEpisode(episode, needRefresh = true) {
     if (episode.status === 'downloading') {
         app.$message({type: 'warning', message: `Episode "${episode.title}" is downloading now.`});
         return
@@ -43,17 +43,19 @@ function downloadEpisode(episode) {
             })
         });
     }
-    let timeInterval = setInterval(() => {
-        axios.get(`episodes/${episode.id}/`).then((response) => {
-            episode.status = response.data.payload.status
-            if (episode.status !== 'downloading'){
-                clearInterval(timeInterval)
-            }
-        })
-        },
-       5000
-    )
-    return timeInterval
+    if (needRefresh){
+        let timeInterval = setInterval(() => {
+            axios.get(`episodes/${episode.id}/`).then((response) => {
+                episode.status = response.data.payload.status
+                if (episode.status !== 'downloading'){
+                    clearInterval(timeInterval)
+                }
+            })
+            },
+           5000
+        )
+        return timeInterval
+    }
 }
 
 function goToEpisode(episode, podcastID) {
