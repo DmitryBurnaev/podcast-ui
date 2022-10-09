@@ -9,16 +9,26 @@
           </div>
           <div class="card-body">
             <div class="author">
-                <img class="avatar avatar-episode border-gray" :src="episode.image_url" alt="...">
-                <p class="title">{{ episode.title }}</p>
+              <img class="avatar avatar-episode border-gray" :src="episode.image_url" alt="...">
+              <p class="title">{{ episode.title }}</p>
             </div>
             <div class="episode-content text-center mt-3">
-              <AudioPlayer v-if="episode.status === 'published'" :src="episode.audio_url" :length="episode.length" ></AudioPlayer>
-              <div v-else class="episode-status text-center">
-                <div  v-if="episode.status === 'downloading'" class="icon-preload">
-                  <i class="el-icon-loading"></i>
+              <AudioPlayer v-if="episodePublished(episode)" :src="episode.audio_url" :length="episode.length" ></AudioPlayer>
+              <div v-else>
+                <div v-if="progress !== null" class="progress-line-block d-none d-sm-block">
+                  <p class="text-muted">{{ humanStatus(progress.status) }}</p>
+                  <el-progress v-if="progress.status === 'error'" :percentage="progress.completed" status="exception"></el-progress>
+                  <el-progress v-else :percentage="parseInt(progress.completed)" ></el-progress>
                 </div>
-                <p> {{ humanStatus(episode.status) }}</p>
+                <div v-else class="pre-progress">
+                  <p :class="{
+                      'text-danger': (episode.status === 'error'),
+                      'text-muted': (['new', 'downloading'].includes(episode.status)),}">
+                    {{ humanStatus(episode.status) }}
+                  </p>
+                  <i v-if="episode.status === 'new'" class="text-muted nc-icon el-icon-star-off"></i>
+                  <i v-else-if="episode.status === 'error'" class="text-danger nc-icon el-icon-warning"></i>
+                </div>
               </div>
             </div>
           </div>
@@ -32,15 +42,24 @@
                     <div class="col-lg-2 col-md-2 col-2 ml-auto pr-1 pl-1 text-center">
                       <span class="episode-status-icon">
                         <i
+                            v-if="episode.status === 'new' || episode.status === 'error'"
                             class="nc-icon text-success"
-                            :title="humanStatus(episode.status)"
+                            :title="`${humanStatus(episode.status)} (click to download)`"
+                            @click="downloadEpisode(episode)"
                             :class="{
                               'nc-tap-01 cursor text-danger': episode.status === 'error',
                               'nc-tap-01 cursor': episode.status === 'new',
+                            }"
+                        >
+                        </i>
+                        <i
+                            v-else
+                            class="nc-icon text-success"
+                            :title="humanStatus(episode.status)"
+                            :class="{
                               'nc-cloud-download-93': episode.status === 'downloading',
                               'nc-headphones': episode.status === 'published',
                             }"
-                            @click="downloadEpisode(episode)"
                         >
                         </i>
                       </span>
@@ -192,15 +211,20 @@
   import AudioPlayer from "@/components/AudioPlayer";
   import axios from "axios";
   import router from "@/router";
+  import {Progress} from 'element-ui';
   import {deleteEpisode, downloadEpisode, humanStatus} from "@/utils/podcast";
 
   export default {
     name: 'EpisodeDetailsView',
-    components: {AudioPlayer},
+    components: {
+      AudioPlayer,
+      'el-progress': Progress,
+    },
     data: () => ({
         loading: true,
         episode: null,
         podcast: null,
+        progress: null,
         form: {
           title: '',
           author: '',
@@ -209,6 +233,7 @@
         showEditOnSmall: false,
         showDetailsOnSmall: false,
         timeInterval: null,
+        progressTimeInterval: null,
     }),
     async created() {
       await this.fetchData()
@@ -238,6 +263,7 @@
     },
     destroyed() {
       if (this.timeInterval){ clearInterval(this.timeInterval) }
+      if (this.progressTimeInterval){ clearInterval(this.progressTimeInterval) }
     },
     watch: {
       // changing route calls fetching data
@@ -249,6 +275,7 @@
         const podcastID = this.$route.params.podcastID
         this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
         this.episode = await this.$store.dispatch('getEpisodeDetails', episodeID)
+        this.updateProgress()
       },
       async updateEpisode(){
         const response = await axios.patch(`episodes/${this.episode.id}/`, this.form);
@@ -261,9 +288,32 @@
         })
       },
       downloadEpisode(episode){
-        this.timeInterval = downloadEpisode(episode)
+        downloadEpisode(episode, false)
+        this.episode.status = 'downloading'
+        this.updateProgress()
       },
       humanStatus: humanStatus,
+      episodeInProgress(episode){
+        return episode.status === 'downloading'
+      },
+      episodePublished(episode){
+        return episode.status === 'published'
+      },
+      updateProgress(){
+        if (this.episodeInProgress(this.episode)){
+          this.progressTimeInterval = setInterval(() => {
+            axios.get(`episodes/${this.episode.id}/progress/`).then((response) => {
+              if (this.episodeInProgress(response.data.payload.episode)){
+                this.progress = response.data.payload
+              } else{
+                this.progress = null
+                clearInterval(this.progressTimeInterval)
+                this.fetchData()
+              }
+            })
+          }, 1000)
+        }
+      }
     }
   }
 </script>
@@ -318,5 +368,13 @@
   }
   .episode-status-icon{
     font-size: 30px;
+  }
+  .el-progress-bar__inner{
+    background-color: #6bd098;
+  }
+  .pre-progress{
+    i{
+      font-size: 20pt;
+    }
   }
 </style>
