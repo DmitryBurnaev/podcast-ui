@@ -86,11 +86,12 @@
           "route": null
         },
       ])
-      this.timeInterval = setInterval(() => {
-        axios.get(`progress/`).then((response) => {
-          this.progressItems = response.data.payload
-        })
-      }, 1000)
+      this.connectWS()
+      // this.timeInterval = setInterval(() => {
+      //   axios.get(`progress/`).then((response) => {
+      //     this.progressItems = response.data.payload
+      //   })
+      // }, 1000)
     },
     destroyed() {
       clearInterval(this.timeInterval)
@@ -100,6 +101,25 @@
         router.push({name: 'episodeDetails', params: {'episodeID': progress.episode.id, 'podcastID': progress.podcast.id}})
       },
       humanStatus: humanStatus,
+      connectWS(){
+          if ("WebSocket" in window) {
+            let ws = new WebSocket("ws://localhost:8000/ws");
+            ws.onopen = function() {
+                console.log("Sending websocket data");
+                ws.send("Hello From Client");
+            };
+            ws.onmessage = function(e) {
+                alert(e.data);
+            };
+            ws.onclose = function() {
+                console.log("Closing websocket connection");
+            };
+          } else {
+              alert("WS not supported, sorry!");
+          }
+      }
+
+
     }
   }
 
