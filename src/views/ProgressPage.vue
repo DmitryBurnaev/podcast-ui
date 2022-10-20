@@ -73,6 +73,7 @@
     data: () => ({
         progressItems: [],
         timeInterval: null,
+        webSocket: null
     }),
     components: {
       'el-progress': Progress
@@ -97,6 +98,7 @@
     },
     destroyed() {
       clearInterval(this.timeInterval)
+      this.webSocket.close()
     },
     methods: {
       goToEpisode(progress){
@@ -104,7 +106,6 @@
       },
       humanStatus: humanStatus,
       connectWS(){
-
         if ("WebSocket" in window) {
           let ws = new WebSocket(`ws://${config.webSocketURL}/progress/`);
           ws.onopen = function() {
@@ -122,11 +123,11 @@
           ws.onclose = function() {
               console.log("Closing websocket connection");
           };
+          this.webSocket = ws
         } else {
             alert("WS not supported, sorry!");
         }
       }
-
 
     }
   }
