@@ -102,7 +102,10 @@
     },
     methods: {
       goToEpisode(progress){
-        router.push({name: 'episodeDetails', params: {'episodeID': progress.episode.id, 'podcastID': progress.podcast.id}})
+        router.push({
+          name: 'episodeDetails',
+          params: {'episodeID': progress.episode.id, 'podcastID': progress.podcast.id}
+        })
       },
       humanStatus: humanStatus,
       connectWS(){
@@ -117,15 +120,14 @@
           };
           ws.onmessage = (e) => {
             let data = JSON.parse(e.data);
-            this.progressItems = data.progressData
-            console.log(this.progressItems);
+            this.progressItems = data.progressItems
           };
           ws.onclose = function() {
-              console.log("Closing websocket connection");
+            console.log("Closing websocket connection");
           };
           this.webSocket = ws
         } else {
-            alert("WS not supported, sorry!");
+          alert("WS not supported, sorry!");
         }
       }
 
