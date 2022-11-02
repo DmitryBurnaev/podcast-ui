@@ -90,11 +90,6 @@
         },
       ])
       this.connectWS()
-      // this.timeInterval = setInterval(() => {
-      //   axios.get(`progress/`).then((response) => {
-      //     this.progressItems = response.data.payload
-      //   })
-      // }, 1000)
     },
     destroyed() {
       clearInterval(this.timeInterval)
