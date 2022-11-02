@@ -23,6 +23,7 @@ jobs:
         uses: borales/actions-yarn@v3.0.0
         env:
           VUE_APP_API_URL: ${{ secrets.VUE_APP_API_URL }}
+          VUE_APP_WS_URL: ${{ secrets.VUE_APP_WS_URL }}
         with:
           cmd: build # will run `yarn build` command
 

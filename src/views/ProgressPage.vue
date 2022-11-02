@@ -61,16 +61,19 @@
 </template>
 
 <script>
-  import axios from "axios";
+  // import axios from "axios";
   import router from "@/router";
+  import config from "@/config";
   import {Progress} from 'element-ui';
   import {humanStatus} from "@/utils/podcast";
+  import store from "@/store";
 
   export default {
     name: 'ProgressPage',
     data: () => ({
         progressItems: [],
         timeInterval: null,
+        webSocket: null
     }),
     components: {
       'el-progress': Progress
@@ -86,20 +89,43 @@
           "route": null
         },
       ])
-      this.timeInterval = setInterval(() => {
-        axios.get(`progress/`).then((response) => {
-          this.progressItems = response.data.payload
-        })
-      }, 1000)
+      this.connectWS()
     },
     destroyed() {
       clearInterval(this.timeInterval)
+      this.webSocket.close()
     },
     methods: {
       goToEpisode(progress){
-        router.push({name: 'episodeDetails', params: {'episodeID': progress.episode.id, 'podcastID': progress.podcast.id}})
+        router.push({
+          name: 'episodeDetails',
+          params: {'episodeID': progress.episode.id, 'podcastID': progress.podcast.id}
+        })
       },
       humanStatus: humanStatus,
+      connectWS(){
+        if ("WebSocket" in window) {
+          let ws = new WebSocket(`ws://${config.webSocketURL}/progress/`);
+          ws.onopen = function() {
+            console.log("Sending websocket data");
+            let data = {
+              "headers": {Authorization: `Bearer ${store.getters.accessToken}`},
+            };
+            ws.send(JSON.stringify(data, null));
+          };
+          ws.onmessage = (e) => {
+            let data = JSON.parse(e.data);
+            this.progressItems = data.progressItems
+          };
+          ws.onclose = function() {
+            console.log("Closing websocket connection");
+          };
+          this.webSocket = ws
+        } else {
+          alert("WS not supported, sorry!");
+        }
+      }
+
     }
   }
 
