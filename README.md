@@ -25,7 +25,7 @@ yarn build
 | argument        |                  description                   |                   example |
 |:----------------|:----------------------------------------------:|--------------------------:|
 | VUE_APP_API_URL | Full URL (with base API path) to backend's API | https://my.service.ru/api |
-| VUE_APP_WS_URL  |       Full URL to backend's WS base URL        |  https://my.service.ru/ws |
+| VUE_APP_WS_URL  |       Full URL to backend's WS base URL        |    wss://my.service.ru/ws |
 
 * * *
 
