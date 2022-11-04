@@ -105,7 +105,7 @@
       humanStatus: humanStatus,
       connectWS(){
         if ("WebSocket" in window) {
-          let ws = new WebSocket(`ws://${config.webSocketURL}/progress/`);
+          let ws = new WebSocket(`${config.webSocketURL}/progress/`);
           ws.onopen = function() {
             console.log("Sending websocket data");
             let data = {
