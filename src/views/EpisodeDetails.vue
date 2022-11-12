@@ -304,7 +304,7 @@
         if (this.episodeInProgress(this.episode)){
           connectToWS(
               "/progress/",
-              {},
+              {"episodeID": this.episode.id},
               (data) => {
                 if (data.progressItems.length !== 0){
                   this.progress = data.progressItems[0]
