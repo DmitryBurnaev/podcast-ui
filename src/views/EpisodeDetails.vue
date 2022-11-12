@@ -213,6 +213,7 @@
   import router from "@/router";
   import {Progress} from 'element-ui';
   import {deleteEpisode, downloadEpisode, humanStatus} from "@/utils/podcast";
+  import {connectToWS} from "@/utils/ws";
 
   export default {
     name: 'EpisodeDetailsView',
@@ -301,17 +302,17 @@
       },
       updateProgress(){
         if (this.episodeInProgress(this.episode)){
-          this.progressTimeInterval = setInterval(() => {
-            axios.get(`episodes/${this.episode.id}/progress/`).then((response) => {
-              if (this.episodeInProgress(response.data.payload.episode)){
-                this.progress = response.data.payload
-              } else{
-                this.progress = null
-                clearInterval(this.progressTimeInterval)
-                this.fetchData()
-              }
+          connectToWS(
+              "/progress/",
+              {},
+              (data) => {
+                if (data.progressItems.length !== 0){
+                  this.progress = data.progressItems[0]
+                }
+                else {
+                  this.progress = null
+                }
             })
-          }, 1000)
         }
       }
     }
