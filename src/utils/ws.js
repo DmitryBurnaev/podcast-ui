@@ -19,7 +19,7 @@ function connectToWS(wsPath, data, handler){
       ws.onclose = function() {
         console.log("Closing websocket connection");
       };
-      this.webSocket = ws
+      return ws
     }
     else {
       alert("WS not supported, sorry!");
