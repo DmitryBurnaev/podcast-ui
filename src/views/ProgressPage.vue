@@ -70,7 +70,6 @@
     name: 'ProgressPage',
     data: () => ({
         progressItems: [],
-        timeInterval: null,
         webSocket: null
     }),
     components: {
@@ -90,8 +89,7 @@
       this.connectWS()
     },
     destroyed() {
-      clearInterval(this.timeInterval)
-      this.webSocket.close()
+      if (this.webSocket) {this.webSocket.close()}
     },
     methods: {
       goToEpisode(progress){
@@ -102,7 +100,11 @@
       },
       humanStatus: humanStatus,
       connectWS(){
-        connectToWS("/progress/", {}, (data) => {this.progressItems = data.progressItems})
+        this.webSocket = connectToWS(
+            "/progress/",
+            {},
+            (data) => {this.progressItems = data.progressItems}
+        )
       }
     }
   }

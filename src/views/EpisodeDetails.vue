@@ -15,7 +15,7 @@
             <div class="episode-content text-center mt-3">
               <AudioPlayer v-if="episodePublished(episode)" :src="episode.audio_url" :length="episode.length" ></AudioPlayer>
               <div v-else>
-                <div v-if="progress !== null" class="progress-line-block d-none d-sm-block">
+                <div v-if="progress !== null" class="progress-line-block d-sm-block">
                   <p class="text-muted">{{ humanStatus(progress.status) }}</p>
                   <el-progress v-if="progress.status === 'error'" :percentage="progress.completed" status="exception"></el-progress>
                   <el-progress v-else :percentage="parseInt(progress.completed)" ></el-progress>
@@ -233,8 +233,7 @@
         },
         showEditOnSmall: false,
         showDetailsOnSmall: false,
-        timeInterval: null,
-        progressTimeInterval: null,
+        webSocket: null,
     }),
     async created() {
       await this.fetchData()
@@ -263,8 +262,7 @@
       ])
     },
     destroyed() {
-      if (this.timeInterval){ clearInterval(this.timeInterval) }
-      if (this.progressTimeInterval){ clearInterval(this.progressTimeInterval) }
+      if (this.webSocket) {this.webSocket.close()}
     },
     watch: {
       // changing route calls fetching data
@@ -302,12 +300,17 @@
       },
       updateProgress(){
         if (this.episodeInProgress(this.episode)){
-          connectToWS(
+          this.webSocket = connectToWS(
               "/progress/",
               {"episodeID": this.episode.id},
               (data) => {
                 if (data.progressItems.length !== 0){
-                  this.progress = data.progressItems[0]
+                  this.progress = data.progressItems[0];
+                  if (! this.episodeInProgress(this.progress.episode)){
+                    console.log("Episode not in progress. Closing connection")
+                    this.webSocket.close()
+                    this.fetchData()
+                  }
                 }
                 else {
                   this.progress = null
