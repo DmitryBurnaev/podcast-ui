@@ -6,9 +6,6 @@
           <div class="image card-background" >
             <img v-if="podcast.image_url" :src="podcast.image_url" :alt="podcast.name">
             <img v-else src="../assets/img/cover-default.jpeg" :alt="podcast.name">
-            <div class="source-badge">
-              <img :src="sourceBadge" :alt="sourceTitle">
-            </div>
           </div>
           <div class="card-body">
             <div class="author">
@@ -115,7 +112,12 @@
               <li>
                 <div class="row">
                   <div class="col-2">
-                    <div class="icon-episode-detail text-center"><i class="nc-icon nc-world-2 text-success"></i></div>
+                    <div class="icon-episode-detail text-center">
+<!--                      TODO: fix image reference -->
+                      <img class="source-badge" src="../assets/img/source-youtube.ico" :alt="sourceBadgeTitle">
+<!--                      <img class="source-badge" :src="require('../assets/img/source-youtube.ico')" :alt="sourceBadgeTitle">-->
+<!--                      <img class="source-badge" :src="sourceBadgeImage" :alt="sourceTitle">-->
+                    </div>
                   </div>
                   <div class="col-10 details-info">
                     <a :href="episode.watch_url" target="_blank">Source URL</a>
@@ -237,8 +239,8 @@
         showEditOnSmall: false,
         showDetailsOnSmall: false,
         webSocket: null,
-        sourceBadge: null,
-        sourceTitle: null,
+        sourceBadgeImage: null,
+        sourceBadgeTitle: null,
     }),
     async created() {
       await this.fetchData()
@@ -325,8 +327,8 @@
         }
       },
       setSourceBadgeData(){
-        this.sourceBadge = `../assets/source_${this.episode.source_info.toLower()}.png`
-        this.sourceTitle = this.episode.source_url
+        this.sourceBadgeImage = `@/assets/img/source_${this.episode.source_type.toLowerCase()}.ico`
+        this.sourceBadgeTitle = this.episode.title
       }
     }
   }
