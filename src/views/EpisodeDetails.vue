@@ -109,21 +109,6 @@
                   </div>
                 </div>
               </li>
-              <li>
-                <div class="row">
-                  <div class="col-2">
-                    <div class="icon-episode-detail text-center">
-<!--                      TODO: fix image reference -->
-                      <img class="source-badge" src="../assets/img/source-youtube.ico" :alt="sourceBadgeTitle">
-<!--                      <img class="source-badge" :src="require('../assets/img/source-youtube.ico')" :alt="sourceBadgeTitle">-->
-<!--                      <img class="source-badge" :src="sourceBadgeImage" :alt="sourceTitle">-->
-                    </div>
-                  </div>
-                  <div class="col-10 details-info">
-                    <a :href="episode.watch_url" target="_blank">Source URL</a>
-                  </div>
-                </div>
-              </li>
               <li v-if="episode.audio_url">
                 <div class="row">
                   <div class="col-2">
@@ -131,6 +116,18 @@
                   </div>
                   <div class="col-10 details-info">
                     <a :href="episode.audio_url" target="_blank">Media URL</a>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="row">
+                  <div class="col-2">
+                    <div class="icon-episode-detail text-center source-img-container">
+                      <img :src="getSourceBadgeIcon()" alt="" :title="episode.title">
+                    </div>
+                  </div>
+                  <div class="col-10 details-info">
+                    <a :href="episode.watch_url" target="_blank">Source URL</a>
                   </div>
                 </div>
               </li>
@@ -239,8 +236,6 @@
         showEditOnSmall: false,
         showDetailsOnSmall: false,
         webSocket: null,
-        sourceBadgeImage: null,
-        sourceBadgeTitle: null,
     }),
     async created() {
       await this.fetchData()
@@ -281,7 +276,6 @@
         const podcastID = this.$route.params.podcastID
         this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
         this.episode = await this.$store.dispatch('getEpisodeDetails', episodeID)
-        this.setSourceBadgeData()
         this.updateProgress()
       },
       async updateEpisode(){
@@ -326,10 +320,9 @@
             })
         }
       },
-      setSourceBadgeData(){
-        this.sourceBadgeImage = `@/assets/img/source_${this.episode.source_type.toLowerCase()}.ico`
-        this.sourceBadgeTitle = this.episode.title
-      }
+      getSourceBadgeIcon(){
+        return require(`../assets/img/source-${this.episode.source_type.toLowerCase()}.png`)
+      },
     }
   }
 </script>
@@ -370,6 +363,12 @@
     }
     div.details-info{
       padding-top: 1px;
+    }
+    div.source-img-container{
+      img{
+        display: block;
+        margin-top: -2px;
+      }
     }
   }
   .cursor{
