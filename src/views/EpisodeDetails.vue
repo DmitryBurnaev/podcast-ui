@@ -112,7 +112,7 @@
               <li v-if="episode.audio_url">
                 <div class="row">
                   <div class="col-2">
-                    <div class="icon-episode-detail text-center"><i class="nc-icon nc-note-03 text-info"></i></div>
+                    <div class="icon-episode-detail text-center"><i class="nc-icon nc-note-03 text-success"></i></div>
                   </div>
                   <div class="col-10 details-info">
                     <a :href="episode.audio_url" target="_blank">Media URL</a>
@@ -367,7 +367,9 @@
     div.source-img-container{
       img{
         display: block;
-        margin-top: -2px;
+        margin-top: -1px;
+        margin-left: 3px;
+        width: 25px;
       }
     }
   }
