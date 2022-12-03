@@ -25,6 +25,12 @@ const routes = [
     component: () => import('./views/SignUp')
   },
   {
+    path: '/profile',
+    name: 'profilePage',
+    meta: {layout: 'main', auth: true},
+    component: () => import('./views/ProfilePage')
+  },
+  {
     path: '/progress',
     name: 'progress',
     meta: {layout: 'main', auth: true},
