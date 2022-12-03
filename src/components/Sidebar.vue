@@ -49,6 +49,7 @@ export default {
       {"title": "Home", "url": "/", "icon": "nc-badge", "exact": true},
       {"title": "Podcast List", "url": "/podcasts/", "icon": "nc-bullet-list-67"},
       {"title": "Progress", "url": "/progress/", "icon": "nc-user-run"},
+      {"title": "Profile", "url": "/profile/", "icon": "nc-single-02"},
     ],
   }),
   computed: {
