@@ -46,9 +46,9 @@
                 </div>
               </div>
               <div class="row mb-2">
-                <div class="col-md-12 text-right">
+                <div class="col-md-3 col-xs-12 text-right control-container">
                   <el-button type="info" plain @click="updateProfile" icon="el-icon-edit" :disabled="profileEdit.hasChanges">
-                    Update
+                    Update Profile
                   </el-button>
                 </div>
               </div>
@@ -163,6 +163,11 @@ export default {
   .profile-title{
     color: #7b7979;
     font-weight: bold;
+  }
+}
+.control-container{
+  button{
+    width: 100%;
   }
 }
 </style>
