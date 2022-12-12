@@ -45,6 +45,26 @@
                   </div>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group text-left">
+                    <label>Password</label>
+                    <el-form-item prop="password_1" :class="{'is-error': profileEdit.serverErrors.password_1.length > 0}">
+                      <el-input placeholder="Password" v-model="profileEdit.form.password_1"></el-input>
+                      <input-errors :errors="profileEdit.serverErrors.password_1"></input-errors>
+                    </el-form-item>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group text-left">
+                    <label>Confirm Password</label>
+                    <el-form-item prop="password_2" :class="{'is-error': profileEdit.serverErrors.password_2.length > 0}">
+                      <el-input placeholder="Confirm Your Password" v-model="profileEdit.form.password_2"></el-input>
+                      <input-errors :errors="profileEdit.serverErrors.password_2"></input-errors>
+                    </el-form-item>
+                  </div>
+                </div>
+              </div>
               <div class="row mb-2">
                 <div class="col-md-3 col-xs-12 text-right control-container">
                   <el-button type="info" plain @click="updateProfile" icon="el-icon-edit" :disabled="profileEdit.hasChanges">
