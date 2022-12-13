@@ -48,7 +48,6 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group text-left">
-                    <label>Password</label>
                     <el-form-item prop="password_1" :class="{'is-error': profileEdit.serverErrors.password_1.length > 0}">
                       <el-input placeholder="Password" v-model="profileEdit.form.password_1"></el-input>
                       <input-errors :errors="profileEdit.serverErrors.password_1"></input-errors>
@@ -57,7 +56,6 @@
                 </div>
                 <div class="col-md-6">
                   <div class="form-group text-left">
-                    <label>Confirm Password</label>
                     <el-form-item prop="password_2" :class="{'is-error': profileEdit.serverErrors.password_2.length > 0}">
                       <el-input placeholder="Confirm Your Password" v-model="profileEdit.form.password_2"></el-input>
                       <input-errors :errors="profileEdit.serverErrors.password_2"></input-errors>
@@ -84,7 +82,7 @@
 <script>
 
 import InputErrors from "@/components/InputErrors";
-import {formIsValid} from "@/utils/podcast";
+import {fillFormErrors, formIsValid} from "@/utils/podcast";
 import axios from "axios";
 
 
@@ -100,10 +98,20 @@ export default {
     profileEdit:{
       form: {
         email: '',
+        password_1: '',
+        password_2: '',
       },
       rules: {
         email: [
-          {min: 1, max: 128, message: 'Email should be from 1 tp 128 symbols', trigger: 'blur'}
+          { type: 'email', required: true, trigger: 'blur' },
+        ],
+        password_1: [
+          {required: true, message: 'Please input your password', trigger: 'change'},
+          {max: 32, message: 'Password should up to 32', trigger: 'blur'}
+        ],
+        password_2: [
+          {required: true, message: 'Please repeat your password', trigger: 'change'},
+          {max: 32, message: 'Password should up to 32', trigger: 'blur'}
         ],
       },
       serverErrors:{
@@ -131,13 +139,17 @@ export default {
   },
   mounted() {
     setTimeout(() => {this.matchHeight()}, 100)
-    // this.matchHeight()
   },
   destroyed() {
   },
   watch: {
     // changing route calls fetching data
-    $route: 'fetchData'
+    $route: 'fetchData',
+    error(serverErrors){
+      fillFormErrors(serverErrors, [
+          this.profileEdit.form.serverErrors,
+      ])
+    }
   },
   methods: {
     async fetchData() {
@@ -146,21 +158,24 @@ export default {
     async updateProfile(){
       const valid = await formIsValid(this, 'profileEditForm')
       if (valid){
+        if (this.profileEdit.form.password_1.length > 0){
+          await this.changePassword()
+        } else {
+          await this.patchProfile()
+        }
+      }
+    },
+    async patchProfile(){
         const response = await axios.patch(`auth/me/`, this.profileEdit.form);
         this.profile = response.data.payload
         this.$message({type: 'success', message: 'Profile successful updated.'});
-      }
+    },
+    async changePassword(){
+        await axios.post(`auth/change-password/`, this.profileEdit.form);
+        this.$message({type: 'success', message: 'Password successful updated.'});
     },
     matchHeight () {
-      console.log(this.$refs)
-      // eslint-disable-next-line no-debugger
-      // debugger
-      console.log(this.$refs.profileFormComponent)
       let heightString = this.$refs.profileFormComponent.clientHeight + 'px';
-      // console.log(heightString)
-      // eslint-disable-next-line no-debugger
-      // debugger
-      // let heightString = document.getElementById("profile-form-component").clientHeight  + 'px';
       this.leftColStyles = {'height': heightString}
     }
   }
