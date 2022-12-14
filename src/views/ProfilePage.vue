@@ -63,10 +63,10 @@
                   </div>
                 </div>
               </div>
-              <div class="row mb-2">
-                <div class="col-md-3 col-xs-12 text-right control-container">
+              <div class="row control-container">
+                <div class="col-md-3 offset-md-9 col-xs-12 text-right">
                   <el-button type="info" plain @click="updateProfile" icon="el-icon-edit" :disabled="profileEdit.hasChanges">
-                    Update Profile
+                    Update
                   </el-button>
                 </div>
               </div>
@@ -92,7 +92,7 @@ export default {
   data: () => ({
     loading: true,
     profile: null,
-    showEditOnSmall: false,
+    showEditOnSmall: true,
     profileFormHeight: null,
     leftColStyles: { },
     profileEdit:{
@@ -116,6 +116,8 @@ export default {
       },
       serverErrors:{
         email: [],
+        password_1: [],
+        password_2: [],
       },
       hasChanges: false,
       inProgress: false,
@@ -201,6 +203,7 @@ export default {
   }
 }
 .control-container{
+  margin-top: 30px;
   button{
     width: 100%;
   }
