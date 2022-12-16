@@ -98,37 +98,29 @@ export default {
     profileEdit:{
       form: {
         email: '',
+        password_1: '',
+        password_2: '',
       },
       rules: {
         email: [
           { type: 'email', required: true, trigger: 'blur' },
         ],
-      },
-      serverErrors:{
-        email: [],
-      },
-      hasChanges: false,
-      inProgress: false,
-    },
-    changePasswordEdit:{
-      form: {
-        password_1: '',
-        password_2: '',
-      },
-      rules: {
         password_1: [
-          {required: true, message: 'Please input your password', trigger: 'change'},
+          {message: 'Please input your password', trigger: 'change'},
           {max: 32, message: 'Password should up to 32', trigger: 'blur'}
         ],
         password_2: [
-          {required: true, message: 'Please repeat your password', trigger: 'change'},
+          {message: 'Please repeat your password', trigger: 'change'},
           {max: 32, message: 'Password should up to 32', trigger: 'blur'}
         ],
       },
       serverErrors:{
+        email: [],
         password_1: [],
         password_2: [],
       },
+      hasChanges: false,
+      inProgress: false,
     },
   }),
   async created() {
@@ -166,12 +158,11 @@ export default {
       this.profile = await this.$store.dispatch('getMe'); // TODO: use already fetched profile
     },
     async updateProfile(){
-      if (this.changePasswordEdit.form.password_1.length > 0){
-        if (await formIsValid(this, 'changePasswordForm')){
+      const formValid = await formIsValid(this, 'profileEditForm')
+      if (formValid){
+        if (this.profileEdit.form.password_1.length > 0){
           await this.changePassword()
-        }
-      } else {
-        if (await formIsValid(this, 'profileEditForm')){
+        } else {
           await this.patchProfile()
         }
       }
