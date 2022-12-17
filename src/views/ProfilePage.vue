@@ -137,19 +137,23 @@ export default {
         "route": null
       },
     ])
-
   },
   mounted() {
     setTimeout(() => {this.matchHeight()}, 100)
   },
   destroyed() {
   },
+  computed: {
+    error() {
+      return this.$store.getters.error
+    }
+  },
   watch: {
     // changing route calls fetching data
     $route: 'fetchData',
     error(serverErrors){
       fillFormErrors(serverErrors, [
-          this.profileEdit.form.serverErrors,
+          this.profileEdit.serverErrors,
       ])
     }
   },
@@ -160,21 +164,19 @@ export default {
     async updateProfile(){
       const formValid = await formIsValid(this, 'profileEditForm')
       if (formValid){
-        if (this.profileEdit.form.password_1.length > 0){
-          await this.changePassword()
-        } else {
-          await this.patchProfile()
-        }
+        await this.patchProfile()
       }
     },
     async patchProfile(){
-        const response = await axios.patch(`auth/me/`, this.profileEdit.form);
-        this.profile = response.data.payload
-        this.$message({type: 'success', message: 'Profile successful updated.'});
-    },
-    async changePassword(){
-        await axios.post(`auth/change-password/`, this.profileEdit.form);
-        this.$message({type: 'success', message: 'Password successful updated.'});
+      const response = await axios.patch(`auth/me/`, this.profileEdit.form);
+      this.profile = response.data.payload
+      let msg;
+      if (this.profileEdit.form.password_1.length > 0){
+        msg = 'Profile data and password successful updated.'
+      } else {
+        msg = 'Profile successful updated.'
+      }
+      this.$message({type: 'success', message: msg});
     },
     matchHeight () {
       let heightString = this.$refs.profileFormComponent.clientHeight + 'px';
