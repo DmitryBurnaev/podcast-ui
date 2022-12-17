@@ -81,12 +81,13 @@ function humanStatus(status) {
 }
 
 function fillFormErrors(serverErrors, formErrorsList) {
-    console.log('serverErrors, formErrors', serverErrors, formErrorsList)
+    console.log('serverErrors, formErrorsList', serverErrors, formErrorsList)
     if (typeof serverErrors.details === 'object') {
         for (let key in serverErrors.details) {
             let serverError = serverErrors.details[key]
             if (serverError) {
                 formErrorsList.forEach((formErrors) => {
+                    console.log('serverError, formErrors', serverError, formErrors)
                     if (Array.isArray(serverError)) {
                         formErrors[key] = serverError
                     } else {
