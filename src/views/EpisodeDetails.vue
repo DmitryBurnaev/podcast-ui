@@ -35,39 +35,39 @@
           <div class="card-footer">
             <hr>
             <div class="button-container">
-                  <div class="row">
-                    <div class="col-lg-5 col-md-5 col-5 ml-auto text-center">
-                      <h5>{{ episode.length | length }}<br><small>Length</small></h5>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-2 ml-auto pr-1 pl-1 text-center">
-                      <span class="episode-status-icon">
-                        <i
-                            v-if="episode.status === 'new' || episode.status === 'error'"
-                            class="nc-icon text-success"
-                            :title="`${humanStatus(episode.status)} (click to download)`"
-                            @click="downloadEpisode(episode)"
-                            :class="{
-                              'nc-tap-01 cursor text-danger': episode.status === 'error',
-                              'nc-tap-01 cursor': episode.status === 'new',
-                            }"
-                        >
-                        </i>
-                        <i
-                            v-else
-                            class="nc-icon text-success"
-                            :title="humanStatus(episode.status)"
-                            :class="{
-                              'nc-cloud-download-93': episode.status === 'downloading',
-                              'nc-headphones': episode.status === 'published',
-                            }"
-                        >
-                        </i>
-                      </span>
-                    </div>
-                    <div class="col-lg-5 col-md-5 col-5 ml-auto mr-auto text-center">
-                      <h5>{{ episode.audio_size | size }} MB<br><small>Size</small></h5>
-                    </div>
-                  </div>
+              <div class="row">
+                <div class="col-lg-5 col-md-5 col-5 ml-auto text-center">
+                  <h5>{{ episode.length | length }}<br><small>Length</small></h5>
+                </div>
+                <div class="col-lg-2 col-md-2 col-2 ml-auto pr-1 pl-1 text-center">
+                  <span class="episode-status-icon">
+                    <i
+                        v-if="episode.status === 'new' || episode.status === 'error'"
+                        class="nc-icon text-success"
+                        :title="`${humanStatus(episode.status)} (click to download)`"
+                        @click="downloadEpisode(episode)"
+                        :class="{
+                          'nc-tap-01 cursor text-danger': episode.status === 'error',
+                          'nc-tap-01 cursor': episode.status === 'new',
+                        }"
+                    >
+                    </i>
+                    <i
+                        v-else
+                        class="nc-icon text-success"
+                        :title="humanStatus(episode.status)"
+                        :class="{
+                          'nc-cloud-download-93': episode.status === 'downloading',
+                          'nc-headphones': episode.status === 'published',
+                        }"
+                    >
+                    </i>
+                  </span>
+                </div>
+                <div class="col-lg-5 col-md-5 col-5 ml-auto mr-auto text-center">
+                  <h5>{{ episode.audio_size | size }} MB<br><small>Size</small></h5>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -214,7 +214,7 @@
   import axios from "axios";
   import router from "@/router";
   import {Progress} from 'element-ui';
-  import {deleteEpisode, downloadEpisode, humanStatus} from "@/utils/podcast";
+  import {deleteEpisode, downloadEpisode, getSourceBadgeIcon, humanStatus} from "@/utils/podcast";
   import {connectToWS} from "@/utils/ws";
 
   export default {
@@ -321,7 +321,7 @@
         }
       },
       getSourceBadgeIcon(){
-        return require(`../assets/img/source-${this.episode.source_type.toLowerCase()}.png`)
+        return getSourceBadgeIcon(this.episode.source_type)
       },
     }
   }
