@@ -52,5 +52,13 @@ export default {
                 return response.data.payload
             }
         },
+        async getCookies({commit}) {
+            console.log(commit)
+            const response = await axios.get('cookies/', )
+            if (response){
+                console.log("resp", response.data.payload)
+                return response.data.payload
+            }
+        },
     }
 }

@@ -14,7 +14,30 @@
           </div>
           <div class="card-footer">
             <hr>
-            <div class="button-container">
+            <h5 class="mb-3">Cookie files</h5>
+            <div class="cookies-list-container">
+              <ul class="list-unstyled episode-details">
+                <li v-for="cookie in cookies" :key="cookie.id">
+                  <div class="row cookie-row">
+                    <div class="col-2">
+                      <div class="icon-episode-detail text-center source-img-container">
+                        <img
+                            :src="getSourceBadgeIcon(cookie.sourceType)" alt=""
+                            :title="`Uploaded cookie file for ${cookie.sourceType}`"
+                        >
+                      </div>
+                    </div>
+                    <div class="col-8 cookie-info">
+                      {{cookie.createdAt | date}}
+                    </div>
+                    <div class="col-2 text-right">
+                      <div class="btn-outline-gray btn-icon" @click="deleteCookie(cookie)">
+                        <i class="nc-icon nc-simple-remove"></i>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
@@ -82,9 +105,8 @@
 <script>
 
 import InputErrors from "@/components/InputErrors";
-import {fillFormErrors, formIsValid} from "@/utils/podcast";
+import {fillFormErrors, formIsValid, getSourceBadgeIcon} from "@/utils/podcast";
 import axios from "axios";
-
 
 export default {
   name: "ProfilePage",
@@ -92,6 +114,7 @@ export default {
   data: () => ({
     loading: true,
     profile: null,
+    cookies: [],
     showEditOnSmall: true,
     profileFormHeight: null,
     leftColStyles: { },
@@ -139,7 +162,7 @@ export default {
     ])
   },
   mounted() {
-    setTimeout(() => {this.matchHeight()}, 100)
+    // setTimeout(() => {this.matchHeight()}, 100)
   },
   destroyed() {
   },
@@ -160,6 +183,7 @@ export default {
   methods: {
     async fetchData() {
       this.profile = await this.$store.dispatch('getMe'); // TODO: use already fetched profile
+      this.cookies = await this.$store.dispatch('getCookies');
     },
     async updateProfile(){
       const formValid = await formIsValid(this, 'profileEditForm')
@@ -179,9 +203,19 @@ export default {
       this.$message({type: 'success', message: msg});
     },
     matchHeight () {
+      //TODO: choose between the largest container (left or right column)
       let heightString = this.$refs.profileFormComponent.clientHeight + 'px';
       this.leftColStyles = {'height': heightString}
-    }
+    },
+    async deleteCookie(cookie){
+      await axios.delete(`cookies/${cookie.id}/`);
+      this.$message({
+        type: 'success',
+        message: `Cookie file for ${cookie.sourceType} was successful deleted`
+      });
+      this.cookies = await this.$store.dispatch('getCookies');
+    },
+    getSourceBadgeIcon: getSourceBadgeIcon
   }
 }
 </script>
@@ -209,5 +243,11 @@ export default {
   button{
     width: 100%;
   }
+}
+.cookie-info{
+  padding-top: 2px;
+}
+.cookie-row{
+  margin-bottom: 10px;
 }
 </style>
