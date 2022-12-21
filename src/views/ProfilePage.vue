@@ -14,7 +14,19 @@
           </div>
           <div class="card-footer">
             <hr>
-            <h5 class="mb-3">Cookie files</h5>
+            <div class="row mb-3" >
+              <div class="col-10">
+                <h5>Cookie files</h5>
+              </div>
+              <div class="col-2 text-right">
+                <div class="btn-outline-gray btn-icon"
+                    @click="uploadCookie()">
+                  <i class="nc-icon nc-cloud-upload-94"></i>
+                </div>
+              </div>
+            </div>
+
+
             <div class="cookies-list-container">
               <ul class="list-unstyled episode-details">
                 <li v-for="cookie in cookies" :key="cookie.id">
@@ -214,6 +226,10 @@ export default {
         message: `Cookie file for ${cookie.sourceType} was successful deleted`
       });
       this.cookies = await this.$store.dispatch('getCookies');
+    },
+    async uploadCookie(){
+      // TODO: open dialog with uploading process
+      console.log("Uploading...")
     },
     getSourceBadgeIcon: getSourceBadgeIcon
   }
