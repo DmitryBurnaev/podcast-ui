@@ -110,6 +110,47 @@
         </div>
       </div>
     </div>
+<!-- UPLOAD COOKIES DIALOG -->
+    <el-dialog :title="cookiesUploading.title" :visible.sync="cookiesUploading.dialog">
+      <el-form :model="cookiesUploading.form" ref="cookiesUploadingForm">
+        <el-select v-model="cookiesUploading.form.source_type" placeholder="Select the source">
+          <el-option
+            v-for="item in cookiesUploading.choices.sourceTypes"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+            <div class="text-left">
+<!--              TODO: move to component?-->
+                <div class="icon-episode-detail text-center source-img-container">
+                  <img
+                    :src="getSourceBadgeIcon(item.value)" alt=""
+                    :title="`Uploaded cookie file for ${item.label}`"
+                  >
+                </div>
+                {{ item.label }}
+            </div>
+          </el-option>
+        </el-select>
+<!--      TODO: add uploader form here -->
+
+
+<!--        <el-form-item prop="source_url" :class="{'is-error': cookiesUploading.serverErrors.source_url.length > 0}">-->
+<!--        <el-input-->
+<!--            placeholder="Link to the source"-->
+<!--            v-model="cookiesUploading.form.source_url"-->
+<!--            :disabled="cookiesUploading.inProgress"-->
+<!--        >-->
+<!--&lt;!&ndash;              <el-button slot="append" icon="el-icon-edit" type="success" @click="createEpisode"></el-button>&ndash;&gt;-->
+<!--        </el-input>-->
+<!--        <input-errors :errors="cookiesUploading.serverErrors.source_url"></input-errors>-->
+<!--        </el-form-item>-->
+      </el-form>
+      <hr class="hr__row-episode">
+
+      </el-dialog>
+<!-- END DIALOG -->
+
+
   </div>
 
 </template>
@@ -156,6 +197,32 @@ export default {
       },
       hasChanges: false,
       inProgress: false,
+    },
+    cookiesUploading:{
+      dialog: false,
+      title: "Uploading new cookie's file",
+      form: {
+        source_type: "",
+        file: null
+      },
+      choices: {
+        sourceTypes: [
+          {
+            "label": "Yandex",
+            "value": "YANDEX",
+          },
+          {
+            "label": "YouTube",
+            "value": "YOUTUBE",
+          },
+        ],
+      },
+      serverErrors:{
+        source_url: [],
+      },
+      inProgress: false,
+      podcast: null,
+      episode: null,
     },
   }),
   async created() {
@@ -230,6 +297,7 @@ export default {
     async uploadCookie(){
       // TODO: open dialog with uploading process
       console.log("Uploading...")
+      this.cookiesUploading.dialog = true
     },
     getSourceBadgeIcon: getSourceBadgeIcon
   }
