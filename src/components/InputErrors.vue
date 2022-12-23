@@ -7,9 +7,8 @@
 </template>
 
 <script>
-export default {
-  name: "input-errors",
-  props: ["errors"],
-}
+  export default {
+    name: "input-errors",
+    props: ["errors"],
+  }
 </script>
-

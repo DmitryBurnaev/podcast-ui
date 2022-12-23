@@ -25,21 +25,17 @@
                 </div>
               </div>
             </div>
-
-
             <div class="cookies-list-container">
               <ul class="list-unstyled episode-details">
                 <li v-for="cookie in cookies" :key="cookie.id">
                   <div class="row cookie-row">
                     <div class="col-2">
-                      <div class="icon-episode-detail text-center source-img-container">
-                        <img
-                            :src="getSourceBadgeIcon(cookie.sourceType)" alt=""
-                            :title="`Uploaded cookie file for ${cookie.sourceType}`"
-                        >
-                      </div>
+                      <source-type-icon
+                          :source-type="cookie.sourceType"
+                          :source-label="`Uploaded cookie file for ${cookie.sourceType}`">
+                      </source-type-icon>
                     </div>
-                    <div class="col-8 cookie-info">
+                    <div class="col-8 cookie-info pl-0">
                       {{cookie.createdAt | date}}
                     </div>
                     <div class="col-2 text-right">
@@ -120,13 +116,10 @@
             :label="item.label"
             :value="item.value">
             <div class="text-left">
-<!--              TODO: move to component?-->
-                <div class="icon-episode-detail text-center source-img-container">
-                  <img
-                    :src="getSourceBadgeIcon(item.value)" alt=""
-                    :title="`Uploaded cookie file for ${item.label}`"
-                  >
-                </div>
+                <source-type-icon
+                    :source-type="item.value"
+                    :source-label="`Upload cookie file for ${item.label}`">
+                </source-type-icon>
                 {{ item.label }}
             </div>
           </el-option>
@@ -158,12 +151,13 @@
 <script>
 
 import InputErrors from "@/components/InputErrors";
-import {fillFormErrors, formIsValid, getSourceBadgeIcon} from "@/utils/podcast";
+import SourceTypeIcon from "@/components/SourceTypeIcon";
+import {fillFormErrors, formIsValid} from "@/utils/podcast";
 import axios from "axios";
 
 export default {
   name: "ProfilePage",
-  components: {InputErrors},
+  components: {InputErrors, SourceTypeIcon},
   data: () => ({
     loading: true,
     profile: null,
@@ -299,39 +293,39 @@ export default {
       console.log("Uploading...")
       this.cookiesUploading.dialog = true
     },
-    getSourceBadgeIcon: getSourceBadgeIcon
+    // getSourceBadgeIcon: getSourceBadgeIcon
   }
 }
 </script>
 
 <style lang="scss">
-.card-background{
-  img{
-    filter: blur(1.5px);
+  .card-background{
+    img{
+      filter: blur(1.5px);
+    }
   }
-}
-.card-profile{
-  .card-body{
-    min-height: initial;
+  .card-profile{
+    .card-body{
+      min-height: initial;
+    }
+    .avatar{
+      margin-bottom: 25px;
+    }
+    .profile-title{
+      color: #7b7979;
+      font-weight: bold;
+    }
   }
-  .avatar{
-    margin-bottom: 25px;
+  .control-container{
+    margin-top: 30px;
+    button{
+      width: 100%;
+    }
   }
-  .profile-title{
-    color: #7b7979;
-    font-weight: bold;
+  .cookie-info{
+    padding-top: 2px;
   }
-}
-.control-container{
-  margin-top: 30px;
-  button{
-    width: 100%;
+  .cookie-row{
+    margin-bottom: 10px;
   }
-}
-.cookie-info{
-  padding-top: 2px;
-}
-.cookie-row{
-  margin-bottom: 10px;
-}
 </style>
