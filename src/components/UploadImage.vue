@@ -80,10 +80,10 @@ export default {
 </script>
 
 <style lang="scss">
-img.avatar{
-  cursor: pointer;
-}
-img.vicp-img{
-  max-width: none;
-}
+  img.avatar{
+    cursor: pointer;
+  }
+  img.vicp-img{
+    max-width: none;
+  }
 </style>

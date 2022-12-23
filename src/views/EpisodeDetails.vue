@@ -122,9 +122,10 @@
               <li>
                 <div class="row">
                   <div class="col-2">
-                    <div class="icon-episode-detail text-center source-img-container">
-                      <img :src="getSourceBadgeIcon()" alt="" :title="episode.title">
-                    </div>
+                    <source-type-icon
+                        :source-type="episode.source_type"
+                        :source-label="`Downloaded from ${episode.source_type} '${episode.title}'`">
+                    </source-type-icon>
                   </div>
                   <div class="col-10 details-info">
                     <a :href="episode.watch_url" target="_blank">Source URL</a>
@@ -144,7 +145,6 @@
             </ul>
           </div>
         </div>
-
       </div>
       <div class="col-md-8">
         <div class="card card-podcast card-user">
@@ -201,20 +201,17 @@
         </div>
       </div>
     </div>
-
   </div>
-
-
-
 
 </template>
 
 <script>
   import AudioPlayer from "@/components/AudioPlayer";
+  import SourceTypeIcon from "@/components/SourceTypeIcon";
   import axios from "axios";
   import router from "@/router";
   import {Progress} from 'element-ui';
-  import {deleteEpisode, downloadEpisode, getSourceBadgeIcon, humanStatus} from "@/utils/podcast";
+  import {deleteEpisode, downloadEpisode, humanStatus} from "@/utils/podcast";
   import {connectToWS} from "@/utils/ws";
 
   export default {
@@ -222,6 +219,7 @@
     components: {
       AudioPlayer,
       'el-progress': Progress,
+      SourceTypeIcon,
     },
     data: () => ({
         loading: true,
@@ -320,9 +318,6 @@
             })
         }
       },
-      getSourceBadgeIcon(){
-        return getSourceBadgeIcon(this.episode.source_type)
-      },
     }
   }
 </script>
@@ -364,7 +359,7 @@
     div.details-info{
       padding-top: 1px;
     }
-    div.source-img-container{
+    .source-type-img-container{
       img{
         display: block;
         margin-top: -1px;
