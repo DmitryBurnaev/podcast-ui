@@ -28,6 +28,7 @@
                       :headers="uploadParams.headers"
                       drag
                       multiple
+                      accept="audio/*"
                       :limit="uploadParams.maxFiles"
                       :on-exceed="handleUploadLimitExceed"
                       :on-success="handleUploadSuccess"

@@ -20,7 +20,7 @@
               </div>
               <div class="col-2 text-right">
                 <div class="btn-outline-gray btn-icon"
-                    @click="uploadCookie()">
+                    @click="uploadCookieOpenDialog()">
                   <i class="nc-icon nc-cloud-upload-94"></i>
                 </div>
               </div>
@@ -96,7 +96,7 @@
               </div>
               <div class="row control-container">
                 <div class="col-md-3 offset-md-9 col-xs-12 text-right">
-                  <el-button type="info" plain @click="updateProfile" icon="el-icon-edit" :disabled="profileEdit.hasChanges">
+                  <el-button type="info" plain @click="updateProfile" icon="el-icon-edit">
                     Update
                   </el-button>
                 </div>
@@ -108,8 +108,10 @@
     </div>
 <!-- UPLOAD COOKIES DIALOG -->
     <el-dialog :title="cookiesUploading.title" :visible.sync="cookiesUploading.dialog">
-      <el-form :model="cookiesUploading.form" ref="cookiesUploadingForm">
-        <el-select v-model="cookiesUploading.form.source_type" placeholder="Select the source">
+      <el-form :model="cookiesUploading.form" ref="cookiesUploadingForm" :rules="cookiesUploading.rules" class="cookie-upload-form">
+        <div class="row">
+          <div class="col-md-4 col-xs-12 input-container">
+            <el-select v-model="cookiesUploading.form.source_type" placeholder="Select the source">
           <el-option
             v-for="item in cookiesUploading.choices.sourceTypes"
             :key="item.value"
@@ -124,23 +126,23 @@
             </div>
           </el-option>
         </el-select>
-<!--      TODO: add uploader form here -->
-
-
-<!--        <el-form-item prop="source_url" :class="{'is-error': cookiesUploading.serverErrors.source_url.length > 0}">-->
-<!--        <el-input-->
-<!--            placeholder="Link to the source"-->
-<!--            v-model="cookiesUploading.form.source_url"-->
-<!--            :disabled="cookiesUploading.inProgress"-->
-<!--        >-->
-<!--&lt;!&ndash;              <el-button slot="append" icon="el-icon-edit" type="success" @click="createEpisode"></el-button>&ndash;&gt;-->
-<!--        </el-input>-->
-<!--        <input-errors :errors="cookiesUploading.serverErrors.source_url"></input-errors>-->
-<!--        </el-form-item>-->
+            <input-errors :errors="cookiesUploading.serverErrors.source_type"></input-errors>
+          </div>
+          <div class="col-md-8 col-xs-12 input-container">
+            <el-input v-model="cookiesUploading.form.file" type="file" accept="text/plain"></el-input>
+            <input-errors :errors="profileEdit.serverErrors.file"></input-errors>
+          </div>
+        </div>
+        <hr class="hr__row-episode">
+        <div class="row control-container">
+          <div class="col-md-3 offset-md-9 col-xs-12 text-right">
+            <el-button type="info" plain @click="submitCookieFormUpload">
+              Upload
+            </el-button>
+          </div>
+        </div>
       </el-form>
-      <hr class="hr__row-episode">
-
-      </el-dialog>
+    </el-dialog>
 <!-- END DIALOG -->
 
 
@@ -189,15 +191,20 @@ export default {
         password_1: [],
         password_2: [],
       },
-      hasChanges: false,
-      inProgress: false,
     },
     cookiesUploading:{
       dialog: false,
       title: "Uploading new cookie's file",
+      fileChosen: false,
       form: {
         source_type: "",
         file: null
+      },
+      rules: {
+        source_type: [
+          { required: true, trigger: 'blur' },
+        ],
+
       },
       choices: {
         sourceTypes: [
@@ -212,11 +219,12 @@ export default {
         ],
       },
       serverErrors:{
-        source_url: [],
+        source_type: [],
+        file: [],
       },
-      inProgress: false,
       podcast: null,
       episode: null,
+      fileList: [],
     },
   }),
   async created() {
@@ -250,6 +258,7 @@ export default {
     error(serverErrors){
       fillFormErrors(serverErrors, [
           this.profileEdit.serverErrors,
+          this.cookiesUploading.serverErrors,
       ])
     }
   },
@@ -288,12 +297,23 @@ export default {
       });
       this.cookies = await this.$store.dispatch('getCookies');
     },
-    async uploadCookie(){
-      // TODO: open dialog with uploading process
-      console.log("Uploading...")
+    async uploadCookieOpenDialog(){
       this.cookiesUploading.dialog = true
     },
-    // getSourceBadgeIcon: getSourceBadgeIcon
+    async submitCookieFormUpload() {
+      const formValid = await formIsValid(this, 'cookiesUploadingForm')
+      if (!formValid){
+        const formData = new FormData();
+        formData.append("file", this.cookiesUploading.form.file)
+        formData.append("source_type", this.cookiesUploading.form.source_type)
+        await axios.post(`/cookies/`, formData);
+
+        let msg = `Cookie for the source ${this.cookiesUploading.form.source_type} successful uploaded`
+        this.$message({type: 'success', message: msg});
+        this.cookies = await this.$store.dispatch('getCookies');
+        this.cookiesUploading.dialog = false;
+      }
+    },
   }
 }
 </script>
@@ -327,5 +347,13 @@ export default {
   }
   .cookie-row{
     margin-bottom: 10px;
+  }
+  .cookie-upload-form{
+    .input-container{
+      margin-bottom: 15px;
+      .el-select{
+        width: 100%;
+      }
+    }
   }
 </style>
