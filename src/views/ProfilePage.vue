@@ -108,28 +108,37 @@
     </div>
 <!-- UPLOAD COOKIES DIALOG -->
     <el-dialog :title="cookiesUploading.title" :visible.sync="cookiesUploading.dialog">
-      <el-form :model="cookiesUploading.form" ref="cookiesUploadingForm" :rules="cookiesUploading.rules" class="cookie-upload-form">
+      <el-form
+          ref="cookiesUploadingForm"
+          class="cookie-upload-form"
+          :model="cookiesUploading.form"
+          :rules="cookiesUploading.rules"
+      >
         <div class="row">
           <div class="col-md-4 col-xs-12 input-container">
-            <el-select v-model="cookiesUploading.form.source_type" placeholder="Select the source">
-          <el-option
-            v-for="item in cookiesUploading.choices.sourceTypes"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-            <div class="text-left">
-                <source-type-icon
-                    :source-type="item.value"
-                    :source-label="`Upload cookie file for ${item.label}`">
-                </source-type-icon>
-                {{ item.label }}
-            </div>
-          </el-option>
-        </el-select>
+            <el-select
+                v-model="cookiesUploading.form.source_type"
+                placeholder="Select the source"
+                :class="{'is-error': cookiesUploading.serverErrors.source_type.length > 0}"
+            >
+              <el-option
+                v-for="item in cookiesUploading.choices.sourceTypes"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+                <div class="text-left">
+                    <source-type-icon
+                        :source-type="item.value"
+                        :source-label="`Upload cookie file for ${item.label}`">
+                    </source-type-icon>
+                    {{ item.label }}
+                </div>
+              </el-option>
+            </el-select>
             <input-errors :errors="cookiesUploading.serverErrors.source_type"></input-errors>
           </div>
           <div class="col-md-8 col-xs-12 input-container">
-            <el-input v-model="cookiesUploading.form.file" type="file" accept="text/plain"></el-input>
+            <input-file v-model="cookiesUploading.form.file" accept="text/plain"></input-file>
             <input-errors :errors="profileEdit.serverErrors.file"></input-errors>
           </div>
         </div>
@@ -154,12 +163,13 @@
 
 import InputErrors from "@/components/InputErrors";
 import SourceTypeIcon from "@/components/SourceTypeIcon";
+import InputFile from "@/components/InputFile";
 import {fillFormErrors, formIsValid} from "@/utils/podcast";
 import axios from "axios";
 
 export default {
   name: "ProfilePage",
-  components: {InputErrors, SourceTypeIcon},
+  components: {InputErrors, SourceTypeIcon, InputFile},
   data: () => ({
     loading: true,
     profile: null,
@@ -197,14 +207,16 @@ export default {
       title: "Uploading new cookie's file",
       fileChosen: false,
       form: {
-        source_type: "",
+        source_type: null,
         file: null
       },
       rules: {
         source_type: [
           { required: true, trigger: 'blur' },
         ],
-
+        file: [
+          { required: true, trigger: 'blur' },
+        ],
       },
       choices: {
         sourceTypes: [
@@ -302,11 +314,17 @@ export default {
     },
     async submitCookieFormUpload() {
       const formValid = await formIsValid(this, 'cookiesUploadingForm')
-      if (!formValid){
+      if (formValid){
         const formData = new FormData();
         formData.append("file", this.cookiesUploading.form.file)
         formData.append("source_type", this.cookiesUploading.form.source_type)
-        await axios.post(`/cookies/`, formData);
+        // eslint-disable-next-line no-debugger
+        debugger;
+        await axios.post(
+            `/cookies/`,
+            formData,
+            {headers: {'Content-Type': 'multipart/form-data'}}
+        );
 
         let msg = `Cookie for the source ${this.cookiesUploading.form.source_type} successful uploaded`
         this.$message({type: 'success', message: msg});
