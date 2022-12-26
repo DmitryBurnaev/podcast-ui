@@ -138,7 +138,9 @@
             <input-errors :errors="cookiesUploading.serverErrors.source_type"></input-errors>
           </div>
           <div class="col-md-8 col-xs-12 input-container">
-            <input-file v-model="cookiesUploading.form.file" accept="text/plain"></input-file>
+            <div class="el-input">
+              <input class="el-input__inner" type="file" @change="onChangeUploadingCookieFile" name="file" accept="text/plain" />
+            </div>
             <input-errors :errors="profileEdit.serverErrors.file"></input-errors>
           </div>
         </div>
@@ -163,13 +165,12 @@
 
 import InputErrors from "@/components/InputErrors";
 import SourceTypeIcon from "@/components/SourceTypeIcon";
-import InputFile from "@/components/InputFile";
 import {fillFormErrors, formIsValid} from "@/utils/podcast";
 import axios from "axios";
 
 export default {
   name: "ProfilePage",
-  components: {InputErrors, SourceTypeIcon, InputFile},
+  components: {InputErrors, SourceTypeIcon},
   data: () => ({
     loading: true,
     profile: null,
@@ -311,6 +312,9 @@ export default {
     },
     async uploadCookieOpenDialog(){
       this.cookiesUploading.dialog = true
+    },
+    onChangeUploadingCookieFile(event){
+      this.cookiesUploading.form.file = event.target.files[0]
     },
     async submitCookieFormUpload() {
       const formValid = await formIsValid(this, 'cookiesUploadingForm')
