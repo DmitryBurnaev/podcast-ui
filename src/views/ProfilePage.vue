@@ -2,13 +2,13 @@
   <div class="content" v-if="!loading" ref="myContent">
     <div class="row">
       <div class="col-md-4">
-        <div class="card card-profile card-user" :style="leftColStyles">
+        <div class="card card-profile card-user" ref="profileLeftComponent">
           <div class="image card-background" >
             <img src="../assets/img/podcast-background.jpg" alt="avatar">
           </div>
           <div class="card-body">
             <div class="author">
-              <img class="avatar avatar-episode border-gray" src="../assets/img/python-avatar.jpg" alt="...">
+              <img class="avatar border-gray" src="../assets/img/python-avatar.jpg" alt="...">
               <p class="profile-title">{{ profile.email }}</p>
             </div>
           </div>
@@ -51,7 +51,7 @@
         </div>
       </div>
       <div class="col-md-8">
-        <div class="card card-podcast card-user" id="profile-form-component" ref="profileFormComponent">
+        <div class="card card-podcast card-user" :style="rightColStyles" id="profile-form-component">
           <div class="card-header card-header-squash">
             <h5 class="card-title" >Profile</h5>
             <div class="header-controls d-block d-sm-none">
@@ -79,29 +79,31 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group text-left">
+                    <label>Your password (if you need to change it)</label>
                     <el-form-item prop="password_1" :class="{'is-error': profileEdit.serverErrors.password_1.length > 0}">
-                      <el-input placeholder="Password" v-model="profileEdit.form.password_1"></el-input>
+                      <el-input type="password" placeholder="Password" v-model="profileEdit.form.password_1"></el-input>
                       <input-errors :errors="profileEdit.serverErrors.password_1"></input-errors>
                     </el-form-item>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group text-left">
+                    <label>Repeat your password (for changing)</label>
                     <el-form-item prop="password_2" :class="{'is-error': profileEdit.serverErrors.password_2.length > 0}">
-                      <el-input placeholder="Confirm Your Password" v-model="profileEdit.form.password_2"></el-input>
+                      <el-input type="password" placeholder="Confirm Your Password" v-model="profileEdit.form.password_2"></el-input>
                       <input-errors :errors="profileEdit.serverErrors.password_2"></input-errors>
                     </el-form-item>
                   </div>
                 </div>
               </div>
-              <div class="row control-container">
-                <div class="col-md-3 offset-md-9 col-xs-12 text-right">
-                  <el-button type="info" plain @click="updateProfile" icon="el-icon-edit">
-                    Update
-                  </el-button>
-                </div>
-              </div>
             </el-form>
+            <div class="row control-container bottom-controllers">
+              <div class="col-md-3 offset-md-9 col-xs-12 text-right">
+                <el-button type="info" plain @click="updateProfile" icon="el-icon-edit">
+                  Update
+                </el-button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -177,7 +179,7 @@ export default {
     cookies: [],
     showEditOnSmall: true,
     profileFormHeight: null,
-    leftColStyles: { },
+    rightColStyles: { },
     profileEdit:{
       form: {
         email: '',
@@ -256,7 +258,7 @@ export default {
     ])
   },
   mounted() {
-    // setTimeout(() => {this.matchHeight()}, 100)
+    setTimeout(() => {this.matchHeight()}, 100)
   },
   destroyed() {
   },
@@ -298,9 +300,8 @@ export default {
       this.$message({type: 'success', message: msg});
     },
     matchHeight () {
-      //TODO: choose between the largest container (left or right column)
-      let heightString = this.$refs.profileFormComponent.clientHeight + 'px';
-      this.leftColStyles = {'height': heightString}
+      let heightString = this.$refs.profileLeftComponent.clientHeight + 'px';
+      this.rightColStyles = {'height': heightString}
     },
     async deleteCookie(cookie){
       await axios.delete(`cookies/${cookie.id}/`);
@@ -322,8 +323,6 @@ export default {
         const formData = new FormData();
         formData.append("file", this.cookiesUploading.form.file)
         formData.append("source_type", this.cookiesUploading.form.source_type)
-        // eslint-disable-next-line no-debugger
-        debugger;
         await axios.post(
             `/cookies/`,
             formData,
@@ -376,6 +375,14 @@ export default {
       .el-select{
         width: 100%;
       }
+    }
+  }
+  @media screen and (min-width: 768px){
+    .bottom-controllers{
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      width: 100%;
     }
   }
 </style>
