@@ -28,7 +28,7 @@ const routes = [
     path: '/profile',
     name: 'profilePage',
     meta: {layout: 'main', auth: true},
-    component: () => import('./views/ProfilePage')
+    component: () => import('./views/UserProfile')
   },
   {
     path: '/progress',

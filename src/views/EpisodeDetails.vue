@@ -1,7 +1,7 @@
 <template>
   <div class="content" v-if="!loading">
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-4" ref="episodeLeftFooter">
         <div class="card card-podcast card-user">
           <div class="image card-background" >
             <img v-if="podcast.image_url" :src="podcast.image_url" :alt="podcast.name">
@@ -147,7 +147,7 @@
         </div>
       </div>
       <div class="col-md-8">
-        <div class="card card-podcast card-user">
+        <div class="card card-podcast card-user card-right-column" >
           <div class="card-header card-header-squash">
             <h5 class="card-title"  @click="showEditOnSmall = !showEditOnSmall">Edit Episode</h5>
             <div class="header-controls d-block d-sm-none">
@@ -181,11 +181,11 @@
                 <div class="col-12">
                   <div class="form-group text-left">
                     <label>Description</label>
-                    <textarea class="form-control textarea" v-model="form.description" rows="15"></textarea>
+                    <textarea class="form-control textarea episode-description" v-model="form.description"></textarea>
                   </div>
                 </div>
               </div>
-              <div class="row mb-2">
+              <div class="row mb-2 bottom-controllers">
                 <div class="col-4 text-left">
                   <el-button type="info" plain @click="updateEpisode" icon="el-icon-edit">Update</el-button>
                 </div>
@@ -234,6 +234,7 @@
         showEditOnSmall: false,
         showDetailsOnSmall: false,
         webSocket: null,
+        episodeRightColStyles: {},
     }),
     async created() {
       await this.fetchData()
@@ -275,6 +276,7 @@
         this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
         this.episode = await this.$store.dispatch('getEpisodeDetails', episodeID)
         this.updateProgress()
+        // setTimeout(() => {this.matchHeight()}, 200)
       },
       async updateEpisode(){
         const response = await axios.patch(`episodes/${this.episode.id}/`, this.form);
@@ -390,6 +392,27 @@
   .pre-progress{
     i{
       font-size: 20pt;
+    }
+  }
+  .card-right-column{
+    .episode-description{
+      min-height: 360px;
+    }
+  }
+  @media screen and (min-width: 768px){
+    .bottom-controllers{
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+    }
+    .card-episode-details{
+      margin-bottom: 0;
+    }
+    .card-right-column{
+      height: 100%;
+      .episode-description{
+        min-height: 360px;
+      }
     }
   }
 </style>
