@@ -2,7 +2,7 @@
   <div class="content" v-if="!loading" ref="myContent">
     <div class="row">
       <div class="col-md-4">
-        <div class="card card-profile card-user" ref="profileLeftComponent">
+        <div class="card card-profile card-user card-user-left-column" ref="profileLeftComponent">
           <div class="image card-background" >
             <img src="../assets/img/podcast-background.jpg" alt="avatar">
           </div>
@@ -51,7 +51,7 @@
         </div>
       </div>
       <div class="col-md-8">
-        <div class="card card-podcast card-user" :style="rightColStyles" id="profile-form-component">
+        <div class="card card-podcast card-user card-user-right-column" id="profile-form-component">
           <div class="card-header card-header-squash">
             <h5 class="card-title" >Profile</h5>
             <div class="header-controls d-block d-sm-none">
@@ -171,7 +171,7 @@ import {fillFormErrors, formIsValid} from "@/utils/podcast";
 import axios from "axios";
 
 export default {
-  name: "ProfilePage",
+  name: "UserProfile",
   components: {InputErrors, SourceTypeIcon},
   data: () => ({
     loading: true,
@@ -257,11 +257,6 @@ export default {
       },
     ])
   },
-  mounted() {
-    setTimeout(() => {this.matchHeight()}, 100)
-  },
-  destroyed() {
-  },
   computed: {
     error() {
       return this.$store.getters.error
@@ -299,10 +294,6 @@ export default {
       }
       this.$message({type: 'success', message: msg});
     },
-    matchHeight () {
-      let heightString = this.$refs.profileLeftComponent.clientHeight + 'px';
-      this.rightColStyles = {'height': heightString}
-    },
     async deleteCookie(cookie){
       await axios.delete(`cookies/${cookie.id}/`);
       this.$message({
@@ -328,7 +319,6 @@ export default {
             formData,
             {headers: {'Content-Type': 'multipart/form-data'}}
         );
-
         let msg = `Cookie for the source ${this.cookiesUploading.form.source_type} successful uploaded`
         this.$message({type: 'success', message: msg});
         this.cookies = await this.$store.dispatch('getCookies');
@@ -378,6 +368,12 @@ export default {
     }
   }
   @media screen and (min-width: 768px){
+    .card-user-right-column{
+        height: 100%;
+    }
+    .card-user-left-column{
+      margin-bottom: 0;
+    }
     .bottom-controllers{
       position: absolute;
       right: 20px;
