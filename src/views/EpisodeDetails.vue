@@ -160,28 +160,31 @@
             </div>
           </div>
           <div class="card-body"  :class="{'hide-on-small': !showEditOnSmall}">
-            <el-form ref="form" :model="form">
+            <el-form ref="form" :model="episodeEdit.form">
               <div class="row">
                 <div class="col-12">
-                  <div class="form-group text-left">
+                  <div class="form-group text-left" :class="{'has-error': episodeEdit.serverErrors.title.length > 0 }">
                     <label>Title</label>
-                    <textarea class="form-control textarea" v-model="form.title" rows="2" placeholder="Podcast Title"></textarea>
+                    <textarea class="form-control textarea" v-model="episodeEdit.form.title" rows="2" placeholder="Episode's Title"/>
+                    <input-errors :errors="episodeEdit.serverErrors.title" />
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-12">
-                  <div class="form-group text-left">
+                  <div class="form-group text-left" :class="{'has-error': episodeEdit.serverErrors.author.length > 0 }">
                     <label>Author</label>
-                    <input type="text" class="form-control textarea" v-model="form.author" placeholder="Podcast Title">
+                    <input type="text" class="form-control textarea" v-model="episodeEdit.form.author">
+                    <input-errors :errors="episodeEdit.serverErrors.author" />
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-12">
-                  <div class="form-group text-left">
+                  <div class="form-group text-left" :class="{'has-error': episodeEdit.serverErrors.description.length > 0 }">
                     <label>Description</label>
-                    <textarea class="form-control textarea episode-description" v-model="form.description"></textarea>
+                    <textarea class="form-control textarea episode-description" v-model="episodeEdit.form.description"/>
+                    <input-errors :errors="episodeEdit.serverErrors.description" />
                   </div>
                 </div>
               </div>
@@ -211,36 +214,55 @@
   import axios from "axios";
   import router from "@/router";
   import {Progress} from 'element-ui';
-  import {deleteEpisode, downloadEpisode, humanStatus} from "@/utils/podcast";
+  import {deleteEpisode, downloadEpisode, fillFormErrors, humanStatus} from "@/utils/podcast";
   import {connectToWS} from "@/utils/ws";
+  import InputErrors from "@/components/InputErrors.vue";
 
   export default {
     name: 'EpisodeDetailsView',
     components: {
+      InputErrors,
       AudioPlayer,
       'el-progress': Progress,
       SourceTypeIcon,
     },
     data: () => ({
-        loading: true,
-        episode: null,
-        podcast: null,
-        progress: null,
+      loading: true,
+      episode: null,
+      podcast: null,
+      progress: null,
+      form: {
+        title: '',
+        author: '',
+        description: ''
+      },
+      episodeEdit:{
         form: {
           title: '',
           author: '',
           description: ''
         },
-        showEditOnSmall: false,
-        showDetailsOnSmall: false,
-        webSocket: null,
-        episodeRightColStyles: {},
+        serverErrors:{
+          title: [],
+          author: [],
+          description: [],
+        },
+        defaultServerErrors:{
+          title: [],
+          author: [],
+          description: [],
+        },
+      },
+      showEditOnSmall: false,
+      showDetailsOnSmall: false,
+      webSocket: null,
+      episodeRightColStyles: {},
     }),
     async created() {
       await this.fetchData()
-      this.form.title = this.episode.title;
-      this.form.author = this.episode.author;
-      this.form.description = this.episode.description;
+      this.episodeEdit.form.title = this.episode.title || "";
+      this.episodeEdit.form.author = this.episode.author || "";
+      this.episodeEdit.form.description = this.episode.description || "";
       this.loading = false;
       this.$store.commit('setBreadcrumbs', [
         {
@@ -265,9 +287,19 @@
     destroyed() {
       if (this.webSocket) {this.webSocket.close()}
     },
+    computed: {
+      error() {
+        return this.$store.getters.error
+      }
+    },
     watch: {
       // changing route calls fetching data
-      $route: 'fetchData'
+      $route: 'fetchData',
+      error(serverErrors){
+        fillFormErrors(serverErrors, [
+            this.episodeEdit.serverErrors
+        ])
+      }
     },
     methods: {
       async fetchData() {
@@ -275,11 +307,12 @@
         const podcastID = this.$route.params.podcastID
         this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
         this.episode = await this.$store.dispatch('getEpisodeDetails', episodeID)
+        this.episodeEdit.serverErrors = {...this.episodeEdit.defaultServerErrors}
         this.updateProgress()
-        // setTimeout(() => {this.matchHeight()}, 200)
       },
       async updateEpisode(){
-        const response = await axios.patch(`episodes/${this.episode.id}/`, this.form);
+        this.episodeEdit.serverErrors = {...this.episodeEdit.defaultServerErrors}
+        const response = await axios.patch(`episodes/${this.episode.id}/`, this.episodeEdit.form);
         this.episode = response.data.payload
         this.$message({type: 'success', message: 'Episode successful updated.'});
       },
@@ -397,6 +430,15 @@
   .card-right-column{
     .episode-description{
       min-height: 360px;
+    }
+  }
+  .has-error{
+    margin-bottom: 30px !important;
+    input{
+      border-color: red;
+    }
+    textarea{
+      border-color: red;
     }
   }
   @media screen and (min-width: 768px){
