@@ -95,16 +95,16 @@
               <br/>
               <span
                   :class="{
-                    'text-success': (episodeCreation.episode.status === 'published'),
-                    'text-danger': (episodeCreation.episode.status === 'error'),
-                    'text-info': (['new', 'downloading'].includes(episodeCreation.episode.status)),
-                    'text-gray': (episodeCreation.episode.status === 'archived')
+                    'text-success': (episodeCreation.episode.status === 'PUBLISHED'),
+                    'text-danger': (episodeCreation.episode.status === 'ERROR'),
+                    'text-info': (['NEW', 'DOWNLOADING'].includes(episodeCreation.episode.status)),
+                    'text-gray': (episodeCreation.episode.status === 'ARCHIVED')
                   }">
                 <small>{{ humanStatus(episodeCreation.episode.status) }}</small>
               </span>
             </div>
             <div class="col-md-1 col-1 text-right episode-controls">
-              <img class="preload mr-1 mt-2" v-if="episodeCreation.episode.status === 'downloading'" src="../assets/img/down-arrow.gif" alt=""/>
+              <img class="preload mr-1 mt-2" v-if="episodeCreation.episode.status === 'DOWNLOADING'" src="../assets/img/down-arrow.gif" alt=""/>
             </div>
           </div>
         </div>

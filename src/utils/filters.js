@@ -27,11 +27,11 @@ function audioLengthFilter(value){
 
 function humanStatusFilter(status){
     const statuses = {
-        "new": "New",
-        "downloading": "Downloading",
-        "published": "Published",
-        "archived": "Archived",
-        "error": "Error"
+        "NEW": "New",
+        "DOWNLOADING": "Downloading",
+        "PUBLISHED": "Published",
+        "ARCHIVED": "Archived",
+        "ERROR": "Error"
     }
     return statuses[status] || status
 }

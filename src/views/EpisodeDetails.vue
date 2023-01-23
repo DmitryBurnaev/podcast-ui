@@ -17,17 +17,17 @@
               <div v-else>
                 <div v-if="progress !== null" class="progress-line-block d-sm-block">
                   <p class="text-muted">{{ humanStatus(progress.status) }}</p>
-                  <el-progress v-if="progress.status === 'error'" :percentage="progress.completed" status="exception"></el-progress>
+                  <el-progress v-if="progress.status === 'ERROR'" :percentage="progress.completed" status="exception"></el-progress>
                   <el-progress v-else :percentage="parseInt(progress.completed)" ></el-progress>
                 </div>
                 <div v-else class="pre-progress">
                   <p :class="{
-                      'text-danger': (episode.status === 'error'),
-                      'text-muted': (['new', 'downloading'].includes(episode.status)),}">
+                      'text-danger': (episode.status === 'ERROR'),
+                      'text-muted': (['NEW', 'DOWNLOADING'].includes(episode.status)),}">
                     {{ humanStatus(episode.status) }}
                   </p>
-                  <i v-if="episode.status === 'new'" class="text-muted nc-icon el-icon-star-off"></i>
-                  <i v-else-if="episode.status === 'error'" class="text-danger nc-icon el-icon-warning"></i>
+                  <i v-if="episode.status === 'NEW'" class="text-muted nc-icon el-icon-star-off"></i>
+                  <i v-else-if="episode.status === 'ERROR'" class="text-danger nc-icon el-icon-warning"></i>
                 </div>
               </div>
             </div>
@@ -42,13 +42,13 @@
                 <div class="col-lg-2 col-md-2 col-2 ml-auto pr-1 pl-1 text-center">
                   <span class="episode-status-icon">
                     <i
-                        v-if="episode.status === 'new' || episode.status === 'error'"
+                        v-if="episode.status === 'NEW' || episode.status === 'ERROR'"
                         class="nc-icon text-success"
                         :title="`${humanStatus(episode.status)} (click to download)`"
                         @click="downloadEpisode(episode)"
                         :class="{
-                          'nc-tap-01 cursor text-danger': episode.status === 'error',
-                          'nc-tap-01 cursor': episode.status === 'new',
+                          'nc-tap-01 cursor text-danger': episode.status === 'ERROR',
+                          'nc-tap-01 cursor': episode.status === 'NEW',
                         }"
                     >
                     </i>
@@ -57,8 +57,8 @@
                         class="nc-icon text-success"
                         :title="humanStatus(episode.status)"
                         :class="{
-                          'nc-cloud-download-93': episode.status === 'downloading',
-                          'nc-headphones': episode.status === 'published',
+                          'nc-cloud-download-93': episode.status === 'DOWNLOADING',
+                          'nc-headphones': episode.status === 'PUBLISHED',
                         }"
                     >
                     </i>
@@ -323,15 +323,15 @@
       },
       downloadEpisode(episode){
         downloadEpisode(episode, false)
-        this.episode.status = 'downloading'
+        this.episode.status = 'DOWNLOADING'
         this.updateProgress()
       },
       humanStatus: humanStatus,
       episodeInProgress(episode){
-        return episode.status === 'downloading'
+        return episode.status === 'DOWNLOADING'
       },
       episodePublished(episode){
-        return episode.status === 'published'
+        return episode.status === 'PUBLISHED'
       },
       updateProgress(){
         if (this.episodeInProgress(this.episode)){

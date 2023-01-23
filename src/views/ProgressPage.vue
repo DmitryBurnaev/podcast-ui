@@ -24,13 +24,13 @@
                   <div class="progress-line-block d-none d-sm-block">
                     <small
                       :class="{
-                        'text-danger': (progress.status === 'error'),
-                        'text-muted': (['new', 'downloading'].includes(progress.episode.status)),
+                        'text-danger': (progress.status === 'ERROR'),
+                        'text-muted': (['NEW', 'DOWNLOADING'].includes(progress.episode.status)),
                       }"
                     >
                       {{ humanStatus(progress.status) }}
                     </small>
-                    <el-progress v-if="progress.status === 'error'" :percentage="progress.completed" status="exception"></el-progress>
+                    <el-progress v-if="progress.status === 'ERROR'" :percentage="progress.completed" status="exception"></el-progress>
                     <el-progress v-else :percentage="parseInt(progress.completed)" ></el-progress>
                   </div>
                 </div>
@@ -39,13 +39,13 @@
               <div class="progress-line-block d-block d-sm-none">
                 <small
                   :class="{
-                    'text-danger': (progress.status === 'error'),
-                    'text-muted': (['new', 'downloading'].includes(progress.episode.status)),
+                    'text-danger': (progress.status === 'ERROR'),
+                    'text-muted': (['NEW', 'DOWNLOADING'].includes(progress.episode.status)),
                   }"
                 >
                   {{ humanStatus(progress.status) }}
                 </small>
-                <el-progress v-if="progress.status === 'error'" :percentage="progress.completed" status="exception"></el-progress>
+                <el-progress v-if="progress.status === 'ERROR'" :percentage="progress.completed" status="exception"></el-progress>
                 <el-progress v-else :percentage="parseInt(progress.completed)" ></el-progress>
               </div>
               <hr class="hr__row-episode">

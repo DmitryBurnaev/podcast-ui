@@ -20,15 +20,15 @@ function deleteEpisode(episode, callback) {
 }
 
 function downloadEpisode(episode, needRefresh = true) {
-    if (episode.status === 'downloading') {
+    if (episode.status === 'DOWNLOADING') {
         app.$message({type: 'warning', message: `Episode "${episode.title}" is downloading now.`});
         return
     }
 
-    if (episode.status === 'new') {
+    if (episode.status === 'NEW') {
         axios.put(`episodes/${episode.id}/download/`).then(() => {
             app.$message({type: 'success', message: `Downloading has been started.`});
-            episode.status = 'downloading'
+            episode.status = 'DOWNLOADING'
         })
     } else {
         app.$confirm('This will remove downloaded and reload new episode. Continue?', 'Warning', {
@@ -39,7 +39,7 @@ function downloadEpisode(episode, needRefresh = true) {
         }).then(() => {
             axios.put(`episodes/${episode.id}/download/`).then(() => {
                 app.$message({type: 'success', message: `Downloading has been started.`});
-                episode.status = 'downloading'
+                episode.status = 'DOWNLOADING'
             })
         });
     }
@@ -47,7 +47,7 @@ function downloadEpisode(episode, needRefresh = true) {
         let timeInterval = setInterval(() => {
             axios.get(`episodes/${episode.id}/`).then((response) => {
                 episode.status = response.data.payload.status
-                if (episode.status !== 'downloading'){
+                if (episode.status !== 'DOWNLOADING'){
                     clearInterval(timeInterval)
                 }
             })
@@ -65,17 +65,17 @@ function goToEpisode(episode, podcastID) {
 
 function humanStatus(status) {
     const statuses = {
-        "new": "New Episode",
-        "downloading": "Downloading",
-        "published": "Episode published",
-        "archived": "Archived",
-        "error": "Downloading error",
-        "pending": "Pending",
-        "episode_downloading": "Downloading",
-        "episode_postprocessing": "Post processing",
-        "episode_uploading": "Uploading to the cloud",
-        "cover_downloading": "Cover is downloading",
-        "cover_uploading": "Cover is uploading",
+        "NEW": "New Episode",
+        "DOWNLOADING": "Downloading",
+        "PUBLISHED": "Episode published",
+        "ARCHIVED": "Archived",
+        "ERROR": "Downloading error",
+        "DL_PENDING": "Pending",
+        "DL_EPISODE_DOWNLOADING": "Downloading",
+        "DL_EPISODE_POSTPROCESSING": "Post processing",
+        "DL_EPISODE_UPLOADING": "Uploading to the cloud",
+        "DL_COVER_DOWNLOADING": "Cover is downloading",
+        "DL_COVER_UPLOADING": "Cover is uploading",
     }
     return statuses[status] || status
 }
