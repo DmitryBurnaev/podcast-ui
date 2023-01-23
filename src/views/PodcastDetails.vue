@@ -188,25 +188,25 @@
                     <br/>
                     <span
                         :class="{
-                          'text-danger': (episode.status === 'error'),
-                          'text-success': (['new', 'downloading', 'published'].includes(episode.status)),
-                          'text-gray': (episode.status === 'archived')
+                          'text-danger': (episode.status === 'ERROR'),
+                          'text-success': (['NEW', 'DOWNLOADING', 'PUBLISHED'].includes(episode.status)),
+                          'text-gray': (episode.status === 'ARCHIVED')
                         }">
                       <small>{{humanStatus(episode.status)}}</small>
                     </span>
                   </div>
                   <div class="col-md-2 episode-controls">
-                      <div  v-if="episode.status === 'downloading'" class="btn-outline-gray btn-icon">
+                      <div  v-if="episode.status === 'DOWNLOADING'" class="btn-outline-gray btn-icon">
                         <i class="el-icon-loading"></i>
                       </div>
                       <div
-                          v-if="episode.status !== 'downloading'"
+                          v-if="episode.status !== 'DOWNLOADING'"
                           class="btn-outline-gray btn-icon"
                           @click="deleteEpisode(episode)">
                         <i class="nc-icon nc-simple-remove"></i>
                       </div>
                       <div
-                          v-if="episode.status === 'new' || episode.status === 'error'"
+                          v-if="episode.status === 'NEW' || episode.status === 'ERROR'"
                           class="btn-outline-gray btn-icon"
                           @click="downloadEpisode(episode)">
                         <i class="nc-icon nc-cloud-download-93"></i>
