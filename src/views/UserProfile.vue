@@ -131,7 +131,9 @@
                 <div class="text-left">
                     <source-type-icon
                         :source-type="item.value"
-                        :source-label="`Upload cookie file for ${item.label}`">
+                        :source-label="`Upload cookie file for ${item.label}`"
+                        :source-suffix="'green'"
+                    >
                     </source-type-icon>
                     {{ item.label }}
                 </div>
