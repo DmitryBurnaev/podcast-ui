@@ -90,10 +90,8 @@
                   <div class="col-md-2 col-2">
                     <div class="icon-episode-detail text-center icon-warning"><i class="nc-icon nc-ruler-pencil text-success"></i></div>
                   </div>
-                  <div class="col-md-7 col-7">
-                    {{ episode.created_at | date}}
-                    <br />
-                    <span class="text-secondary"><small>Created At</small></span>
+                  <div class="col-md-9 col-9 details-info">
+                    {{ episode.created_at | date}} <span class="text-secondary ml-2"><small>(Created At)</small></span>
                   </div>
                 </div>
               </li>
@@ -102,10 +100,8 @@
                   <div class="col-md-2 col-2">
                     <div class="icon-episode-detail text-center"><i class="nc-icon nc-spaceship text-info"></i></div>
                   </div>
-                  <div class="col-md-7 col-7">
-                    {{ episode.published_at | date}}
-                    <br />
-                    <span class="text-secondary"><small>Published At</small></span>
+                  <div class="col-md-9 col-9 details-info">
+                    {{ episode.published_at | date}} <span class="text-secondary ml-2"><small>(Published At)</small></span>
                   </div>
                 </div>
               </li>
@@ -396,10 +392,7 @@
     }
     .source-type-img-container{
       img{
-        display: block;
-        margin-top: -1px;
-        margin-left: 3px;
-        width: 25px;
+        margin-left: 5px;
       }
     }
   }

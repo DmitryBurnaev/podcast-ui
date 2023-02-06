@@ -10,11 +10,11 @@
 <script>
   export default {
     name: "source-type-icon",
-    props: ["sourceType", "sourceLabel"],
+    props: ["sourceType", "sourceLabel", "sourceSuffix"],
     methods: {
       getSourceBadgeIcon() {
-        console.log("sourceType", this.sourceType)
-        return require(`../assets/img/source-${this.sourceType.toLowerCase()}.png`)
+        let suffix = this.sourceSuffix ? `-${this.sourceSuffix}` : ''
+        return require(`../assets/img/source-${this.sourceType.toLowerCase()}${suffix}.png`)
       }
     }
   }
