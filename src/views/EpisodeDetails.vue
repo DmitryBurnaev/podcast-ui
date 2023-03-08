@@ -9,7 +9,7 @@
           </div>
           <div class="card-body">
             <div class="author">
-              <img class="avatar avatar-episode border-gray" :src="episode.image_url" alt="...">
+              <img class="avatar avatar-episode border-gray" :src="episode.image_url" :alt="episode.title" @error="defaultImage">
               <p class="title">{{ episode.title }}</p>
             </div>
             <div class="episode-content text-center mt-3">
@@ -210,7 +210,7 @@
   import axios from "axios";
   import router from "@/router";
   import {Progress} from 'element-ui';
-  import {deleteEpisode, downloadEpisode, fillFormErrors, humanStatus} from "@/utils/podcast";
+  import {deleteEpisode, downloadEpisode, fillFormErrors, humanStatus, defaultImage} from "@/utils/podcast";
   import {connectToWS} from "@/utils/ws";
   import InputErrors from "@/components/InputErrors.vue";
 
@@ -298,11 +298,11 @@
       }
     },
     methods: {
+      defaultImage,
       async fetchData() {
         const episodeID = this.$route.params.episodeID
-        const podcastID = this.$route.params.podcastID
-        this.podcast = await this.$store.dispatch('getPodcastDetails', podcastID)
         this.episode = await this.$store.dispatch('getEpisodeDetails', episodeID)
+        this.podcast = this.episode.podcast
         this.episodeEdit.serverErrors = {...this.episodeEdit.defaultServerErrors}
         this.updateProgress()
       },
@@ -323,6 +323,7 @@
         this.updateProgress()
       },
       humanStatus: humanStatus,
+      // defaultImage: defaultImage,
       episodeInProgress(episode){
         return episode.status === 'DOWNLOADING'
       },
