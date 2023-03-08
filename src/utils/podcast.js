@@ -155,12 +155,11 @@ function closeSidebar(){
   app.$store.commit('setSidebarOpen', false)
 }
 
-// function getSourceBadgeIcon(sourceType){
-//     console.log("sourceType", sourceType)
-//     return require(`../assets/img/source-${sourceType.toLowerCase()}.png`)
-// }
+function defaultImage(e){
+    e.target.src = require(`../assets/img/cover-default.jpeg`)
+}
 
 export {
     deleteEpisode, downloadEpisode, deletePodcast, humanStatus, goToEpisode, fillFormErrors,
-    formIsValid, copyToClipboard, closeSidebar, isPlaylistURL
+    formIsValid, copyToClipboard, closeSidebar, defaultImage, isPlaylistURL,
 }

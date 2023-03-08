@@ -180,7 +180,7 @@
                 <div class="row row-episode">
                   <div class="col-md-1 col-3 episode-content" @click="goToEpisode(episode)">
                     <div class="episode-image">
-                      <img :src="episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                      <img :src="episode.image_url" :alt="episode.title" class="img-circle img-no-padding img-responsive" @error="defaultImage">
                     </div>
                   </div>
                   <div class="col-md-9 col-9 episode-title episode-content" @click="goToEpisode(episode)">
@@ -240,6 +240,7 @@ import {
   deletePodcast,
   copyToClipboard,
   isPlaylistURL,
+  defaultImage,
 } from "@/utils/podcast";
 import InputErrors from "@/components/InputErrors";
 import UploadImage from "@/components/UploadImage";
@@ -334,6 +335,7 @@ export default {
     if (this.timeInterval){ clearInterval(this.timeInterval) }
   },
   methods: {
+    defaultImage,
     async fetchData() {
       this.loading = true
       const podcastID = this.$route.params.id
