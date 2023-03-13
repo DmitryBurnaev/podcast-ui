@@ -217,7 +217,8 @@
               </li>
             </ul>
           </div>
-          <infinite-loading @infinite="loadMoreEpisodes">
+          <infinite-loading @infinite="loadMoreEpisodes" >
+            <span slot="no-results"></span>
             <span slot="no-more"></span>
           </infinite-loading>
         </div>
