@@ -451,4 +451,9 @@
       }
     }
   }
+  .image.card-background{
+    img{
+      width: 100%;
+    }
+  }
 </style>
