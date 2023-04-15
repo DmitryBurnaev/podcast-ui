@@ -60,5 +60,12 @@ export default {
                 return response.data.payload
             }
         },
+        async getIPAddresses({commit}) {
+            const response = await axios.get('auth/ips/', )
+            if (response){
+                console.log("resp", response.data.payload)
+                return response.data.payload
+            }
+        },
     }
 }

@@ -108,6 +108,42 @@
         </div>
       </div>
     </div>
+
+    <div class="row" v-if="ipAddresses.length > 0">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header card-header-episodes">
+            <h4 class="card-title">Allowed IP Addresses </h4>
+          </div>
+          <div class="card-body">
+            <ul class="list-unstyled team-members">
+              <li v-for="ipAddress in ipAddresses" :key="ipAddress.id">
+                <div class="row row-episode">
+                  <div class="col-md-1 col-3 ip-address-value">
+                    {{ipAddress.ip_address}}
+                  </div>
+                  <div class="col-md-9 col-9 ip-address-description"></div>
+                  <div class="col-md-2 episode-controls">
+                      <div
+                          class="btn-outline-gray btn-icon"
+                          @click="deleteIPAddress(ipAddress)">
+                        <i class="nc-icon nc-simple-remove"></i>
+                      </div>
+                    </div>
+                </div>
+                <hr class="hr__row-episode">
+              </li>
+            </ul>
+          </div>
+          <infinite-loading @infinite="loadMoreIPAddresses" >
+            <span slot="no-results"></span>
+            <span slot="no-more"></span>
+          </infinite-loading>
+        </div>
+      </div>
+    </div>
+
+
 <!-- UPLOAD COOKIES DIALOG -->
     <el-dialog :title="cookiesUploading.title" :visible.sync="cookiesUploading.dialog">
       <el-form
@@ -179,6 +215,7 @@ export default {
     loading: true,
     profile: null,
     cookies: [],
+    ipAddresses: [],
     showEditOnSmall: true,
     profileFormHeight: null,
     rightColStyles: { },
@@ -278,6 +315,7 @@ export default {
     async fetchData() {
       this.profile = await this.$store.dispatch('getMe'); // TODO: use already fetched profile
       this.cookies = await this.$store.dispatch('getCookies');
+      this.ipAddresses = await this.$store.dispatch('getIPAddresses')
     },
     async updateProfile(){
       const formValid = await formIsValid(this, 'profileEditForm')
@@ -325,6 +363,21 @@ export default {
         this.$message({type: 'success', message: msg});
         this.cookies = await this.$store.dispatch('getCookies');
         this.cookiesUploading.dialog = false;
+      }
+    },
+    async deleteIPAddress(ipAddress){
+      console.log(`Removing ${ipAddress.ip_address}`)
+    },
+    async loadMoreIPAddresses($state){
+      let ipAddressesResponse = await this.$store.dispatch(
+          'getIPAddresses',
+          {offset: this.ipAddresses.length}
+      )
+      this.ipAddresses.push(...ipAddressesResponse.items)
+      if (ipAddressesResponse.hasNext){
+        $state.loaded();
+      } else {
+        $state.complete()
       }
     },
   }
