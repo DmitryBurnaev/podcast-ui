@@ -20,7 +20,7 @@
                       v-for="podcast in podcasts"
                       :key="podcast.id">
                     <div class="row row-podcast">
-                      <div class="col-md-1 col-3 podcast-content" @click="goToPodcast(podcast)">
+                      <div class="col-md-1 col-3 podcast-content" @click="goToPodcast(podcast.id)">
                         <div class="podcast-image">
                           <img v-if="podcast.image_url" :src="podcast.image_url" :alt="podcast.name" class="img-circle img-no-padding img-responsive">
                           <img v-else src="../assets/img/cover-default.jpeg" :alt="podcast.name" class="img-circle img-no-padding img-responsive">
@@ -51,7 +51,7 @@
 
 <script>
   import router from "@/router";
-  import {deletePodcast} from "@/utils/podcast";
+  import {deletePodcast, goToPodcast} from "@/utils/podcast";
 
   export default {
     name: 'PodcastListView',
@@ -73,9 +73,7 @@
       ])
     },
     methods: {
-      goToPodcast(podcast){
-        router.push({name: 'podcastDetails', params: {'id': podcast.id}})
-      },
+      goToPodcast: goToPodcast,
       deletePodcast(podcast){
         deletePodcast(podcast, () => {
           const index = this.podcasts.findIndex((el) => el.id === podcast.id)

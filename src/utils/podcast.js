@@ -81,7 +81,6 @@ function humanStatus(status) {
 }
 
 function fillFormErrors(serverErrors, formErrorsList) {
-    console.log('serverErrors, formErrorsList', serverErrors, formErrorsList)
     if (typeof serverErrors.details === 'object') {
         for (let key in serverErrors.details) {
             let serverError = serverErrors.details[key]
@@ -159,7 +158,12 @@ function defaultImage(e){
     e.target.src = require(`../assets/img/cover-default.jpeg`)
 }
 
+function goToPodcast(podcastID){
+    router.push({name: 'podcastDetails', params: {'id': podcastID}})
+}
+
+
 export {
     deleteEpisode, downloadEpisode, deletePodcast, humanStatus, goToEpisode, fillFormErrors,
-    formIsValid, copyToClipboard, closeSidebar, defaultImage, isPlaylistURL,
+    formIsValid, copyToClipboard, closeSidebar, defaultImage, isPlaylistURL, goToPodcast
 }

@@ -119,11 +119,17 @@
             <ul class="list-unstyled team-members">
               <li v-for="ipAddress in ipAddresses" :key="ipAddress.id">
                 <div class="row row-episode">
-                  <div class="col-md-1 col-3 ip-address-value">
+                  <div class="col-4 ip-address-value">
                     {{ipAddress.ip_address}}
                   </div>
-                  <div class="col-md-9 col-9 ip-address-description"></div>
-                  <div class="col-md-2 episode-controls">
+                  <div class="col-6 ip-address-description">
+                    <div v-if="ipAddress.by_rss_podcast">
+                      <div class="col-md-9 col-8 podcast-content" @click="goToPodcast(ipAddress.by_rss_podcast.id)">
+                        <p class=" podcast-title">{{ ipAddress.by_rss_podcast.name }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-2 episode-controls">
                       <div
                           class="btn-outline-gray btn-icon"
                           @click="deleteIPAddress(ipAddress)">
@@ -205,7 +211,7 @@
 
 import InputErrors from "@/components/InputErrors";
 import SourceTypeIcon from "@/components/SourceTypeIcon";
-import {fillFormErrors, formIsValid} from "@/utils/podcast";
+import {fillFormErrors, formIsValid, goToPodcast} from "@/utils/podcast";
 import axios from "axios";
 
 export default {
@@ -380,6 +386,7 @@ export default {
         $state.complete()
       }
     },
+    goToPodcast: goToPodcast,
   }
 }
 </script>
