@@ -50,7 +50,6 @@
 </template>
 
 <script>
-  import router from "@/router";
   import {deletePodcast, goToPodcast} from "@/utils/podcast";
 
   export default {

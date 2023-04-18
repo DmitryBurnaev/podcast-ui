@@ -213,10 +213,11 @@ import InputErrors from "@/components/InputErrors";
 import SourceTypeIcon from "@/components/SourceTypeIcon";
 import {fillFormErrors, formIsValid, goToPodcast} from "@/utils/podcast";
 import axios from "axios";
+import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
   name: "UserProfile",
-  components: {InputErrors, SourceTypeIcon},
+  components: {InputErrors, SourceTypeIcon, InfiniteLoading},
   data: () => ({
     loading: true,
     profile: null,
@@ -321,7 +322,7 @@ export default {
     async fetchData() {
       this.profile = await this.$store.dispatch('getMe'); // TODO: use already fetched profile
       this.cookies = await this.$store.dispatch('getCookies');
-      this.ipAddresses = await this.$store.dispatch('getIPAddresses')
+      this.ipAddresses = (await this.$store.dispatch('getIPAddresses')).items;
     },
     async updateProfile(){
       const formValid = await formIsValid(this, 'profileEditForm')
