@@ -109,7 +109,7 @@
       </div>
     </div>
 
-    <div class="row" v-if="ipAddresses.length > 0">
+    <div class="row user-ips-container" v-if="ipAddresses.length > 0">
       <div class="col-12">
         <div class="card">
           <div class="card-header card-header-episodes">
@@ -322,7 +322,8 @@ export default {
     async fetchData() {
       this.profile = await this.$store.dispatch('getMe'); // TODO: use already fetched profile
       this.cookies = await this.$store.dispatch('getCookies');
-      this.ipAddresses = (await this.$store.dispatch('getIPAddresses')).items;
+      let ipsResponse = await this.$store.dispatch('getIPAddresses', {offset: 0})
+      this.ipAddresses = ipsResponse.items;
     },
     async updateProfile(){
       const formValid = await formIsValid(this, 'profileEditForm')
@@ -443,5 +444,8 @@ export default {
       bottom: 20px;
       width: 100%;
     }
+  }
+  .user-ips-container{
+    margin-top: 20px;
   }
 </style>
