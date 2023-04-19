@@ -60,11 +60,14 @@ export default {
                 return response.data.payload
             }
         },
-        async getIPAddresses({commit}) {
-            const response = await axios.get('auth/ips/', )
+        async getIPAddresses({commit}, {offset}) {
+            const response = await axios.get('auth/ips/', {params: {"limit": 20, "offset": offset}})
             if (response){
                 console.log("resp", response.data.payload)
-                return response.data.payload
+                return {
+                    items: response.data.payload.items,
+                    hasNext: response.data.payload.has_next,
+                }
             }
         },
     }
