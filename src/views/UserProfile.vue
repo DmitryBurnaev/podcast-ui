@@ -214,6 +214,7 @@ import SourceTypeIcon from "@/components/SourceTypeIcon";
 import {fillFormErrors, formIsValid, goToPodcast} from "@/utils/podcast";
 import axios from "axios";
 import InfiniteLoading from 'vue-infinite-loading';
+import app from "@/main";
 
 export default {
   name: "UserProfile",
@@ -322,8 +323,7 @@ export default {
     async fetchData() {
       this.profile = await this.$store.dispatch('getMe'); // TODO: use already fetched profile
       this.cookies = await this.$store.dispatch('getCookies');
-      let ipsResponse = await this.$store.dispatch('getIPAddresses', {offset: 0})
-      this.ipAddresses = ipsResponse.items;
+      this.ipAddresses = await this.getIPAddresses()
     },
     async updateProfile(){
       const formValid = await formIsValid(this, 'profileEditForm')
@@ -356,6 +356,10 @@ export default {
     onChangeUploadingCookieFile(event){
       this.cookiesUploading.form.file = event.target.files[0]
     },
+    async getIPAddresses(){
+      let ipsResponse = await this.$store.dispatch('getIPAddresses', {offset: 0})
+      return ipsResponse.items;
+    },
     async submitCookieFormUpload() {
       const formValid = await formIsValid(this, 'cookiesUploadingForm')
       if (formValid){
@@ -375,6 +379,22 @@ export default {
     },
     async deleteIPAddress(ipAddress){
       console.log(`Removing ${ipAddress.ip_address}`)
+      if (ipAddress.by_rss_podcast !== null) {
+        app.$confirm(`This IP seems like access IP, created by rss-read server. Are you sure?`, 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          cancelButtonClass: 'is-plain',
+          type: 'warning',
+        }).then(() => {
+          axios.post(`auth/ips/delete`, {"ips": [ipAddress.ip_address]}).then(() => {
+            app.$message({type: 'success', message: `IP successful deleted.`});
+            this.ipAddresses = this.getIPAddresses()
+          })
+        });
+      } else {
+        await axios.post(`auth/ips/delete`, {"ips": [ipAddress.ip_address]} );
+        this.ipAddresses = await this.getIPAddresses()
+      }
     },
     async loadMoreIPAddresses($state){
       let ipAddressesResponse = await this.$store.dispatch(
