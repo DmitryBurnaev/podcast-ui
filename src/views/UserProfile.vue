@@ -119,12 +119,17 @@
             <ul class="list-unstyled team-members">
               <li v-for="ipAddress in ipAddresses" :key="ipAddress.id">
                 <div class="row row-episode">
-                  <div class="col-4 ip-address-value">
+                  <div class="col-2 ip-address-value">
                     {{ipAddress.ip_address}}
                   </div>
-                  <div class="col-6 ip-address-description">
-                    <div v-if="ipAddress.by_rss_podcast">
-                      <div class="col-md-9 col-8 podcast-content" @click="goToPodcast(ipAddress.by_rss_podcast.id)">
+                  <div class="col-8 ip-address-description">
+                    <div v-if="ipAddress.by_rss_podcast" class="podcast-link-container">
+<!--                      TODO: fix btn style here-->
+                      <el-button type="info" plain @click="goToPodcast(ipAddress.by_rss_podcast.id)" icon="el-icon-edit">
+                        {{ ipAddress.by_rss_podcast.name }}
+                      </el-button>
+
+                      <div class="col-md-9 col-8" @click="goToPodcast(ipAddress.by_rss_podcast.id)">
                         <p class=" podcast-title">{{ ipAddress.by_rss_podcast.name }}</p>
                       </div>
                     </div>
