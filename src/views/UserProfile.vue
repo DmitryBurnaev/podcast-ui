@@ -119,19 +119,17 @@
             <ul class="list-unstyled team-members">
               <li v-for="ipAddress in ipAddresses" :key="ipAddress.id">
                 <div class="row row-episode">
-                  <div class="col-2 ip-address-value">
-                    {{ipAddress.ip_address}}
-                  </div>
-                  <div class="col-8 ip-address-description">
+                  <div class="col-10 ip-address-value">
+                    <div class="float-left mr-3">
+                      {{ipAddress.ip_address}}
+                    </div>
                     <div v-if="ipAddress.by_rss_podcast" class="podcast-link-container">
-<!--                      TODO: fix btn style here-->
-                      <el-button type="info" plain @click="goToPodcast(ipAddress.by_rss_podcast.id)" icon="el-icon-edit">
-                        {{ ipAddress.by_rss_podcast.name }}
-                      </el-button>
-
-                      <div class="col-md-9 col-8" @click="goToPodcast(ipAddress.by_rss_podcast.id)">
-                        <p class=" podcast-title">{{ ipAddress.by_rss_podcast.name }}</p>
-                      </div>
+                      (RSS
+                      <span @click="goToPodcast(ipAddress.by_rss_podcast.id)"
+                            title="Created by downloading RSS for podcast (ex.: server or client that tries to get podcast's RSS)">
+                        "{{ ipAddress.by_rss_podcast.name }}"
+                      </span>
+                      )
                     </div>
                   </div>
                   <div class="col-2 episode-controls">
@@ -472,5 +470,12 @@ export default {
   }
   .user-ips-container{
     margin-top: 20px;
+  }
+  .podcast-link-container{
+    float: left;
+    span{
+      font-weight: bold;
+      cursor: pointer;
+    }
   }
 </style>
