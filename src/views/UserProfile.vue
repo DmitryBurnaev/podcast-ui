@@ -389,13 +389,13 @@ export default {
           cancelButtonClass: 'is-plain',
           type: 'warning',
         }).then(() => {
-          axios.post(`auth/ips/delete`, {"ips": [ipAddress.ip_address]}).then(() => {
+          axios.post(`auth/ips/delete/`, {"ips": [ipAddress.ip_address]}).then(() => {
             app.$message({type: 'success', message: `IP successful deleted.`});
             this.ipAddresses = this.getIPAddresses()
           })
         });
       } else {
-        await axios.post(`auth/ips/delete`, {"ips": [ipAddress.ip_address]} );
+        await axios.post(`auth/ips/delete/`, {"ips": [ipAddress.ip_address]} );
         this.ipAddresses = await this.getIPAddresses()
       }
     },
