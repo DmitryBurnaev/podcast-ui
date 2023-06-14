@@ -24,6 +24,18 @@
                   </h5>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-lg-12 col-md-12 col-12 ml-auto text-center" >
+                  <el-button
+                      icon="el-icon-copy-document"
+                      type="success"
+                      :disabled="!podcast.rss_url"
+                      @click="copyToClipboard(podcast.rss_url)">
+<!--                    TODO: adopt for small screen-->
+                    Copy RSS
+                  </el-button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
