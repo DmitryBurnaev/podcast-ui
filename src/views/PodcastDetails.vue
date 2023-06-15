@@ -25,15 +25,18 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-lg-12 col-md-12 col-12 ml-auto text-center" >
-                  <el-button
-                      icon="el-icon-copy-document"
-                      type="success"
-                      :disabled="!podcast.rss_url"
-                      @click="copyToClipboard(podcast.rss_url)">
-<!--                    TODO: adopt for small screen-->
-                    Copy RSS
-                  </el-button>
+                <div class="col-lg- col-lg-12 col-md-12 col-12 ml-auto text-center" >
+<!--                  <div class="d-none d-sm-block text-center">-->
+                    <el-button
+                        type="info"
+                        plain
+                        :disabled="!podcast.rss_url"
+                        @click="copyToClipboard(podcast.rss_url)"
+                        icon="el-icon-copy-document"
+                    >
+                      Copy RSS
+                    </el-button>
+<!--                  </div>-->
                 </div>
               </div>
             </div>
@@ -443,7 +446,7 @@ export default {
     },
     showRSS(){
       window.open(this.podcast.rss_url)
-    }
+    },
   }
 }
 </script>
