@@ -2,9 +2,9 @@
   <div class="content" v-if="!loading">
     <div class="row">
       <div class="col-md-4">
-        <div class="card card-podcast-summary  card-user">
+        <div class="card card-podcast-summary card-user">
           <div class="image card-background">
-            <img src="../assets/img/podcast-background.jpg" alt="podcast-background" >
+            <img src="../assets/img/podcast-background.jpg" alt="podcast-background">
           </div>
           <div class="card-body">
             <div class="author">
@@ -24,9 +24,8 @@
                   </h5>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-lg- col-lg-12 col-md-12 col-12 ml-auto text-center" >
-<!--                  <div class="d-none d-sm-block text-center">-->
+              <div class="row hide-on-large1">
+                <div class="col-lg-12 col-md-12 col-12 ml-auto text-center" >
                     <el-button
                         type="info"
                         plain
@@ -36,7 +35,6 @@
                     >
                       Copy RSS
                     </el-button>
-<!--                  </div>-->
                 </div>
               </div>
             </div>
