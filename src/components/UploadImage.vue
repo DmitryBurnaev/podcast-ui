@@ -1,6 +1,13 @@
 <template>
   <div>
-    <img v-if="podcast.image_url" class="avatar border-gray" :src="podcast.image_url" :alt="podcast.name" @click="toggleShow">
+    <img
+        v-if="podcast.image_url"
+        class="avatar border-gray"
+        :src="podcast.image_url"
+        :alt="podcast.name"
+        @click="toggleShow"
+        @error="defaultImage"
+    >
     <img v-else class="avatar border-gray" src="../assets/img/cover-default.jpeg" :alt="podcast.name" @click="toggleShow">
     <my-upload
       @crop-success="cropSuccess"
@@ -21,6 +28,7 @@
 import store from "@/store";
 import config from "@/config";
 import myUpload from "vue-image-crop-upload/upload-2";
+import {defaultImage} from "@/utils/podcast";
 
 export default {
   name: "UploadImage",
@@ -62,6 +70,7 @@ export default {
     'my-upload': myUpload
   },
   methods: {
+    defaultImage,
     toggleShow() {
       this.show = !this.show;
     },
