@@ -175,7 +175,7 @@ export default {
   }
   .hide-on-large{
     @media (min-width: 577px) {
-      display: none;
+      display: none !important;
     }
   }
   .sidebar-wrapper{
