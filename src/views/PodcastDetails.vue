@@ -24,7 +24,7 @@
                   </h5>
                 </div>
               </div>
-              <div class="row hide-on-large1">
+              <div class="row hide-on-large">
                 <div class="col-lg-12 col-md-12 col-12 ml-auto text-center" >
                     <el-button
                         type="info"
