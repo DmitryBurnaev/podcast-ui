@@ -24,11 +24,12 @@
                   </h5>
                 </div>
               </div>
-              <div class="row hide-on-large">
+              <div class="row hide-on-large mt-3">
                 <div class="col-lg-12 col-md-12 col-12 ml-auto text-center" >
                     <el-button
                         type="info"
                         plain
+                        class="copy-rss-btn"
                         :disabled="!podcast.rss_url"
                         @click="copyToClipboard(podcast.rss_url)"
                         icon="el-icon-copy-document"
@@ -455,6 +456,9 @@ export default {
 }
 .hr__row-episode{
   margin-top: 0.5rem;
+}
+.copy-rss-btn{
+  width: 95%;
 }
 .episode-controls{
   margin-top: -7px;
