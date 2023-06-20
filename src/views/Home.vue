@@ -13,7 +13,7 @@
             >
               <div class="row">
                 <div class="col-4 col-md-4 podcast-cover-container">
-                    <img v-if="podcast.image_url" :src="podcast.image_url" :alt="podcast.name">
+                    <img v-if="podcast.image_url" :src="podcast.image_url" :alt="podcast.name" @error="defaultImage">
                     <img v-else src="../assets/img/cover-default.jpeg" :alt="podcast.name">
                 </div>
                 <div class="col-8 col-md-8">
@@ -115,11 +115,12 @@
 
 <script>
 import {
-  goToEpisode,
-  humanStatus,
-  fillFormErrors,
-  formIsValid,
-  isPlaylistURL
+    goToEpisode,
+    humanStatus,
+    fillFormErrors,
+    formIsValid,
+    isPlaylistURL,
+    defaultImage,
 } from "@/utils/podcast";
 import InputErrors from "@/components/InputErrors";
 import axios from "axios";
@@ -174,6 +175,7 @@ export default {
     ])
   },
   methods:{
+    defaultImage,
     openCreateEpisodeDialog(podcast){
       this.episodeCreation.title = `Add episode to "${podcast.name}"`
       this.episodeCreation.inProgress = false
