@@ -22,6 +22,9 @@
 
 </script>
 <style lang="scss">
+  @import 'assets/css/element-ui.css';
+  @import 'assets/css/font-awesome.min.css';
+  @import 'assets/css/font-googleapis.css';
   @import 'assets/css/bootstrap.min.css';
   @import 'assets/scss/paper-dashboard';
 </style>
