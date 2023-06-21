@@ -19,6 +19,7 @@
                   <p class="text-muted">{{ humanStatus(progress.status) }}</p>
                   <el-progress v-if="progress.status === 'ERROR'" :percentage="progress.completed" status="exception"></el-progress>
                   <el-progress v-else :percentage="parseInt(progress.completed)" ></el-progress>
+<!--                  TODO: add cancel btn-->
                 </div>
                 <div v-else class="pre-progress">
                   <p :class="{
