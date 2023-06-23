@@ -19,7 +19,6 @@
                   <p class="text-muted">{{ humanStatus(progress.status) }}</p>
                   <el-progress v-if="progress.status === 'ERROR'" :percentage="progress.completed" status="exception"></el-progress>
                   <el-progress v-else :percentage="parseInt(progress.completed)" ></el-progress>
-<!--                  TODO: add cancel btn-->
                 </div>
                 <div v-else class="pre-progress">
                   <p :class="{
@@ -190,7 +189,8 @@
                   <el-button type="info" plain @click="updateEpisode" icon="el-icon-edit">Update</el-button>
                 </div>
                 <div class="col-4 text-center">
-                  <el-button class="hide-on-small" type="info" plain @click="downloadEpisode(episode)" icon="el-icon-download">Download</el-button>
+                  <el-button v-if="episodeInProgress(episode)" class="hide-on-small" type="info" plain @click="cancelDownloading(episode)" icon="el-icon-download">Cancel Downloading</el-button>
+                  <el-button v-else class="hide-on-small" type="info" plain @click="downloadEpisode(episode)" icon="el-icon-download">Download</el-button>
                 </div>
                 <div class="col-4 text-right">
                   <el-button type="info" plain @click="deleteEpisode" icon="el-icon-delete"></el-button>
@@ -324,6 +324,10 @@
         this.updateProgress()
       },
       humanStatus: humanStatus,
+      async cancelDownloading(episode){
+        await axios.put(`episodes/${this.episode.id}/cancel-downloading/`);
+        this.episode.status = 'NEW'
+      },
       // defaultImage: defaultImage,
       episodeInProgress(episode){
         return episode.status === 'DOWNLOADING'
