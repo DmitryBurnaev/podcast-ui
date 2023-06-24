@@ -186,14 +186,54 @@
               </div>
               <div class="row mb-2 bottom-controllers">
                 <div class="col-4 text-left">
-                  <el-button type="info" plain @click="updateEpisode" icon="el-icon-edit">Update</el-button>
+                  <el-button
+                    type="info"
+                    plain
+                    @click="updateEpisode"
+                    icon="el-icon-edit"
+                    title="Save Episode Changes"
+                  >
+                    <span class="control-caption hide-on-small">
+                        Update
+                    </span>
+                  </el-button>
                 </div>
                 <div class="col-4 text-center">
-                  <el-button v-if="episodeInProgress(episode)" class="hide-on-small" type="info" plain @click="cancelDownloading(episode)" icon="el-icon-download">Cancel Downloading</el-button>
-                  <el-button v-else class="hide-on-small" type="info" plain @click="downloadEpisode(episode)" icon="el-icon-download">Download</el-button>
+                  <el-button
+                    v-if="episodeInProgress(episode)"
+                    type="info"
+                    plain
+                    @click="cancelDownloading(episode)"
+                    icon="el-icon-circle-close"
+                    title="Cancel Downloading"
+                  >
+                    <span class="control-caption hide-on-small">
+                      Cancel Downloading
+                    </span>
+                  </el-button>
+                  <el-button
+                    v-else
+                    class="hide-on-small"
+                    type="info"
+                    plain
+                    @click="downloadEpisode(episode)"
+                    icon="el-icon-download"
+                    title="Start downloading"
+                  >
+                    <span class="control-caption hide-on-small">
+                        Download
+                    </span>
+                  </el-button>
                 </div>
                 <div class="col-4 text-right">
-                  <el-button type="info" plain @click="deleteEpisode" icon="el-icon-delete"></el-button>
+                  <el-button
+                    type="info"
+                    plain
+                    @click="deleteEpisode"
+                    icon="el-icon-delete"
+                    title="Delete Episode"
+                  >
+                  </el-button>
                 </div>
               </div>
             </el-form>
@@ -460,5 +500,8 @@
     img{
       width: 100%;
     }
+  }
+  .control-caption.hide-on-small{
+    margin-left: 0;
   }
 </style>
