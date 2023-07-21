@@ -231,9 +231,4 @@ export default {
       box-shadow: none;
     }
   }
-  @media (max-width: 576px){
-    .el-dialog, .el-message-box {
-      width: 95% !important;
-    }
-  }
 </style>
