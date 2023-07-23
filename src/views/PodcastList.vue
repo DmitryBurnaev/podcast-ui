@@ -19,8 +19,8 @@
                   <li
                       v-for="podcast in podcasts"
                       :key="podcast.id">
-                    <div class="row row-podcast">
-                      <div class="col-md-1 col-3 podcast-content" @click="goToPodcast(podcast.id)">
+                    <div class="row row-podcast" @click="goToPodcast(podcast.id)">
+                      <div class="col-md-1 col-3 podcast-content">
                         <div class="podcast-image">
                           <img v-if="podcast.image_url" :src="podcast.image_url" :alt="podcast.name" class="img-circle img-no-padding img-responsive">
                           <img v-else src="../assets/img/cover-default.jpeg" :alt="podcast.name" class="img-circle img-no-padding img-responsive">
