@@ -16,9 +16,7 @@
               </div>
               <div class="card-body">
                 <ul class="list-unstyled">
-                  <li
-                      v-for="podcast in podcasts"
-                      :key="podcast.id">
+                  <li v-for="podcast in podcasts" :key="podcast.id">
                     <div class="row row-podcast" @click="goToPodcast(podcast.id)">
                       <div class="col-md-1 col-3 podcast-content">
                         <div class="podcast-image">
@@ -26,7 +24,7 @@
                           <img v-else src="../assets/img/cover-default.jpeg" :alt="podcast.name" class="img-circle img-no-padding img-responsive">
                         </div>
                       </div>
-                      <div class="col-md-9 col-8 podcast-content" @click="goToPodcast(podcast)">
+                      <div class="col-md-9 col-8 podcast-content" @click="goToPodcast(podcast.id)">
                         <p class=" podcast-title">{{ podcast.name }}</p>
                         <p class="podcast-description d-none d-sm-block">{{ podcast.description }}</p>
                         <p class="podcast-description d-block d-sm-none">{{ podcast.description | cut(60) }}</p>

@@ -194,6 +194,11 @@ export default {
         color: #168a4a;
     }
   }
+  .el-breadcrumb__inner{
+    &.is-link{
+      font-weight: normal !important;
+    }
+  }
   @media (max-width: 576px){
     .el-dialog, .el-message-box {
       width: 95% !important;
