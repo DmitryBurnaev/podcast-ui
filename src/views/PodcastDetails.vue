@@ -478,7 +478,7 @@ export default {
   }
 }
 .card-podcast-summary{
-  height: 500px;
+  height: 515px;
   @media (max-width: 576px) {
     min-height: 400px;
     height: initial;
