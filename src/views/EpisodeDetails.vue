@@ -28,6 +28,7 @@
                   </p>
                   <i v-if="episode.status === 'NEW'" class="text-muted nc-icon el-icon-star-off"></i>
                   <i v-else-if="episode.status === 'ERROR'" class="text-danger nc-icon el-icon-warning"></i>
+                  <i v-else-if="episode.status === 'CANCELING'" class="text-danger nc-icon el-icon-warning"></i>
                 </div>
               </div>
             </div>
