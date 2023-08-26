@@ -70,7 +70,7 @@ function humanStatus(status) {
         "PUBLISHED": "Episode published",
         "ARCHIVED": "Archived",
         "ERROR": "Downloading error",
-        "CANCELING": "Downloading was cancelled",
+        "CANCELING": "Downloading is canceling",
         "DL_PENDING": "Pending",
         "DL_EPISODE_DOWNLOADING": "Downloading",
         "DL_EPISODE_POSTPROCESSING": "Post processing",

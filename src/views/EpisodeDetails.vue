@@ -17,7 +17,7 @@
               <div v-else>
                 <div v-if="progress !== null" class="progress-line-block d-sm-block">
                   <p class="text-muted">{{ humanStatus(progress.status) }}</p>
-                  <el-progress v-if="progress.status === 'ERROR'" :percentage="progress.completed" status="exception"></el-progress>
+                  <el-progress v-if="progress.status === 'ERROR'" :percentage="parseInt(progress.completed)" status="exception"></el-progress>
                   <el-progress v-else :percentage="parseInt(progress.completed)" ></el-progress>
                 </div>
                 <div v-else class="pre-progress">
@@ -366,7 +366,7 @@
       },
       humanStatus: humanStatus,
       async cancelDownloading(episode){
-        await axios.put(`episodes/${this.episode.id}/cancel-downloading/`);
+        await axios.put(`episodes/${episode.id}/cancel-downloading/`);
         this.episode.status = 'NEW'
       },
       // defaultImage: defaultImage,
