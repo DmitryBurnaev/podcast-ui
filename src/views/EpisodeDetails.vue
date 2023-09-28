@@ -233,6 +233,7 @@
                     @click="deleteEpisode"
                     icon="el-icon-delete"
                     title="Delete Episode"
+                    :disabled="episodeInProgress(episode)"
                   >
                   </el-button>
                 </div>
@@ -368,10 +369,11 @@
       async cancelDownloading(episode){
         await axios.put(`episodes/${episode.id}/cancel-downloading/`);
         this.episode.status = 'NEW'
+        await this.fetchData()
       },
       // defaultImage: defaultImage,
       episodeInProgress(episode){
-        return episode.status === 'DOWNLOADING'
+        return episode.status === 'DOWNLOADING' || episode.status === 'CANCELLING'
       },
       episodePublished(episode){
         return episode.status === 'PUBLISHED'
