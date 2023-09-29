@@ -54,6 +54,16 @@
                     >
                     </i>
                     <i
+                        v-else-if="episode.status === 'CANCELING'"
+                        class="nc-icon text-success"
+                        :title="humanStatus(episode.status)"
+                        @click="fetchData()"
+                        :class="{
+                          'nc-refresh-69 cursor': episode.status === 'CANCELING',
+                        }"
+                    >
+                    </i>
+                    <i
                         v-else
                         class="nc-icon text-success"
                         :title="humanStatus(episode.status)"
