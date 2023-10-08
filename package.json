@@ -10,9 +10,9 @@
   "dependencies": {
     "axios": "^0.27.2",
     "bootstrap": "^4.6.2",
-    "core-js": "^3.25.1",
-    "element-ui": "^2.15.10",
-    "vue": "^2.7.10",
+    "core-js": "^3.33.0",
+    "element-ui": "^2.15.14",
+    "vue": "^2.7.14",
     "vue-image-crop-upload": "^3.0.3",
     "vue-infinite-loading": "^2.4.5",
     "vue-router": "^3.6.5",
@@ -20,17 +20,17 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "~7.22.15",
     "@vue/cli-plugin-babel": "~5.0.8",
     "@vue/cli-plugin-eslint": "~5.0.8",
     "@vue/cli-plugin-router": "~5.0.8",
     "@vue/cli-service": "~5.0.8",
-    "@babel/eslint-parser": "~7.19.1",
     "babel-plugin-transform-remove-console": "^6.9.4",
-    "eslint": "8.22.0",
-    "eslint-plugin-vue": "^9.4.0",
-    "node-sass": "^7.0.3",
-    "sass-loader": "^13.0.2",
-    "vue-template-compiler": "^2.7.10"
+    "eslint": "8.51.0",
+    "eslint-plugin-vue": "^9.17.0",
+    "node-sass": "^9.0.0",
+    "sass-loader": "^13.3.2",
+    "vue-template-compiler": "^2.7.14"
   },
   "eslintConfig": {
     "root": true,
@@ -45,7 +45,14 @@
       "parser": "@babel/eslint-parser"
     },
     "rules": {
-        "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": false }]
+      "no-unused-vars": [
+        "error",
+        {
+          "vars": "all",
+          "args": "none",
+          "ignoreRestSiblings": false
+        }
+      ]
     }
   },
   "browserslist": [
