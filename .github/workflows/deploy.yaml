@@ -25,7 +25,7 @@ jobs:
           cmd: install # will run `yarn install` command
 
       - name: Build
-        uses: borales/actions-yarn@v4
+        uses: borales/actions-yarn@v3
         env:
           VUE_APP_API_URL: ${{ secrets.VUE_APP_API_URL }}
           VUE_APP_WS_URL: ${{ secrets.VUE_APP_WS_URL }}
