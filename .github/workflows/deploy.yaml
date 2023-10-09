@@ -20,12 +20,12 @@ jobs:
           node-version: 18.x
 
       - name: Install dependencies
-        uses: borales/actions-yarn@v3
+        uses: borales/actions-yarn@v3.0.0
         with:
           cmd: install # will run `yarn install` command
 
       - name: Build
-        uses: borales/actions-yarn@v3
+        uses: borales/actions-yarn@v3.0.0
         env:
           VUE_APP_API_URL: ${{ secrets.VUE_APP_API_URL }}
           VUE_APP_WS_URL: ${{ secrets.VUE_APP_WS_URL }}
