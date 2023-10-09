@@ -20,7 +20,7 @@ jobs:
           node-version: 18.x
 
       - name: Install dependencies
-        uses: borales/actions-yarn@v4
+        uses: borales/actions-yarn@v3
         with:
           cmd: install # will run `yarn install` command
 
