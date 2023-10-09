@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - master
-      - fix/71-playlist-detection
+      - tech/123-fix-building
 
 jobs:
 
@@ -31,25 +31,25 @@ jobs:
           VUE_APP_WS_URL: ${{ secrets.VUE_APP_WS_URL }}
         with:
           cmd: build # will run `yarn build` command
-
-      - name: Archive build (crating artifacts)
-        if: success()
-        uses: actions/upload-artifact@v1
-        with:
-          name: deploy_dist
-          path: dist
-
-      - name: Download and unzip build
-        uses: actions/download-artifact@v1
-        with:
-          name: deploy_dist
-
-      - name: Prepare SSH key
-        run: |
-          mkdir ~/.ssh
-          echo "${{ secrets.SSH_PKEY }}" > ~/.ssh/id_rsa
-          chmod 400 ~/.ssh/id_rsa
-
-      - name: Copy project files
-        run: |
-          scp -o StrictHostKeyChecking=no -r ./deploy_dist/* ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
+#
+#      - name: Archive build (crating artifacts)
+#        if: success()
+#        uses: actions/upload-artifact@v1
+#        with:
+#          name: deploy_dist
+#          path: dist
+#
+#      - name: Download and unzip build
+#        uses: actions/download-artifact@v1
+#        with:
+#          name: deploy_dist
+#
+#      - name: Prepare SSH key
+#        run: |
+#          mkdir ~/.ssh
+#          echo "${{ secrets.SSH_PKEY }}" > ~/.ssh/id_rsa
+#          chmod 400 ~/.ssh/id_rsa
+#
+#      - name: Copy project files
+#        run: |
+#          scp -o StrictHostKeyChecking=no -r ./deploy_dist/* ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
