@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         uses: borales/actions-yarn@v4.2.0
         with:
-          cmd: install # will run `yarn install` command
+          cmd: install --verbose  # will run `yarn install` command
 
       - name: Build
         uses: borales/actions-yarn@v4.2.0
@@ -30,7 +30,7 @@ jobs:
           VUE_APP_API_URL: ${{ secrets.VUE_APP_API_URL }}
           VUE_APP_WS_URL: ${{ secrets.VUE_APP_WS_URL }}
         with:
-          cmd: build # will run `yarn build` command
+          cmd: build --report-json # will run `yarn build` command
 #
 #      - name: Archive build (crating artifacts)
 #        if: success()
