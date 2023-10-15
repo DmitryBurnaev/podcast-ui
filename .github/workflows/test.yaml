@@ -1,0 +1,29 @@
+name: Deploy Application
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - tech/123-fix-building
+
+jobs:
+
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build image
+        run: docker-compose build build_app
+
+      - name: Build
+        run: |
+          docker build -t podcast-ui-build
+          docker run --rm podcast-ui --volume dist:/podcast-ui/dist podcast-ui-build 
+
+      - name: Test
+        run: |
+          ls -lah dist
