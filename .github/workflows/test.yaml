@@ -1,8 +1,8 @@
 name: Deploy Application
 on:
-  pull_request:
-    branches:
-      - master
+#  pull_request:
+#    branches:
+#      - master
   push:
     branches:
       - tech/123-fix-building
@@ -15,9 +15,6 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Build image
-        run: docker-compose build build_app
 
       - name: Build
         run: |
