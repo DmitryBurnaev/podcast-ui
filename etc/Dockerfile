@@ -11,4 +11,4 @@ RUN yarn install
 COPY ../babel.config.js .
 COPY ../src ./src
 
-ENTRYPOINT ["yarn", "build"]
+CMD ["yarn", "build"]
