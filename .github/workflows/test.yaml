@@ -18,8 +18,8 @@ jobs:
 
       - name: Build
         run: |
-          docker build -t podcast-ui-build
-          docker run --rm podcast-ui --volume dist:/podcast-ui/dist podcast-ui-build 
+          docker build -t podcast-ui-build --file etc/Dockerfile  .
+          docker run --rm podcast-ui-build --volume dist:/podcast-ui/dist podcast-ui-build 
 
       - name: Test
         run: |
