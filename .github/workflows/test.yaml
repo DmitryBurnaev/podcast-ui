@@ -20,8 +20,8 @@ jobs:
         run: docker build -t podcast-ui --file etc/Dockerfile  .
 
       - name: Build App
-        run: docker run --rm --volume dist:/podcast-ui/dist podcast-ui
+        run: docker run --rm --volume ./dist:/podcast-ui/dist podcast-ui
 
       - name: Test
         run: |
-          ls -lah dist
+          ls -lah ./dist
