@@ -3,52 +3,50 @@ on:
   push:
     branches:
       - master
+      - tech/123-fix-building
 
 jobs:
 
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Set Node.js 18.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
+      - name: Build Docker
+        run: docker build -t podcast-ui --file etc/Dockerfile  .
 
-      - name: Install dependencies
-        uses: borales/actions-yarn@v4.2.0
-        with:
-          cmd: install --verbose  # will run `yarn install` command
+      - name: Build App
+        run: docker run --rm --volume ./dist:/podcast-ui/dist podcast-ui
 
-      - name: Build
-        uses: borales/actions-yarn@v4.2.0
-        env:
-          VUE_APP_API_URL: ${{ secrets.VUE_APP_API_URL }}
-          VUE_APP_WS_URL: ${{ secrets.VUE_APP_WS_URL }}
+      - name: Test
+        run: |
+          ls -lah ./dist
+          if [ -z "$(ls -A ./dist)" ]; then
+             echo "Dist directory is empty"
+             exit 1
+          else
+             echo "Dist was built"
+          fi
+
+      - name: Archive build (crating artifacts)
+        if: success()
+        uses: actions/upload-artifact@v1
         with:
-          cmd: build --report-json # will run `yarn build` command
-#
-#      - name: Archive build (crating artifacts)
-#        if: success()
-#        uses: actions/upload-artifact@v1
-#        with:
-#          name: deploy_dist
-#          path: dist
-#
-#      - name: Download and unzip build
-#        uses: actions/download-artifact@v1
-#        with:
-#          name: deploy_dist
-#
-#      - name: Prepare SSH key
-#        run: |
-#          mkdir ~/.ssh
-#          echo "${{ secrets.SSH_PKEY }}" > ~/.ssh/id_rsa
-#          chmod 400 ~/.ssh/id_rsa
-#
-#      - name: Copy project files
-#        run: |
-#          scp -o StrictHostKeyChecking=no -r ./deploy_dist/* ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
+          name: deploy_dist
+          path: ./dist
+
+      - name: Download and unzip build
+        uses: actions/download-artifact@v1
+        with:
+          name: deploy_dist
+
+      - name: Prepare SSH key
+        run: |
+          mkdir ~/.ssh
+          echo "${{ secrets.SSH_PKEY }}" > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
+
+      - name: Copy project files
+        run: |
+          scp -o StrictHostKeyChecking=no -r ./deploy_dist/* ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
