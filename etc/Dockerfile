@@ -1,7 +1,5 @@
 FROM node:18.18-alpine
 WORKDIR /podcast-ui
-ARG VUE_APP_API_URL
-ARG VUE_APP_WS_URL
 
 RUN apk add yarn
 
