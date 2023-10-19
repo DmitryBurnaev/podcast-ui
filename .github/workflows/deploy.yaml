@@ -19,8 +19,8 @@ jobs:
       - name: Build App
         run: | 
           docker run --rm --volume ./dist:/podcast-ui/dist \
-          --build-arg VUE_APP_API_URL=${{ secrets.VUE_APP_API_URL }} \
-          --build-arg VUE_APP_WS_URL=${{ secrets.VUE_APP_WS_URL }} \
+          --env VUE_APP_API_URL=${{ secrets.VUE_APP_API_URL }} \
+          --env VUE_APP_WS_URL=${{ secrets.VUE_APP_WS_URL }} \
           podcast-ui
 
       - name: Test
