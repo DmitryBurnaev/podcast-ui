@@ -121,7 +121,8 @@
                 <div class="row row-episode">
                   <div class="col-10 ip-address-value">
                     <div class="float-left mr-3">
-                      {{ipAddress.ip_address}}
+                      <!-- TODO: slice string here -->
+                      {{ipAddress.hashed_address}}
                     </div>
                     <div v-if="ipAddress.by_rss_podcast" class="podcast-link-container">
                       (RSS
@@ -381,7 +382,6 @@ export default {
       }
     },
     async deleteIPAddress(ipAddress){
-      console.log(`Removing ${ipAddress.ip_address}`)
       if (ipAddress.by_rss_podcast !== null) {
         app.$confirm(`This IP seems like access IP, created by rss-read server. Are you sure?`, 'Warning', {
           confirmButtonText: 'OK',
@@ -389,13 +389,13 @@ export default {
           cancelButtonClass: 'is-plain',
           type: 'warning',
         }).then(() => {
-          axios.post(`auth/ips/delete/`, {"ips": [ipAddress.ip_address]}).then(() => {
+          axios.post(`auth/ips/delete/`, {"ids": [ipAddress.id]}).then(() => {
             app.$message({type: 'success', message: `IP successful deleted.`});
             this.ipAddresses = this.getIPAddresses()
           })
         });
       } else {
-        await axios.post(`auth/ips/delete/`, {"ips": [ipAddress.ip_address]} );
+        await axios.post(`auth/ips/delete/`, {"ids": [ipAddress.id]} );
         this.ipAddresses = await this.getIPAddresses()
       }
     },
