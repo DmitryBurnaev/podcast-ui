@@ -113,7 +113,7 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header card-header-episodes">
-            <h4 class="card-title">Allowed IP Addresses </h4>
+            <h4 class="card-title">Allowed IPs (hash version) </h4>
           </div>
           <div class="card-body">
             <ul class="list-unstyled team-members">
@@ -121,8 +121,7 @@
                 <div class="row row-episode">
                   <div class="col-10 ip-address-value">
                     <div class="float-left mr-3">
-                      <!-- TODO: slice string here -->
-                      {{ipAddress.hashed_address}}
+                      {{ipAddress.hashed_address | cut(10) }}
                     </div>
                     <div v-if="ipAddress.by_rss_podcast" class="podcast-link-container">
                       (RSS
