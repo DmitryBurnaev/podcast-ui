@@ -8,6 +8,7 @@ COPY ../yarn.lock .
 
 RUN yarn install
 
+COPY ../public ./public
 COPY ../babel.config.js .
 COPY ../src ./src
 
