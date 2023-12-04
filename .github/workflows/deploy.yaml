@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - feature/127-web-page-title
 
 jobs:
 
