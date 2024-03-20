@@ -64,6 +64,14 @@
               >
                 <i class="el-icon-edit"></i><span>Add chosen</span>
               </button>
+              <button
+                  type="button"
+                  class="el-button el-button--info is-plain"
+                  @click="massUpdateOpenDialog"
+                  :disabled="episodesCreating"
+              >
+                <i class="el-icon-edit"></i><span>Mass update chosen</span>
+              </button>
             </div>
           </div>
           <div class="card-body">
@@ -144,12 +152,18 @@ export default {
     podcast: null,
     uploadedFiles: [],
     episodesCreating: false,
-
     podcastEdit:{
       form: {
         download_automatically: false,
       },
       inProgress: false,
+    },
+    episodesMassUpdateEdit:{
+      form: {
+        album: "",
+        title: "",
+        cover: {}
+      },
     },
     fileList: [],
     uploadParams: {
@@ -210,7 +224,11 @@ export default {
     async setDownloadAuto(){
       const response = await axios.patch(`podcasts/${this.podcast.id}/`, this.podcastEdit.form);
       this.podcast = response.data.payload;
-        this.$message({type: 'success', message: 'Podcast successful updated.'});
+      this.$message({type: 'success', message: 'Podcast successful updated.'});
+    },
+    massUpdateOpenDialog(){
+      this.$message({type: 'success', message: 'Open dialog'});
+      // TODO: open dialog with form here
     },
     createEpisodes(){
       this.uploadedFiles.forEach((uploadedFile, i) => {
