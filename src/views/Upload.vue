@@ -134,6 +134,54 @@
         </div>
       </div>
     </div>
+
+
+<!--    dialog for mass changing -->
+
+      <el-dialog :title="'Mass episodes changing'">
+<!--        TODO: provide correct form here-->
+        <el-form :model="episodeCreation.form" :rules="episodeCreation.rules" ref="createEpisodeForm" @submit.native.prevent="createEpisode">
+          <el-form-item prop="source_url" :class="{'is-error': episodeCreation.serverErrors.source_url.length > 0}">
+            <el-input
+                placeholder="Link to the source"
+                v-model="episodeCreation.form.source_url"
+                :disabled="episodeCreation.inProgress"
+            >
+              <el-button slot="append" icon="el-icon-edit" type="success" @click="createEpisode"></el-button>
+            </el-input>
+            <input-errors :errors="episodeCreation.serverErrors.source_url"></input-errors>
+          </el-form-item>
+        </el-form>
+        <hr class="hr__row-episode">
+        <div class="d-flex justify-content-center" v-if="episodeCreation.inProgress">
+          <img class="preload ml-1" src="../assets/img/down-arrow.gif" alt=""/>
+        </div>
+        <div v-else-if="episodeCreation.episode">
+          <div class="row row-episode">
+            <div class="col-md-2 col-1 episode-content" @click="goToEpisode(episodeCreation.episode, episodeCreation.podcast.id)">
+              <div class="episode-image">
+                <img :src="episodeCreation.episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+              </div>
+            </div>
+            <div class="col-md-9 col-9 episode-title episode-content" @click="goToEpisode(episodeCreation.episode, episodeCreation.podcast.id)">
+              {{ episodeCreation.episode.title }}
+              <br/>
+              <span
+                  :class="{
+                    'text-success': (episodeCreation.episode.status === 'PUBLISHED'),
+                    'text-danger': (episodeCreation.episode.status === 'ERROR'),
+                    'text-info': (['NEW', 'DOWNLOADING'].includes(episodeCreation.episode.status)),
+                    'text-gray': (episodeCreation.episode.status === 'ARCHIVED')
+                  }">
+                <small>{{ humanStatus(episodeCreation.episode.status) }}</small>
+              </span>
+            </div>
+            <div class="col-md-1 col-1 text-right episode-controls">
+              <img class="preload mr-1 mt-2" v-if="episodeCreation.episode.status === 'DOWNLOADING'" src="../assets/img/down-arrow.gif" alt=""/>
+            </div>
+          </div>
+        </div>
+      </el-dialog>
   </div>
 
 </template>
@@ -143,10 +191,11 @@ import axios from "axios";
 import config from "@/config";
 import store from "@/store";
 import app from "@/main";
+import InputErrors from "@/components/InputErrors.vue";
 
 export default {
   name: 'UploadView',
-  components: {},
+  components: {InputErrors},
   data: () => ({
     loading: true,
     podcast: null,
