@@ -19,7 +19,7 @@
           </div>
           <div class="card-body">
             <div class="row">
-              <div class="col-md-12">
+              <div class="col-md-9">
                   <div class="d-none d-sm-block">
                     <el-upload
                       class="upload-demo"
@@ -40,6 +40,17 @@
                       <div class="el-upload__tip" slot="tip">audio/mpeg files with a size less than 100Mb</div>
                     </el-upload>
                   </div>
+              </div>
+              <div class="cal-md-3 text-md-right">
+<!--                TODO: TMP (need to remove) -->
+                <button
+                    type="button"
+                    class="el-button el-button--info is-plain"
+                    @click="massUpdateOpenDialog"
+                    :disabled="episodesCreating"
+                >
+                  <i class="el-icon-edit"></i><span>Mass update chosen</span>
+                </button>
               </div>
             </div>
           </div>
@@ -136,52 +147,37 @@
     </div>
 
 
-<!--    dialog for mass changing -->
-
-      <el-dialog :title="'Mass episodes changing'">
-<!--        TODO: provide correct form here-->
-        <el-form :model="episodeCreation.form" :rules="episodeCreation.rules" ref="createEpisodeForm" @submit.native.prevent="createEpisode">
-          <el-form-item prop="source_url" :class="{'is-error': episodeCreation.serverErrors.source_url.length > 0}">
-            <el-input
-                placeholder="Link to the source"
-                v-model="episodeCreation.form.source_url"
-                :disabled="episodeCreation.inProgress"
-            >
-              <el-button slot="append" icon="el-icon-edit" type="success" @click="createEpisode"></el-button>
-            </el-input>
-            <input-errors :errors="episodeCreation.serverErrors.source_url"></input-errors>
-          </el-form-item>
-        </el-form>
-        <hr class="hr__row-episode">
-        <div class="d-flex justify-content-center" v-if="episodeCreation.inProgress">
-          <img class="preload ml-1" src="../assets/img/down-arrow.gif" alt=""/>
-        </div>
-        <div v-else-if="episodeCreation.episode">
-          <div class="row row-episode">
-            <div class="col-md-2 col-1 episode-content" @click="goToEpisode(episodeCreation.episode, episodeCreation.podcast.id)">
-              <div class="episode-image">
-                <img :src="episodeCreation.episode.image_url" alt="Circle Image" class="img-circle img-no-padding img-responsive">
-              </div>
-            </div>
-            <div class="col-md-9 col-9 episode-title episode-content" @click="goToEpisode(episodeCreation.episode, episodeCreation.podcast.id)">
-              {{ episodeCreation.episode.title }}
-              <br/>
-              <span
-                  :class="{
-                    'text-success': (episodeCreation.episode.status === 'PUBLISHED'),
-                    'text-danger': (episodeCreation.episode.status === 'ERROR'),
-                    'text-info': (['NEW', 'DOWNLOADING'].includes(episodeCreation.episode.status)),
-                    'text-gray': (episodeCreation.episode.status === 'ARCHIVED')
-                  }">
-                <small>{{ humanStatus(episodeCreation.episode.status) }}</small>
-              </span>
-            </div>
-            <div class="col-md-1 col-1 text-right episode-controls">
-              <img class="preload mr-1 mt-2" v-if="episodeCreation.episode.status === 'DOWNLOADING'" src="../assets/img/down-arrow.gif" alt=""/>
-            </div>
-          </div>
-        </div>
-      </el-dialog>
+    <!-- dialog for mass episodes' changing -->
+    <el-dialog :title="'Mass episodes changing'" :visible.sync="episodesMassUpdateEdit.dialog" >
+      <el-form :model="episodesMassUpdateEdit.form" :rules="episodesMassUpdateEdit.rules" ref="episodesMassUpdateEdit" @submit.native.prevent="massUpdateEpisodes">
+        <el-form-item prop="author">
+          <el-input
+              placeholder="Episode Author"
+              v-model="episodesMassUpdateEdit.form.author"
+          />
+        </el-form-item>
+        <el-form-item prop="album">
+          <el-input
+              placeholder="Episode Album"
+              v-model="episodesMassUpdateEdit.form.album"
+          />
+        </el-form-item>
+        <el-form-item prop="title">
+          <el-input
+              placeholder="Episode Title"
+              v-model="episodesMassUpdateEdit.form.title"
+          />
+        </el-form-item>
+        <el-form-item prop="cover">
+          <el-input
+              placeholder="Episode Cover"
+              v-model="episodesMassUpdateEdit.form.cover"
+          />
+        </el-form-item>
+      </el-form>
+      <hr class="hr__row-episode">
+      <el-button icon="el-icon-edit" @click="massUpdateEpisodes"> Update selected episodes </el-button>
+    </el-dialog>
   </div>
 
 </template>
@@ -191,11 +187,9 @@ import axios from "axios";
 import config from "@/config";
 import store from "@/store";
 import app from "@/main";
-import InputErrors from "@/components/InputErrors.vue";
 
 export default {
   name: 'UploadView',
-  components: {InputErrors},
   data: () => ({
     loading: true,
     podcast: null,
@@ -209,10 +203,12 @@ export default {
     },
     episodesMassUpdateEdit:{
       form: {
+        author: "",
         album: "",
         title: "",
-        cover: {}
+        cover: ""
       },
+      dialog: false,
     },
     fileList: [],
     uploadParams: {
@@ -277,7 +273,18 @@ export default {
     },
     massUpdateOpenDialog(){
       this.$message({type: 'success', message: 'Open dialog'});
-      // TODO: open dialog with form here
+      this.episodesMassUpdateEdit.dialog = true
+    },
+    massUpdateEpisodes(){
+      this.$message({type: 'success', message: 'Episodes updated'});
+      // TODO: update all episodes with data in episodesMassUpdateEdit.form
+      this.episodesMassUpdateEdit.dialog = false
+      console.log(
+          this.episodesMassUpdateEdit.form.title,
+          this.episodesMassUpdateEdit.form.author,
+          this.episodesMassUpdateEdit.form.album,
+          this.episodesMassUpdateEdit.form.cover,
+      )
     },
     createEpisodes(){
       this.uploadedFiles.forEach((uploadedFile, i) => {
