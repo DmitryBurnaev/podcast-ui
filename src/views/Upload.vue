@@ -130,6 +130,7 @@
                           <hr class="file-info-hr">
                           <ul class="file-info-list">
                             <li>Title: "{{item.file.meta.title}}"</li>
+                            <li>Author: "{{item.file.meta.author}}"</li>
                             <li>Size: {{(item.file.size / 1024 / 1024).toFixed(2)}} MB</li>
                             <li>Duration: ~{{(item.file.meta.duration / 60).toFixed(0) }} min</li>
                           </ul>
@@ -163,10 +164,20 @@
           />
         </el-form-item>
         <el-form-item prop="title">
-          <el-input
-              placeholder="Episode Title"
-              v-model="episodesMassUpdateEdit.form.title"
-          />
+          <div class="row">
+            <div class="col-md-9 pr-0">
+              <el-input
+                placeholder="Episode Title"
+                v-model="episodesMassUpdateEdit.form.title"
+              />
+            </div>
+            <div class="col-md-3">
+              <el-input
+                placeholder="Title From"
+                v-model="episodesMassUpdateEdit.form.startTitleFrom"
+              />
+            </div>
+          </div>
         </el-form-item>
         <el-form-item prop="cover">
           <el-input
@@ -193,7 +204,47 @@ export default {
   data: () => ({
     loading: true,
     podcast: null,
-    uploadedFiles: [],
+    uploadedFiles: [
+      //   TODO: remove before:
+      {
+        "status": "UPLOADED",
+        "checked": true,
+        "episode": null,
+        "file": {
+          "name": "dune_2__1_92269672.mp3",
+          "path": "tmp/audio/uploaded_audio_111a560f1cc60a287a6d8f9fd6ff69e9.mp3",
+          "size": 6205857,
+          "meta": {
+            "duration": 387,
+            "title": null,
+            "author": null,
+            "album": null,
+            "track": null
+          },
+          "hash": "111a560f1cc60a287a6d8f9fd6ff69e9",
+          "cover": null
+        }
+      },
+      {
+        "status": "UPLOADED",
+        "checked": true,
+        "episode": null,
+        "file": {
+          "name": "dune_2__2_92269672.mp3",
+          "path": "tmp/audio/uploaded_audio_222a560f1cc60a287a6d8f9fd6ff69e9.mp3",
+          "size": 16205857,
+          "meta": {
+            "duration": 587,
+            "title": null,
+            "author": null,
+            "album": null,
+            "track": null
+          },
+          "hash": "222a560f1cc60a287a6d8f9fd6ff69e9",
+          "cover": null
+        }
+      },
+    ],
     episodesCreating: false,
     podcastEdit:{
       form: {
@@ -206,6 +257,7 @@ export default {
         author: "",
         album: "",
         title: "",
+        startTitleFrom: 1,
         cover: ""
       },
       dialog: false,
@@ -277,14 +329,17 @@ export default {
     },
     massUpdateEpisodes(){
       this.$message({type: 'success', message: 'Episodes updated'});
-      // TODO: update all episodes with data in episodesMassUpdateEdit.form
+      let counts;
+      counts = {
+        episodeCount: parseInt(this.episodesMassUpdateEdit.form.startTitleFrom)
+      }
+      this.uploadedFiles.forEach((uploadedFile) => {
+        counts.episodeCount += 1
+        uploadedFile.file.meta.title = `${this.episodesMassUpdateEdit.form.title} ${counts.episodeCount}`
+        uploadedFile.file.meta.author = this.episodesMassUpdateEdit.form.author
+        uploadedFile.file.meta.album = this.episodesMassUpdateEdit.form.album
+      })
       this.episodesMassUpdateEdit.dialog = false
-      console.log(
-          this.episodesMassUpdateEdit.form.title,
-          this.episodesMassUpdateEdit.form.author,
-          this.episodesMassUpdateEdit.form.album,
-          this.episodesMassUpdateEdit.form.cover,
-      )
     },
     createEpisodes(){
       this.uploadedFiles.forEach((uploadedFile, i) => {
