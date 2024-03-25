@@ -206,44 +206,44 @@ export default {
     podcast: null,
     uploadedFiles: [
       //   TODO: remove before:
-      {
-        "status": "UPLOADED",
-        "checked": true,
-        "episode": null,
-        "file": {
-          "name": "dune_2__1_92269672.mp3",
-          "path": "tmp/audio/uploaded_audio_111a560f1cc60a287a6d8f9fd6ff69e9.mp3",
-          "size": 6205857,
-          "meta": {
-            "duration": 387,
-            "title": null,
-            "author": null,
-            "album": null,
-            "track": null
-          },
-          "hash": "111a560f1cc60a287a6d8f9fd6ff69e9",
-          "cover": null
-        }
-      },
-      {
-        "status": "UPLOADED",
-        "checked": true,
-        "episode": null,
-        "file": {
-          "name": "dune_2__2_92269672.mp3",
-          "path": "tmp/audio/uploaded_audio_222a560f1cc60a287a6d8f9fd6ff69e9.mp3",
-          "size": 16205857,
-          "meta": {
-            "duration": 587,
-            "title": null,
-            "author": null,
-            "album": null,
-            "track": null
-          },
-          "hash": "222a560f1cc60a287a6d8f9fd6ff69e9",
-          "cover": null
-        }
-      },
+      // {
+      //   "status": "UPLOADED",
+      //   "checked": true,
+      //   "episode": null,
+      //   "file": {
+      //     "name": "dune_2__1_92269672.mp3",
+      //     "path": "tmp/audio/uploaded_audio_111a560f1cc60a287a6d8f9fd6ff69e9.mp3",
+      //     "size": 6205857,
+      //     "meta": {
+      //       "duration": 387,
+      //       "title": null,
+      //       "author": null,
+      //       "album": null,
+      //       "track": null
+      //     },
+      //     "hash": "111a560f1cc60a287a6d8f9fd6ff69e9",
+      //     "cover": null
+      //   }
+      // },
+      // {
+      //   "status": "UPLOADED",
+      //   "checked": true,
+      //   "episode": null,
+      //   "file": {
+      //     "name": "dune_2__2_92269672.mp3",
+      //     "path": "tmp/audio/uploaded_audio_222a560f1cc60a287a6d8f9fd6ff69e9.mp3",
+      //     "size": 16205857,
+      //     "meta": {
+      //       "duration": 587,
+      //       "title": null,
+      //       "author": null,
+      //       "album": null,
+      //       "track": null
+      //     },
+      //     "hash": "222a560f1cc60a287a6d8f9fd6ff69e9",
+      //     "cover": null
+      //   }
+      // },
     ],
     episodesCreating: false,
     podcastEdit:{
@@ -334,10 +334,12 @@ export default {
         episodeCount: parseInt(this.episodesMassUpdateEdit.form.startTitleFrom)
       }
       this.uploadedFiles.forEach((uploadedFile) => {
+        if (uploadedFile.checked){
+          uploadedFile.file.meta.title = `${this.episodesMassUpdateEdit.form.title} ${counts.episodeCount}`
+          uploadedFile.file.meta.author = this.episodesMassUpdateEdit.form.author
+          uploadedFile.file.meta.album = this.episodesMassUpdateEdit.form.album
+        }
         counts.episodeCount += 1
-        uploadedFile.file.meta.title = `${this.episodesMassUpdateEdit.form.title} ${counts.episodeCount}`
-        uploadedFile.file.meta.author = this.episodesMassUpdateEdit.form.author
-        uploadedFile.file.meta.album = this.episodesMassUpdateEdit.form.album
       })
       this.episodesMassUpdateEdit.dialog = false
     },
