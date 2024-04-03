@@ -184,6 +184,22 @@
               placeholder="Episode Cover"
               v-model="episodesMassUpdateEdit.form.cover"
           />
+          <el-upload
+            class="upload-demo"
+            ref="upload-image"
+            :action="uploadImageParams.url"
+            :headers="uploadImageParams.headers"
+            accept="image/*"
+            :limit="1"
+            :on-success="handleUploadImageSuccess"
+          >
+            <img v-if="episodesMassUpdateEdit.form.cover" :src="episodesMassUpdateEdit.form.cover.preview_url" class="avatar" alt="upl">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+<!--            <i class="el-icon-upload"></i>-->
+<!--            <div class="el-upload__text">Drop file here or <em>click to upload</em></div>-->
+<!--            <div class="el-upload__tip" slot="tip">image files with a size less than 100Mb</div>-->
+          </el-upload>
+
         </el-form-item>
       </el-form>
       <hr class="hr__row-episode">
@@ -258,7 +274,7 @@ export default {
         album: "",
         title: "",
         startTitleFrom: 1,
-        cover: ""
+        cover: null
       },
       dialog: false,
     },
@@ -269,6 +285,14 @@ export default {
       // todo: use method http-request for manual handling upload requests
       //       (see https://element.eleme.io/#/en-US/component/upload)
       url: `${config.apiURL}media/upload/audio/`,
+      headers: {
+        Authorization: `Bearer ${store.getters.accessToken}`
+      },
+    },
+    uploadImageParams: {
+      name: 'file',
+      maxFiles: 100,
+      url: `${config.apiURL}media/upload/image/`,
       headers: {
         Authorization: `Bearer ${store.getters.accessToken}`
       },
@@ -394,6 +418,9 @@ export default {
       )
       this.sortUploadedFiles()
       this.removeFileFromFileList(fileResponse.payload.name)
+    },
+    async handleUploadImageSuccess(fileResponse){
+      this.episodesMassUpdateEdit.form.cover = fileResponse.data.payload
     },
     removeFileFromFileList(fileName){
       const indexOfObject = this.$refs.upload.uploadFiles.findIndex(file => {
