@@ -184,6 +184,36 @@
               placeholder="Episode Cover"
               v-model="episodesMassUpdateEdit.form.cover"
           />
+<!--TODO: TRY to use
+          <el-upload
+  action="https://jsonplaceholder.typicode.com/posts/"
+  list-type="picture-card"
+  :on-preview="handlePictureCardPreview"
+  :on-remove="handleRemove">
+  <i class="el-icon-plus"></i>
+</el-upload>
+<el-dialog :visible.sync="dialogVisible">
+  <img width="100%" :src="dialogImageUrl" alt="">
+</el-dialog>
+<script>
+  export default {
+    data() {
+      return {
+        dialogImageUrl: '',
+        dialogVisible: false
+      };
+    },
+    methods: {
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
+      }
+    }
+  }
+</script>-->
           <el-upload
             class="upload-demo"
             ref="upload-image"
@@ -195,9 +225,6 @@
           >
             <img v-if="episodesMassUpdateEdit.form.cover" :src="episodesMassUpdateEdit.form.cover.preview_url" class="avatar" alt="upl">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-<!--            <i class="el-icon-upload"></i>-->
-<!--            <div class="el-upload__text">Drop file here or <em>click to upload</em></div>-->
-<!--            <div class="el-upload__tip" slot="tip">image files with a size less than 100Mb</div>-->
           </el-upload>
 
         </el-form-item>
