@@ -180,40 +180,6 @@
           </div>
         </el-form-item>
         <el-form-item prop="cover">
-          <el-input
-              placeholder="Episode Cover"
-              v-model="episodesMassUpdateEdit.form.cover"
-          />
-<!--TODO: TRY to use
-          <el-upload
-  action="https://jsonplaceholder.typicode.com/posts/"
-  list-type="picture-card"
-  :on-preview="handlePictureCardPreview"
-  :on-remove="handleRemove">
-  <i class="el-icon-plus"></i>
-</el-upload>
-<el-dialog :visible.sync="dialogVisible">
-  <img width="100%" :src="dialogImageUrl" alt="">
-</el-dialog>
-<script>
-  export default {
-    data() {
-      return {
-        dialogImageUrl: '',
-        dialogVisible: false
-      };
-    },
-    methods: {
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
-      }
-    }
-  }
-</script>-->
           <el-upload
             class="upload-demo"
             ref="upload-image"
@@ -223,7 +189,7 @@
             :limit="1"
             :on-success="handleUploadImageSuccess"
           >
-            <img v-if="episodesMassUpdateEdit.form.cover" :src="episodesMassUpdateEdit.form.cover.preview_url" class="avatar" alt="upl">
+            <img v-if="episodesMassUpdateEdit.form.cover" :src="episodesMassUpdateEdit.form.cover.preview_url" class="avatar uploaded-mass-update-cover" alt="upl">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
 
@@ -249,44 +215,44 @@ export default {
     podcast: null,
     uploadedFiles: [
       //   TODO: remove before:
-      // {
-      //   "status": "UPLOADED",
-      //   "checked": true,
-      //   "episode": null,
-      //   "file": {
-      //     "name": "dune_2__1_92269672.mp3",
-      //     "path": "tmp/audio/uploaded_audio_111a560f1cc60a287a6d8f9fd6ff69e9.mp3",
-      //     "size": 6205857,
-      //     "meta": {
-      //       "duration": 387,
-      //       "title": null,
-      //       "author": null,
-      //       "album": null,
-      //       "track": null
-      //     },
-      //     "hash": "111a560f1cc60a287a6d8f9fd6ff69e9",
-      //     "cover": null
-      //   }
-      // },
-      // {
-      //   "status": "UPLOADED",
-      //   "checked": true,
-      //   "episode": null,
-      //   "file": {
-      //     "name": "dune_2__2_92269672.mp3",
-      //     "path": "tmp/audio/uploaded_audio_222a560f1cc60a287a6d8f9fd6ff69e9.mp3",
-      //     "size": 16205857,
-      //     "meta": {
-      //       "duration": 587,
-      //       "title": null,
-      //       "author": null,
-      //       "album": null,
-      //       "track": null
-      //     },
-      //     "hash": "222a560f1cc60a287a6d8f9fd6ff69e9",
-      //     "cover": null
-      //   }
-      // },
+      {
+        "status": "UPLOADED",
+        "checked": true,
+        "episode": null,
+        "file": {
+          "name": "dune_2__1_92269672.mp3",
+          "path": "tmp/audio/uploaded_audio_111a560f1cc60a287a6d8f9fd6ff69e9.mp3",
+          "size": 6205857,
+          "meta": {
+            "duration": 387,
+            "title": null,
+            "author": null,
+            "album": null,
+            "track": null
+          },
+          "hash": "111a560f1cc60a287a6d8f9fd6ff69e9",
+          "cover": null
+        }
+      },
+      {
+        "status": "UPLOADED",
+        "checked": true,
+        "episode": null,
+        "file": {
+          "name": "dune_2__2_92269672.mp3",
+          "path": "tmp/audio/uploaded_audio_222a560f1cc60a287a6d8f9fd6ff69e9.mp3",
+          "size": 16205857,
+          "meta": {
+            "duration": 587,
+            "title": null,
+            "author": null,
+            "album": null,
+            "track": null
+          },
+          "hash": "222a560f1cc60a287a6d8f9fd6ff69e9",
+          "cover": null
+        }
+      },
     ],
     episodesCreating: false,
     podcastEdit:{
@@ -389,6 +355,7 @@ export default {
           uploadedFile.file.meta.title = `${this.episodesMassUpdateEdit.form.title} ${counts.episodeCount}`
           uploadedFile.file.meta.author = this.episodesMassUpdateEdit.form.author
           uploadedFile.file.meta.album = this.episodesMassUpdateEdit.form.album
+          uploadedFile.file.cover = this.episodesMassUpdateEdit.form.cover
         }
         counts.episodeCount += 1
       })
@@ -447,7 +414,8 @@ export default {
       this.removeFileFromFileList(fileResponse.payload.name)
     },
     async handleUploadImageSuccess(fileResponse){
-      this.episodesMassUpdateEdit.form.cover = fileResponse.data.payload
+      this.episodesMassUpdateEdit.form.cover = fileResponse.payload
+      console.log(this.episodesMassUpdateEdit.form.cover)
     },
     removeFileFromFileList(fileName){
       const indexOfObject = this.$refs.upload.uploadFiles.findIndex(file => {
@@ -501,6 +469,9 @@ export default {
     display: flex;
     justify-content: center;
     line-height: 200px;
+  }
+  .uploaded-mass-update-cover{
+    width: 200px;
   }
   .row-uploaded-file{
     .image-container{
