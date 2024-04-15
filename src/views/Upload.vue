@@ -32,6 +32,7 @@
                       :limit="uploadParams.maxFiles"
                       :on-exceed="handleUploadLimitExceed"
                       :on-success="handleUploadSuccess"
+                      :before-upload="handleBeforeUpload"
                       :file-list="fileList"
                       :auto-upload="true"
                     >
@@ -342,6 +343,10 @@ export default {
                 you selected ${files.length} files this time,
                 add up to ${files.length + fileList.length} totally`
       );
+    },
+    async handleBeforeUpload(){
+      // just rechecking current access before sending file to server
+      await this.$store.dispatch('getMe');
     },
     async handleUploadSuccess(fileResponse){
       const existsEpisodeResponse = await axios.get(
