@@ -346,7 +346,10 @@ export default {
     },
     async handleBeforeUpload(){
       // just rechecking current access before sending file to server
-      await this.$store.dispatch('getMe');
+      // TODO: recheck
+      console.log("handleBeforeUpload")
+      const podcastID = this.$route.params.podcastID;
+      await this.$store.dispatch('getPodcastDetails', podcastID);
     },
     async handleUploadSuccess(fileResponse){
       const existsEpisodeResponse = await axios.get(
