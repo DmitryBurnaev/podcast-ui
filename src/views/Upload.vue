@@ -1,6 +1,5 @@
 <template>
   <div class="content" v-if="!loading">
-
     <div class="row">
       <div class="col-md-12">
         <div class="card card-podcast card-user">
@@ -47,7 +46,6 @@
         </div>
       </div>
     </div>
-
 
     <div class="row" v-if="uploadedFiles.length > 0">
       <div class="col-12">
@@ -136,7 +134,6 @@
         </div>
       </div>
     </div>
-
 
     <!-- dialog for mass episodes' changing -->
     <el-dialog :title="'Mass episodes changing'" :visible.sync="episodesMassUpdateEdit.dialog" >
@@ -345,9 +342,6 @@ export default {
       );
     },
     async handleBeforeUpload(){
-      // just rechecking current access before sending file to server
-      // TODO: recheck
-      console.log("handleBeforeUpload")
       const podcastID = this.$route.params.podcastID;
       await this.$store.dispatch('getPodcastDetails', podcastID);
     },
