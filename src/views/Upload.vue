@@ -195,6 +195,7 @@ import config from "@/config";
 import store from "@/store";
 import app from "@/main";
 
+
 export default {
   name: 'UploadView',
   data: () => ({
@@ -225,9 +226,10 @@ export default {
       // todo: use method http-request for manual handling upload requests
       //       (see https://element.eleme.io/#/en-US/component/upload)
       url: `${config.apiURL}media/upload/audio/`,
-      headers: {
-        Authorization: `Bearer ${store.getters.accessToken}`
-      },
+      header: this.getHeaders(),
+      // headers: {
+      //   Authorization: `Bearer ${store.getters.accessToken}`
+      // },
     },
     uploadImageParams: {
       name: 'file',
@@ -314,6 +316,11 @@ export default {
           this.createEpisode(uploadedFile);
         }, i*1000);
       });
+    },
+    getHeaders() {
+      return {
+        Authorization: `Bearer ${store.getters.accessToken}`
+      }
     },
     createEpisode(uploadedFile){
       console.log(`Creating episode for file ${uploadedFile.file.name}`)
