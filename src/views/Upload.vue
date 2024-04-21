@@ -172,6 +172,7 @@
             ref="upload-image"
             :action="uploadImageParams.url"
             :headers="uploadImageParams.headers"
+            :before-upload="handleBeforeUpload"
             accept="image/*"
             :limit="1"
             :on-success="handleUploadImageSuccess"
@@ -203,6 +204,7 @@ export default {
     podcast: null,
     uploadedFiles: [],
     episodesCreating: false,
+    authHeader: `Bearer ${store.getters.accessToken}`,
     podcastEdit:{
       form: {
         download_automatically: false,
@@ -223,21 +225,21 @@ export default {
     uploadParams: {
       name: 'file',
       maxFiles: 100,
-      // todo: use method http-request for manual handling upload requests
-      //       (see https://element.eleme.io/#/en-US/component/upload)
       url: `${config.apiURL}media/upload/audio/`,
-      header: this.getHeaders(),
+      headers: {}
+
       // headers: {
-      //   Authorization: `Bearer ${store.getters.accessToken}`
+      //   Authorization: this.calcHeader()
       // },
     },
     uploadImageParams: {
       name: 'file',
       maxFiles: 100,
       url: `${config.apiURL}media/upload/image/`,
-      headers: {
-        Authorization: `Bearer ${store.getters.accessToken}`
-      },
+      headers: {}
+      // headers: {
+      //   // Authorization: this.authHeader
+      // },
     },
     uploadFileStatus: {
       NEW: 'NEW',
@@ -250,7 +252,7 @@ export default {
   computed: {
     error() {
       return this.$store.getters.error
-    }
+    },
   },
   watch: {
     $route: 'fetchData',
@@ -276,6 +278,8 @@ export default {
         "route": null
       },
     ])
+    this.uploadParams.headers['Authorization'] = this.authHeader
+    this.uploadImageParams.headers['Authorization'] = this.authHeader
   },
   methods: {
     async fetchData() {
@@ -317,11 +321,6 @@ export default {
         }, i*1000);
       });
     },
-    getHeaders() {
-      return {
-        Authorization: `Bearer ${store.getters.accessToken}`
-      }
-    },
     createEpisode(uploadedFile){
       console.log(`Creating episode for file ${uploadedFile.file.name}`)
       uploadedFile.status = this.uploadFileStatus.EPISODE_CREATING
@@ -349,8 +348,13 @@ export default {
       );
     },
     async handleBeforeUpload(){
-      const podcastID = this.$route.params.podcastID;
-      await this.$store.dispatch('getPodcastDetails', podcastID);
+      await this.$store.dispatch('checkAuth');
+      let header = `Bearer ${store.getters.accessToken}`;
+      if (header !== this.authHeader){
+        this.authHeader = header;
+        this.uploadParams.headers['Authorization'] = header
+        this.uploadImageParams.headers['Authorization'] = header
+      }
     },
     async handleUploadSuccess(fileResponse){
       const existsEpisodeResponse = await axios.get(

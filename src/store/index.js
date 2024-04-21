@@ -50,6 +50,13 @@ export default new Vuex.Store({
                 return response.data.payload
             }
         },
+        async checkAuth({commit}) {
+            console.log(commit)
+            const response = await axios.get(`auth/me/`, )
+            if (response){
+                console.log(response.data.payload)
+            }
+        },
 
     },
     modules: {auth, podcasts}
