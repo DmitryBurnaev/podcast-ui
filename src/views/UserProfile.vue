@@ -108,6 +108,40 @@
         </div>
       </div>
     </div>
+    <div class="row user-access-tokens" v-if="accessTokens.length > 0">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header card-header-episodes">
+            <h4 class="card-title">Access Tokens</h4>
+          </div>
+          <div class="card-body">
+            <ul class="list-unstyled team-members">
+              <li v-for="accessToken in accessTokens" :key="accessToken.id">
+                <div class="row row-episode">
+                  <div class="col-10 ip-address-value">
+                    <div class="float-left mr-3">
+                      {{accessToken.created_at }}
+                    </div>
+                  </div>
+                  <div class="col-2 episode-controls">
+                      <div
+                          class="btn-outline-gray btn-icon"
+                          @click="deleteAccessToken(accessToken)">
+                        <i class="nc-icon nc-simple-remove"></i>
+                      </div>
+                    </div>
+                </div>
+                <hr class="hr__row-episode">
+              </li>
+            </ul>
+          </div>
+          <infinite-loading @infinite="loadMoreIPAddresses" >
+            <span slot="no-results"></span>
+            <span slot="no-more"></span>
+          </infinite-loading>
+        </div>
+      </div>
+    </div>
 
     <div class="row user-ips-container" v-if="ipAddresses.length > 0">
       <div class="col-12">
