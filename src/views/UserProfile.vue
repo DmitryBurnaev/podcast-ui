@@ -47,6 +47,40 @@
                 </li>
               </ul>
             </div>
+            <hr>
+            <div class="row mb-3" >
+              <div class="col-10">
+                <h5>Access Tokens</h5>
+              </div>
+              <div class="col-2 text-right">
+                <div class="btn-outline-gray btn-icon"
+                    @click="createAccessTokenOpenDialog()">
+                  <i class="nc-icon nc-simple-add"></i>
+                </div>
+              </div>
+            </div>
+            <div class="access-tokens-list-container">
+              <ul class="list-unstyled episode-details">
+                <li v-for="accessToken in accessTokens" :key="accessToken.id">
+                  <div class="row cookie-row">
+                    <div class="col-2">
+<!--                      <source-type-icon-->
+<!--                          :source-type="cookie.sourceType"-->
+<!--                          :source-label="`Uploaded cookie file for ${cookie.sourceType}`">-->
+<!--                      </source-type-icon>-->
+                    </div>
+                    <div class="col-8 cookie-info pl-0">
+                      {{accessToken.created_at | date}}
+                    </div>
+                    <div class="col-2 text-right">
+                      <div class="btn-outline-gray btn-icon" @click="deleteAccessToken(accessToken)">
+                        <i class="nc-icon nc-simple-remove"></i>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -98,47 +132,18 @@
               </div>
             </el-form>
             <div class="row control-container bottom-controllers">
-              <div class="col-md-3 offset-md-9 col-xs-12 text-right">
+              <div class="col-md-6 col-xs-12 text-left">
+                <el-button type="info" plain @click="updateProfile" icon="el-icon-edit">
+                  Create Access Token
+                </el-button>
+              </div>
+              <div class="col-md-3 offset-md-1 col-xs-12 text-right">
                 <el-button type="info" plain @click="updateProfile" icon="el-icon-edit">
                   Update
                 </el-button>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="row user-access-tokens" v-if="accessTokens.length > 0">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-header card-header-episodes">
-            <h4 class="card-title">Access Tokens</h4>
-          </div>
-          <div class="card-body">
-            <ul class="list-unstyled team-members">
-              <li v-for="accessToken in accessTokens" :key="accessToken.id">
-                <div class="row row-episode">
-                  <div class="col-10 ip-address-value">
-                    <div class="float-left mr-3">
-                      {{accessToken.created_at }}
-                    </div>
-                  </div>
-                  <div class="col-2 episode-controls">
-                      <div
-                          class="btn-outline-gray btn-icon"
-                          @click="deleteAccessToken(accessToken)">
-                        <i class="nc-icon nc-simple-remove"></i>
-                      </div>
-                    </div>
-                </div>
-                <hr class="hr__row-episode">
-              </li>
-            </ul>
-          </div>
-          <infinite-loading @infinite="loadMoreIPAddresses" >
-            <span slot="no-results"></span>
-            <span slot="no-more"></span>
-          </infinite-loading>
         </div>
       </div>
     </div>
@@ -185,7 +190,6 @@
         </div>
       </div>
     </div>
-
 
 <!-- UPLOAD COOKIES DIALOG -->
     <el-dialog :title="cookiesUploading.title" :visible.sync="cookiesUploading.dialog">
@@ -239,6 +243,50 @@
     </el-dialog>
 <!-- END DIALOG -->
 
+<!-- CREATE ACCESS TOKEN DIALOG -->
+    <el-dialog :title="accessTokenCreating.title" :visible.sync="accessTokenCreating.dialog">
+      <el-form
+          ref="accessTokenCreating"
+          class="create-access-token-form"
+          :model="accessTokenCreating.form"
+          :rules="accessTokenCreating.rules"
+      >
+        <div class="row">
+          <div class="col-md-4 col-xs-12 input-container">
+            <el-select
+                v-model="accessTokenCreating.form.expiresInDays"
+                placeholder="Select Expires"
+                :class="{'is-error': accessTokenCreating.serverErrors.expiresInDays.length > 0}"
+            >
+              <el-option
+                v-for="item in accessTokenCreating.choices.expiresIn"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+                <div class="text-left">
+                    {{ item.label }}
+                </div>
+              </el-option>
+            </el-select>
+            <input-errors :errors="accessTokenCreating.serverErrors.expiresInDays"></input-errors>
+          </div>
+          <div class="col-md-8 col-xs-12 input-container">
+            <el-input placeholder="Token Name" v-model="accessTokenCreating.form.name"></el-input>
+            <input-errors :errors="accessTokenCreating.serverErrors.name"></input-errors>
+          </div>
+        </div>
+        <hr class="hr__row-episode">
+        <div class="row control-container">
+          <div class="col-md-3 offset-md-9 col-xs-12 text-right">
+            <el-button type="info" plain @click="submitCreateAccessTokenForm">
+              Create
+            </el-button>
+          </div>
+        </div>
+      </el-form>
+    </el-dialog>
+<!-- END DIALOG -->
+
 
   </div>
 
@@ -261,6 +309,7 @@ export default {
     profile: null,
     cookies: [],
     ipAddresses: [],
+    accessTokens: [],
     showEditOnSmall: true,
     profileFormHeight: null,
     rightColStyles: { },
@@ -287,6 +336,46 @@ export default {
         email: [],
         password_1: [],
         password_2: [],
+      },
+    },
+    accessTokenCreating: {
+      dialog: false,
+      title: "Creating new access token",
+      form: {
+        name: "",
+        expiresInDays: 180,
+      },
+      rules: {
+        name: [
+          { required: true, trigger: 'blur' },
+        ],
+        expires_in_days: [
+          { required: true, trigger: 'blur' },
+        ],
+      },
+      choices: {
+        expiresIn: [
+          {
+            "label": "30 days",
+            "value": "30",
+          },
+          {
+            "label": "60 days",
+            "value": "60",
+          },
+          {
+            "label": "180 days",
+            "value": "180",
+          },
+          {
+            "label": "365 days",
+            "value": "365",
+          },
+        ],
+      },
+      serverErrors:{
+        name: [],
+        expiresInDays: [],
       },
     },
     cookiesUploading:{
@@ -361,6 +450,7 @@ export default {
       this.profile = await this.$store.dispatch('getMe'); // TODO: use already fetched profile
       this.cookies = await this.$store.dispatch('getCookies');
       this.ipAddresses = await this.getIPAddresses()
+      this.accessTokens = await this.getAccessTokens()
     },
     async updateProfile(){
       const formValid = await formIsValid(this, 'profileEditForm')
@@ -390,12 +480,19 @@ export default {
     async uploadCookieOpenDialog(){
       this.cookiesUploading.dialog = true
     },
+    async createAccessTokenOpenDialog(){
+      this.accessTokenCreating.dialog = true
+    },
     onChangeUploadingCookieFile(event){
       this.cookiesUploading.form.file = event.target.files[0]
     },
     async getIPAddresses(){
       let ipsResponse = await this.$store.dispatch('getIPAddresses', {offset: 0})
       return ipsResponse.items;
+    },
+    async getAccessTokens(){
+      let accessTokens = await this.$store.dispatch('getAccessTokens', {offset: 0})
+      return accessTokens.items;
     },
     async submitCookieFormUpload() {
       const formValid = await formIsValid(this, 'cookiesUploadingForm')
@@ -411,6 +508,16 @@ export default {
         let msg = `Cookie for the source ${this.cookiesUploading.form.source_type} successful uploaded`
         this.$message({type: 'success', message: msg});
         this.cookies = await this.$store.dispatch('getCookies');
+        this.cookiesUploading.dialog = false;
+      }
+    },
+    async submitCreateAccessTokenForm() {
+      const formValid = await formIsValid(this, 'createAccessTokenForm')
+      if (formValid){
+        let response = await axios.patch(`auth/access-token/`, this.accessTokenCreating.form);
+        // TODO: print token
+        console.log(response);
+        this.$message({type: 'success', message: 'Access Token successful created'});
         this.cookiesUploading.dialog = false;
       }
     },
@@ -431,6 +538,10 @@ export default {
         await axios.post(`auth/ips/delete/`, {"ids": [ipAddress.id]} );
         this.ipAddresses = await this.getIPAddresses()
       }
+    },
+    async deleteAccessToken(accessToken){
+        await axios.delete(`auth/access-tokens/${accessToken.id}/`);
+        this.accessTokens = await this.getAccessTokens()
     },
     async loadMoreIPAddresses($state){
       let ipAddressesResponse = await this.$store.dispatch(
