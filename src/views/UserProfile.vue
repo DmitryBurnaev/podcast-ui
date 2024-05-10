@@ -246,7 +246,7 @@
 <!-- CREATE ACCESS TOKEN DIALOG -->
     <el-dialog :title="accessTokenCreating.title" :visible.sync="accessTokenCreating.dialog">
       <el-form
-          ref="accessTokenCreating"
+          ref="createAccessTokenForm"
           class="create-access-token-form"
           :model="accessTokenCreating.form"
           :rules="accessTokenCreating.rules"
@@ -276,9 +276,29 @@
           </div>
         </div>
         <hr class="hr__row-episode">
-        <div class="row control-container">
+        <div class="preloader text-center" v-if="accessTokenCreating.generatingInProgress">
+          <i class="icon el-icon-loading"></i>
+        </div>
+        <div class="form-group text-left" v-else-if="accessTokenCreating.generatedToken">
+          <!-- Show generated token -->
+          <label>Generated Token</label>
+          <el-input
+              v-if="accessTokenCreating.generatedToken !== ''"
+              placeholder="Generated Token"
+              v-model="accessTokenCreating.generatedToken"
+              :disabled="true"
+          >
+              <el-button
+                  slot="append"
+                  icon="el-icon-copy-document"
+                  type="success"
+                  @click="copyToClipboard(accessTokenCreating.generatedToken)">
+              </el-button>
+          </el-input>
+        </div>
+        <div class="row control-container mt-4">
           <div class="col-md-3 offset-md-9 col-xs-12 text-right">
-            <el-button type="info" plain @click="submitCreateAccessTokenForm">
+            <el-button type="info" plain @click="submitCreateAccessTokenForm" :disabled="accessTokenCreating.generatedToken !== ''">
               Create
             </el-button>
           </div>
@@ -296,7 +316,7 @@
 
 import InputErrors from "@/components/InputErrors";
 import SourceTypeIcon from "@/components/SourceTypeIcon";
-import {fillFormErrors, formIsValid, goToPodcast} from "@/utils/podcast";
+import {fillFormErrors, formIsValid, goToPodcast, copyToClipboard} from "@/utils/podcast";
 import axios from "axios";
 import InfiniteLoading from 'vue-infinite-loading';
 import app from "@/main";
@@ -342,14 +362,17 @@ export default {
       dialog: false,
       title: "Creating new access token",
       form: {
-        name: "",
-        expiresInDays: 180,
+        name: "My Access Token",
+        expiresInDays: "180",
       },
+      generatingInProgress: true,
+      // generatedToken: "fasldfjalskdjfsal;djfa;sldkfjaslk",
+      generatedToken: "",
       rules: {
         name: [
-          { required: true, trigger: 'blur' },
+          { required: true, trigger: 'blur', min: 1, message: 'Name should be from 1 to 256 symbols'},
         ],
-        expires_in_days: [
+        expiresInDays: [
           { required: true, trigger: 'blur' },
         ],
       },
@@ -481,6 +504,7 @@ export default {
       this.cookiesUploading.dialog = true
     },
     async createAccessTokenOpenDialog(){
+      this.accessTokenCreating.generatingInProgress = false
       this.accessTokenCreating.dialog = true
     },
     onChangeUploadingCookieFile(event){
@@ -514,11 +538,18 @@ export default {
     async submitCreateAccessTokenForm() {
       const formValid = await formIsValid(this, 'createAccessTokenForm')
       if (formValid){
-        let response = await axios.patch(`auth/access-token/`, this.accessTokenCreating.form);
-        // TODO: print token
+        this.accessTokenCreating.generatingInProgress = true
+        let data = {
+          name: this.accessTokenCreating.form.name,
+          expires_in_days: this.accessTokenCreating.form.expiresInDays,
+        }
+        let response = await axios.post(`auth/access-tokens/`, data);
         console.log(response);
+        // if (response.status === 200){
+        //
+        // }
         this.$message({type: 'success', message: 'Access Token successful created'});
-        this.cookiesUploading.dialog = false;
+        this.accessTokenCreating.generatingInProgress = false
       }
     },
     async deleteIPAddress(ipAddress){
@@ -556,6 +587,7 @@ export default {
       }
     },
     goToPodcast: goToPodcast,
+    copyToClipboard: copyToClipboard,
   }
 }
 </script>
@@ -620,6 +652,12 @@ export default {
     span{
       font-weight: bold;
       cursor: pointer;
+    }
+  }
+  .preloader{
+    padding-top: 10px;
+    .icon{
+      font-size: 30px;
     }
   }
 </style>
