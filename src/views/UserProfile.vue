@@ -63,18 +63,26 @@
               <ul class="list-unstyled episode-details">
                 <li v-for="accessToken in accessTokens" :key="accessToken.id">
                   <div class="row cookie-row">
-                    <div class="col-2">
-<!--                      <source-type-icon-->
-<!--                          :source-type="cookie.sourceType"-->
-<!--                          :source-label="`Uploaded cookie file for ${cookie.sourceType}`">-->
-<!--                      </source-type-icon>-->
+                    <div class="col-2 pt-1"
+                         :title="`Name: ${accessToken.name}\nCreated: ${dateFilter(accessToken.created_at)}\nExpires: ${dateFilter(accessToken.expires_in)}\nEnabled: ${accessToken.enabled}\n`"
+                    >
+                      <i class="nc-icon nc-key-25"></i>
                     </div>
-                    <div class="col-8 cookie-info pl-0">
-                      {{accessToken.created_at | date}}
+                    <div
+                        class="col-7 cookie-info pl-0"
+                        :class="{'inactive-token': !accessToken.active}"
+                    >
+                      {{ accessToken.name }}
                     </div>
-                    <div class="col-2 text-right">
-                      <div class="btn-outline-gray btn-icon" @click="deleteAccessToken(accessToken)">
+                    <div class="col-3 text-right">
+                      <div class="btn-outline-gray btn-icon" @click="deleteAccessToken(accessToken)"  title="Delete Access Token">
                         <i class="nc-icon nc-simple-remove"></i>
+                      </div>
+                      <div v-if="accessToken.enabled" class="btn-outline-gray btn-icon" @click="disableAccessToken(accessToken)" title="Disable Access Token">
+                        <i class="nc-icon nc-button-pause"></i>
+                      </div>
+                      <div v-else-if="!accessToken.enabled" class="btn-outline-gray btn-icon" @click="enableAccessToken(accessToken)" title="Enable Access Token">
+                        <i class="nc-icon nc-button-play"></i>
                       </div>
                     </div>
                   </div>
@@ -320,6 +328,7 @@ import {fillFormErrors, formIsValid, goToPodcast, copyToClipboard} from "@/utils
 import axios from "axios";
 import InfiniteLoading from 'vue-infinite-loading';
 import app from "@/main";
+import {dateFilter} from "@/utils/filters";
 
 export default {
   name: "UserProfile",
@@ -366,7 +375,6 @@ export default {
         expiresInDays: "180",
       },
       generatingInProgress: true,
-      // generatedToken: "fasldfjalskdjfsal;djfa;sldkfjaslk",
       generatedToken: "",
       rules: {
         name: [
@@ -469,6 +477,7 @@ export default {
     }
   },
   methods: {
+    dateFilter,
     async fetchData() {
       this.profile = await this.$store.dispatch('getMe'); // TODO: use already fetched profile
       this.cookies = await this.$store.dispatch('getCookies');
@@ -505,6 +514,7 @@ export default {
     },
     async createAccessTokenOpenDialog(){
       this.accessTokenCreating.generatingInProgress = false
+      this.accessTokenCreating.generatedToken = ""
       this.accessTokenCreating.dialog = true
     },
     onChangeUploadingCookieFile(event){
@@ -545,10 +555,11 @@ export default {
         }
         let response = await axios.post(`auth/access-tokens/`, data);
         console.log(response);
-        // if (response.status === 200){
-        //
-        // }
-        this.$message({type: 'success', message: 'Access Token successful created'});
+        if (response.status === 201){
+          this.$message({type: 'success', message: 'Access Token successful created'});
+          this.accessTokenCreating.generatedToken = response.data.payload.token
+          this.accessTokens = await this.getAccessTokens()
+        }
         this.accessTokenCreating.generatingInProgress = false
       }
     },
@@ -560,7 +571,7 @@ export default {
           cancelButtonClass: 'is-plain',
           type: 'warning',
         }).then(() => {
-          axios.post(`auth/ips/delete/`, {"ids": [ipAddress.id]}).then(() => {
+          axios.post(`auth/ips/delete/`, {"ids": [ipAddress.id]}).then(async () => {
             app.$message({type: 'success', message: `IP successful deleted.`});
             this.ipAddresses = this.getIPAddresses()
           })
@@ -571,8 +582,36 @@ export default {
       }
     },
     async deleteAccessToken(accessToken){
-        await axios.delete(`auth/access-tokens/${accessToken.id}/`);
+      app.$confirm(`This Access Token will be removed persistently. Are you sure?`, 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        cancelButtonClass: 'is-plain',
+        type: 'warning',
+      }).then(() => {
+        axios.delete(`auth/access-tokens/${accessToken.id}/`, ).then(async () => {
+          app.$message({type: 'success', message: `Access Token successful deleted.`});
+          this.accessTokens = await this.getAccessTokens()
+        })
+      });
+    },
+    async disableAccessToken(accessToken){
+      app.$confirm(`This Access Token will be disabled. Are you sure?`, 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        cancelButtonClass: 'is-plain',
+        type: 'warning',
+      }).then(() => {
+        axios.patch(`auth/access-tokens/${accessToken.id}/`, {"enabled": false}).then(async () => {
+          app.$message({type: 'success', message: `Access Token successful disabled.`});
+          this.accessTokens = await this.getAccessTokens()
+        })
+      });
+    },
+    async enableAccessToken(accessToken){
+      axios.patch(`auth/access-tokens/${accessToken.id}/`, {"enabled": true}).then(async () => {
+        app.$message({type: 'success', message: `Access Token successful enabled.`});
         this.accessTokens = await this.getAccessTokens()
+      })
     },
     async loadMoreIPAddresses($state){
       let ipAddressesResponse = await this.$store.dispatch(
@@ -659,5 +698,9 @@ export default {
     .icon{
       font-size: 30px;
     }
+  }
+  .inactive-token{
+    text-decoration: line-through;
+    color: #9ca8b4;
   }
 </style>
