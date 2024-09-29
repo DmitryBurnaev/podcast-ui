@@ -31,6 +31,7 @@
                   <i v-else-if="episode.status === 'CANCELING'" class="text-danger nc-icon el-icon-warning"></i>
                 </div>
               </div>
+              <EpisodeChapters></EpisodeChapters>
             </div>
           </div>
           <div class="card-footer">
@@ -259,6 +260,7 @@
 
 <script>
   import AudioPlayer from "@/components/AudioPlayer";
+  import EpisodeChapters from "@/components/EpisodeChapters.vue";
   import SourceTypeIcon from "@/components/SourceTypeIcon";
   import axios from "axios";
   import router from "@/router";
@@ -270,6 +272,7 @@
   export default {
     name: 'EpisodeDetailsView',
     components: {
+      EpisodeChapters,
       InputErrors,
       AudioPlayer,
       'el-progress': Progress,
