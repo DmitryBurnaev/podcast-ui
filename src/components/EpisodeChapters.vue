@@ -55,20 +55,12 @@ export default {
 </script>
 
 <style lang="scss">
-
-.audio-content{
-  padding-left: 10px;
-  padding-right: 10px;
-  figure{display: none}
-  i{
-    font-size: 2.5em;
-    cursor: pointer;
-  }
-  .el-slider__button{
-    border-color: #6bd098 !important;
-  }
-  .el-slider__bar{
-    background-color: #6bd098 !important;
+.el-timeline{
+  padding-left: 5px;
+  .el-timeline-item__wrapper{
+    text-align: left;
   }
 }
+
+
 </style>
