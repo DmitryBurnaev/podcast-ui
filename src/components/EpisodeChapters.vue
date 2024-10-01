@@ -55,10 +55,50 @@ export default {
 </script>
 
 <style lang="scss">
+.el-collapse{
+  border: 0;
+  .el-collapse-item__content{
+    padding-bottom: 0;
+    padding-top: 10px;
+  }
+  .el-collapse-item__header{
+    border-bottom: 0;
+    padding-left: 3px;
+  }
+  .el-collapse-item__wrap{
+    border-bottom: 0;
+  }
+  .el-collapse-item__content{
+    margin-bottom: 5px;
+    font-size: 13px;
+  }
+}
 .el-timeline{
   padding-left: 5px;
+  .el-timeline-item__node--normal {
+    width: 10px;
+    height: 10px;
+  }
+  .el-timeline-item__tail{
+    left: 4px;
+    border-left: 1px solid #E4E7ED;
+  }
+  .el-timeline-item__node--success {
+    background-color: #6bd098;
+  }
+
+  .el-timeline-item{
+    padding-bottom: 10px;
+  }
   .el-timeline-item__wrapper{
     text-align: left;
+    padding-left: 20px;
+    top: -7px;
+  }
+  .el-timeline-item__timestamp{
+    float: right;
+    margin-top: -19px;
+    padding-right: 7px;
   }
 }
 
