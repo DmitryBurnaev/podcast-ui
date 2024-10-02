@@ -3,11 +3,11 @@
     <el-collapse-item title="Chapters" name="1">
       <el-timeline :reverse="false">
         <el-timeline-item
-          v-for="(activity, index) in activities"
+          v-for="(chapter, index) in chapters"
           :key="index"
           :type="'success'"
-          :timestamp="activity.timestamp">
-          {{activity.content}}
+          :timestamp="chapter.start">
+          {{chapter.title}}
         </el-timeline-item>
       </el-timeline>
     </el-collapse-item>
@@ -21,19 +21,19 @@ import {Timeline, TimelineItem} from "element-ui";
 
 export default {
   name: "EpisodeChapters",
-  // props: ['src', 'length'],
+  props: ['chapters'],
   data: () => ({
     activeNames: [],
-    activities: [{
-      content: 'Chapter 1',
-      timestamp: '0:0:0'
-    }, {
-      content: 'Chapter 2',
-      timestamp: '0:10:25'
-    }, {
-      content: 'Chapter 3',
-      timestamp: '0:23:11'
-    }]
+    // chapters: [{
+    //   content: 'Chapter 1',
+    //   timestamp: '0:0:0'
+    // }, {
+    //   content: 'Chapter 2',
+    //   timestamp: '0:10:25'
+    // }, {
+    //   content: 'Chapter 3',
+    //   timestamp: '0:23:11'
+    // }]
   }),
   components: {
     'el-collapse': Collapse,
@@ -43,8 +43,8 @@ export default {
   },
   mounted() {
     this.audio = document.getElementById("audioPlayer");
-    this.audio.addEventListener("timeupdate", () => { this.audioCurrentTime = this.audio.currentTime})
-    this.audio.addEventListener("ended", () => { this.isPlaying = false;})
+    // this.audio.addEventListener("timeupdate", () => { this.audioCurrentTime = this.audio.currentTime})
+    // this.audio.addEventListener("ended", () => { this.isPlaying = false;})
   },
   methods: {
     handleChange(val) {
@@ -70,7 +70,6 @@ export default {
   }
   .el-collapse-item__content{
     margin-bottom: 5px;
-    font-size: 13px;
   }
 }
 .el-timeline{
@@ -86,19 +85,24 @@ export default {
   .el-timeline-item__node--success {
     background-color: #6bd098;
   }
-
+  .el-timeline-item__content{
+    font-size: 13px;
+    max-width: 200px;
+  }
   .el-timeline-item{
     padding-bottom: 10px;
   }
   .el-timeline-item__wrapper{
     text-align: left;
     padding-left: 20px;
-    top: -7px;
+    top: -6px;
   }
   .el-timeline-item__timestamp{
     float: right;
-    margin-top: -19px;
+    margin-top: -16px;
     padding-right: 7px;
+    font-family: "Space Mono",monospace;
+    font-size: 10px;
   }
 }
 
