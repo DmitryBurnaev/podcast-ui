@@ -31,7 +31,7 @@
                   <i v-else-if="episode.status === 'CANCELING'" class="text-danger nc-icon el-icon-warning"></i>
                 </div>
               </div>
-              <EpisodeChapters></EpisodeChapters>
+              <EpisodeChapters v-if="episode.chapters" :chapters="episode.chapters"></EpisodeChapters>
             </div>
           </div>
           <div class="card-footer">

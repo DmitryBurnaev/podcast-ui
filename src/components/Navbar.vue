@@ -66,6 +66,14 @@ export default {
   .navbar{
     height: 63px;
   }
+  .el-breadcrumb{
+    .el-breadcrumb__item:last-child{
+      max-width: 600px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
   .el-breadcrumb__separator{
     @media (max-width: 576px) {
       display: block;
