@@ -7,9 +7,10 @@
           :key="index"
           :type="'success'"
           :timestamp="chapter.start"
-          v-on:click="chooseChapter(chapter)"
         >
-          {{chapter.title}}
+          <span @click="chooseChapter(chapter)">
+            {{chapter.title}}
+          </span>
         </el-timeline-item>
       </el-timeline>
     </el-collapse-item>
@@ -35,17 +36,18 @@ export default {
   },
   mounted() {
     this.audio = document.getElementById("audioPlayer");
-    // this.audio.addEventListener("timeupdate", () => { this.audioCurrentTime = this.audio.currentTime})
-    // this.audio.addEventListener("ended", () => { this.isPlaying = false;})
   },
   methods: {
-    // handleChange(val) {
-    //     console.log(val);
-    // },
     chooseChapter(chapter){
-      console.log("dsfddddd")
-      console.log(chapter)
+      this.playerSeek(chapter.start)
     },
+    playerSeek(startTime){
+      this.audio.currentTime = this.convertTimeToSeconds(startTime)
+    },
+    convertTimeToSeconds(timeString) {
+      const timeParts = timeString.split(':');
+      return parseInt(timeParts[0], 10) * 3600 + parseInt(timeParts[1], 10) * 60 + parseInt(timeParts[2], 10);
+    }
   }
 }
 </script>
