@@ -31,7 +31,7 @@
                   <i v-else-if="episode.status === 'CANCELING'" class="text-danger nc-icon el-icon-warning"></i>
                 </div>
               </div>
-              <EpisodeChapters v-if="episode.chapters" :chapters="episode.chapters"></EpisodeChapters>
+              <EpisodeChapters v-if="episodeHasChapters(episode)" :chapters="episode.chapters"></EpisodeChapters>
             </div>
           </div>
           <div class="card-footer">
@@ -390,6 +390,9 @@
       },
       episodePublished(episode){
         return episode.status === 'PUBLISHED'
+      },
+      episodeHasChapters(episode){
+        return Array.isArray(episode.chapters) && episode.chapters.length > 0
       },
       updateProgress(){
         if (this.episodeInProgress(this.episode)){
