@@ -1,12 +1,14 @@
 <template>
-  <el-collapse v-model="activeNames" @change="handleChange">
+  <el-collapse v-model="activeNames">
     <el-collapse-item title="Chapters" name="1">
       <el-timeline :reverse="false">
         <el-timeline-item
           v-for="(chapter, index) in chapters"
           :key="index"
           :type="'success'"
-          :timestamp="chapter.start">
+          :timestamp="chapter.start"
+          v-on:click="chooseChapter(chapter)"
+        >
           {{chapter.title}}
         </el-timeline-item>
       </el-timeline>
@@ -24,16 +26,6 @@ export default {
   props: ['chapters'],
   data: () => ({
     activeNames: [],
-    // chapters: [{
-    //   content: 'Chapter 1',
-    //   timestamp: '0:0:0'
-    // }, {
-    //   content: 'Chapter 2',
-    //   timestamp: '0:10:25'
-    // }, {
-    //   content: 'Chapter 3',
-    //   timestamp: '0:23:11'
-    // }]
   }),
   components: {
     'el-collapse': Collapse,
@@ -47,9 +39,13 @@ export default {
     // this.audio.addEventListener("ended", () => { this.isPlaying = false;})
   },
   methods: {
-    handleChange(val) {
-        console.log(val);
-    }
+    // handleChange(val) {
+    //     console.log(val);
+    // },
+    chooseChapter(chapter){
+      console.log("dsfddddd")
+      console.log(chapter)
+    },
   }
 }
 </script>
@@ -88,6 +84,7 @@ export default {
   .el-timeline-item__content{
     font-size: 13px;
     max-width: 200px;
+    cursor: pointer;
   }
   .el-timeline-item{
     padding-bottom: 10px;
