@@ -32,18 +32,6 @@ jobs:
              echo "Dist was built"
           fi
 
-      - name: Archive build (crating artifacts)
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: deploy_dist
-          path: ./dist
-
-      - name: Download and unzip build
-        uses: actions/download-artifact@v4
-        with:
-          name: deploy_dist
-
       - name: Prepare SSH key
         run: |
           mkdir ~/.ssh
@@ -52,4 +40,4 @@ jobs:
 
       - name: Copy project files
         run: |
-          scp -o StrictHostKeyChecking=no -r ./deploy_dist/* ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
+          scp -o StrictHostKeyChecking=no -r ./dist/* ${{ secrets.SSH_USER }}@${{ secrets.PROD_SSH_HOST }}:${{ secrets.PROD_PROJECT_ROOT }}
